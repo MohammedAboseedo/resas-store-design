@@ -12,3 +12,5 @@ storefront/tools/zid-export/
 storefront/tools/zid-export-raw/
 *.env
 .env*
+zid-theme/soft-v2/previews/home-v2-FINAL.html
+zid-theme/soft-v2/previews/home-v2-preview.html

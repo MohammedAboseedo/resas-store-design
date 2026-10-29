@@ -9,13 +9,8 @@
   var RESAS = {
     announcement: "قسّم مشترياتك على 4 دفعات مع تمارا وتابي، بدون فوائد",
     whatsapp: "966590000902",
-    /* Banner slides. "product" slides read the live price from that product page; "url" is where the button goes. */
-    slides: [
-      { kicker: "من عطور رساس الخاصة", title: "العود الملكي", text: "جريب فروت وخزامى وتبغ وعنبر خام، عطر للرجال والنساء.", image: M + "9e29ccd2-79c5-4a6f-817f-f94c19acc616.jpg", url: "/products/العود-الملكي", product: true, cta: "تسوّق العود الملكي" },
-      { kicker: "عرض العطور المستوحاة", title: "اختر 5 عطور\nبـ 199 ر.س", text: "عطور 30 مل مستوحاة من أشهر الماركات العالمية، اختر منها ما يناسبك.", image: M + "82bec99f-4824-4291-a2f0-b2f02be5ac81.jpg", url: "/categories/1343245", cta: "اختر عطورك", small: true },
-      { kicker: "الأكثر مبيعاً", title: "مسك المدينة", text: "من أكثر عطور رساس طلباً، بعلبة تحمل روح المدينة المنورة.", image: M + "d227b714-bf96-4d10-b8a0-519b70c57270.jpg", url: "/products/مسك-المدينه", product: true, cta: "تسوّق مسك المدينة" }
-    ],
-    slideSeconds: 7,
+    /* Banner: one image across the page. Upload it to Zid (Files) and paste its address here to host it on the store. */
+    banner: { image: "https://mohammedaboseedo.github.io/resas-store-design/storefront/assets/img/banner.webp", alt: "رساس: كل زجاجة تحمل قصة وكل رائحة توقيع" },
     arches: [
       { title: "الأكثر مبيعاً", url: "/categories/1385910/الاكثر-مبيعا", image: M + "7f45bf7f-b2ae-4e43-a751-079cac07c99d.jpeg" },
       { title: "عطور", url: "/categories/358519/عطور", image: M + "dc857f06-41cd-4df4-940a-4938a84ae9d0.jpeg" },
@@ -124,33 +119,6 @@
     if (lang) lang.style.display = "none";
   }
 
-  /* ---------- banner slider: crossfade, arrows, dots, swipe, pauses on hover and focus ---------- */
-  function slider(hero) {
-    var slides = $$(".rs-slide", hero), dots = $$(".rs-hero__dot", hero), cur = 0, timer = null;
-    function go(n) {
-      cur = (n + slides.length) % slides.length;
-      slides.forEach(function (s, i) {
-        var on = i === cur;
-        s.classList.toggle("is-on", on);
-        s.setAttribute("aria-hidden", on ? "false" : "true");
-        $$("a", s).forEach(function (a) { a.tabIndex = on ? 0 : -1; });
-      });
-      dots.forEach(function (d, i) { if (i === cur) d.setAttribute("aria-current", "true"); else d.removeAttribute("aria-current"); });
-    }
-    function stop() { clearInterval(timer); timer = null; }
-    function play() { stop(); if (!reduce) timer = setInterval(function () { go(cur + 1); }, (RESAS.slideSeconds || 7) * 1000); }
-    $$(".rs-hero__arrow", hero).forEach(function (b) { b.addEventListener("click", function () { go(cur + (+b.getAttribute("data-dir"))); play(); }); });
-    dots.forEach(function (d) { d.addEventListener("click", function () { go(+d.getAttribute("data-slide")); play(); }); });
-    hero.addEventListener("mouseenter", stop); hero.addEventListener("mouseleave", play);
-    hero.addEventListener("focusin", stop); hero.addEventListener("focusout", play);
-    /* RTL: the next slide is toward the left */
-    hero.addEventListener("keydown", function (e) { if (e.key === "ArrowLeft") { go(cur + 1); e.preventDefault(); } if (e.key === "ArrowRight") { go(cur - 1); e.preventDefault(); } });
-    var x0 = null;
-    hero.addEventListener("touchstart", function (e) { x0 = e.touches[0].clientX; stop(); }, { passive: true });
-    hero.addEventListener("touchend", function (e) { if (x0 === null) return; var dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) go(cur + (dx > 0 ? -1 : 1)); x0 = null; play(); });
-    play();
-  }
-
   /* ---------- homepage ---------- */
   function home() {
     var root = $(".home");
@@ -158,25 +126,7 @@
     var soft = $('[section-id="df0d438a-b345-41db-a20e-65838c8b4a43"]', root);
     var anchor = soft || root.firstElementChild;
 
-    var SLIDES = RESAS.slides;
-    var hero = el('<section class="rs-hero" aria-roledescription="عرض متتالٍ" aria-label="العروض الرئيسية"><div class="rs-slides">' + SLIDES.map(function (sl, i) {
-      var h = i ? "h2" : "h1";
-      return '<div class="rs-slide' + (i ? "" : " is-on") + '" role="group" aria-roledescription="شريحة" aria-label="' + (i + 1) + " من " + SLIDES.length + '"' + (i ? ' aria-hidden="true"' : "") + ">" +
-        '<div class="rs-slide__text"><span class="rs-slide__kicker">' + esc(sl.kicker) + "</span>" +
-        "<" + h + ' class="rs-title rs-slide__title' + (sl.small ? " rs-slide__title--sm" : "") + '">' + esc(sl.title).replace(/\n/g, "<br>") + "</" + h + ">" +
-        '<p class="rs-slide__lede">' + esc(sl.text) + "</p>" +
-        (sl.product ? '<p class="rs-slide__price" data-slide-price="' + i + '" hidden></p>' : "") +
-        '<a class="rs-btn rs-slide__cta" href="' + esc(sl.url) + '"' + (i ? ' tabindex="-1"' : "") + ">" + esc(sl.cta) + "</a></div>" +
-        '<div class="rs-slide__media"><img src="' + esc(img(sl.image, 900)) + '" alt="' + esc(sl.title.replace(/\n/g, " ")) + '"' + (i ? ' loading="lazy"' : ' fetchpriority="high"') + "></div></div>";
-    }).join("") + '</div><div class="rs-hero__ui"><div class="rs-hero__arrows">' +
-      '<button class="rs-hero__arrow" type="button" aria-label="الشريحة السابقة" data-dir="-1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>' +
-      '<button class="rs-hero__arrow" type="button" aria-label="الشريحة التالية" data-dir="1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button></div>' +
-      '<div class="rs-hero__dots">' + SLIDES.map(function (sl, i) { return '<button class="rs-hero__dot" type="button" aria-label="الشريحة ' + (i + 1) + '"' + (i ? "" : ' aria-current="true"') + ' data-slide="' + i + '"></button>'; }).join("") + "</div></div></section>");
-    SLIDES.forEach(function (sl, i) {
-      if (!sl.product) return;
-      loadProduct(sl.url).then(function (p) { var e = $('[data-slide-price="' + i + '"]', hero); if (p && p.price && e) { e.innerHTML = esc(p.price) + "<small>شامل الضريبة</small>"; e.hidden = false; } });
-    });
-    slider(hero);
+    var hero = el('<section class="rs-hero" aria-label="العرض الرئيسي"><img class="rs-hero__img" src="' + esc(RESAS.banner.image) + '" width="1280" height="494" alt="' + esc(RESAS.banner.alt) + '" fetchpriority="high"></section>');
 
     var arches = el('<section class="rs-sec" aria-labelledby="rs-cat-title"><div class="rs-wrap"><div class="rs-sec__head"><h2 class="rs-title rs-sec__title" id="rs-cat-title"' + rise(0) + '>تسوّق حسب القسم</h2>' +
       '<a class="rs-link" href="/categories"' + rise(80) + '>عرض كل الأقسام</a></div><ul class="rs-arches">' +
