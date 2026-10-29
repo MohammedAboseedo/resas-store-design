@@ -15,6 +15,7 @@
    One thin gold thread runs behind the content down the page margins and is drawn by scrolling. */
 :root {
   --paper: #fff;         /* page ground: clean white, as the owner liked it */
+  --ivory: #FAF8F0;      /* the page ground fades between white and this */
   --bone: #F4EFE0;       /* the store's ivory */
   --linen: #E9DFC1;
   --sand: #D9CB9B;
@@ -69,7 +70,7 @@
 [hidden] { display: none !important; }
 /* The header is fixed, so keep focused and anchored elements from sliding under it (WCAG 2.4.11) */
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: calc(var(--header) + 16px); }
-body { margin: 0; background: var(--paper) linear-gradient(180deg, #fff 0%, var(--bone) 16%, #fff 34%, var(--bone) 52%, #fff 70%, var(--bone) 88%, #fff 100%); color: var(--ink); font-family: var(--body); font-size: var(--fs-b); line-height: 1.7; overflow-x: hidden; } /* page ground fades between white and ivory down the page, as the owner asked. taste-skill-ignore */
+body { margin: 0; background: var(--paper) linear-gradient(180deg, #fff 0%, var(--ivory) 16%, #fff 34%, var(--ivory) 52%, #fff 70%, var(--ivory) 88%, #fff 100%); color: var(--ink); font-family: var(--body); font-size: var(--fs-b); line-height: 1.7; overflow-x: hidden; } /* page ground fades between white and ivory down the page, as the owner asked. taste-skill-ignore */
 img { display: block; max-width: 100%; }
 a { color: inherit; }
 button { font: inherit; color: inherit; padding: 0; }

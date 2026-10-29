@@ -5,6 +5,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap");
 
 :root {
+  --rs-ivory: #FAF8F0;   /* the page ground fades between white and this */
   --rs-bone: #F4EFE0;
   --rs-linen: #E9DFC1;
   --rs-sand: #D9CB9B;
@@ -55,7 +56,7 @@
 /* ---------- Base ---------- */
 body, body.rtl, body button, body input, body select, body textarea,
 body h1, body h2, body h3, body h4, body h5, body h6, body p, body a, body span { font-family: var(--rs-font) !important; }
-body { background: #fff linear-gradient(180deg, #fff 0%, var(--rs-bone) 16%, #fff 34%, var(--rs-bone) 52%, #fff 70%, var(--rs-bone) 88%, #fff 100%); color: var(--rs-ink); } /* page ground fades between white and ivory down the page, as the owner asked. taste-skill-ignore */
+body { background: #fff linear-gradient(180deg, #fff 0%, var(--rs-ivory) 16%, #fff 34%, var(--rs-ivory) 52%, #fff 70%, var(--rs-ivory) 88%, #fff 100%); color: var(--rs-ink); } /* page ground fades between white and ivory down the page, as the owner asked. taste-skill-ignore */
 :focus-visible { outline: 2px solid var(--rs-cognac) !important; outline-offset: 2px; }
 body .btn-primary, body .btn.primary {
   background: var(--rs-cognac) !important; border-color: var(--rs-cognac) !important; color: var(--rs-ink) !important;
