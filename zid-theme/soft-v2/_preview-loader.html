@@ -1,0 +1,15 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Resas preview loader</title>
+<p>Loading resas-soft.css and resas-soft.js, then opening the store…</p>
+<script>
+  /* Preview helper only, not uploaded to Zid. Puts both files in this tab's name and
+     opens the store; a one-line snippet run on the store page applies them. */
+  var next = new URLSearchParams(location.search).get("to") || "https://resas.sa.com/";
+  Promise.all([fetch((new URLSearchParams(location.search).get("css") || "resas-soft.css") + "?" + Date.now()).then(function (r) { return r.text(); }),
+               fetch("resas-soft.js?" + Date.now()).then(function (r) { return r.text(); })])
+    .then(function (files) {
+      window.name = "RESAS_PREVIEW" + JSON.stringify({ css: files[0], js: files[1] });
+      location.href = next;
+    });
+</script>

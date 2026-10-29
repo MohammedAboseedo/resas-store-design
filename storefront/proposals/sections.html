@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>أفكار صف الأقسام</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../assets/css/resas.css">
+<style>
+  body { padding-bottom: 80px; }
+  .opt { padding-top: 56px; }
+  .opt__label { display: flex; align-items: baseline; gap: 12px; margin-bottom: 20px; }
+  .opt__label b { font-size: 15px; background: var(--rs-ink); color: #fff; border-radius: 999px; padding: 2px 12px; }
+  .opt__label span { font-size: 15px; color: var(--rs-muted); }
+
+  /* A: tall photo cards, text on the photo */
+  .a-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+  .a-card { position: relative; display: block; aspect-ratio: 4 / 5; border-radius: var(--rs-radius); overflow: hidden; color: #fff; text-decoration: none; isolation: isolate; }
+  .a-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; transition: transform .7s ease; }
+  .a-card::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, rgba(28, 20, 15, .72) 0%, rgba(28, 20, 15, .18) 42%, rgba(28, 20, 15, 0) 62%); }
+  .a-card:hover img { transform: scale(1.04); }
+  .a-body { position: absolute; inset-inline: 0; bottom: 0; padding: 32px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+  .a-body small { font-size: 13px; opacity: .85; }
+  .a-body strong { font-size: 28px; font-weight: 600; }
+  .a-body em { font-style: normal; font-size: 13.5px; font-weight: 600; margin-top: 8px; padding-bottom: 3px; border-bottom: 1.5px solid #fff; }
+
+  /* B: arched photo frames, name under each */
+  .b-wrap { background: var(--rs-ivory); padding: 48px 0 52px; }
+  .b-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; max-width: 1080px; margin-inline: auto; }
+  .b-item { display: flex; flex-direction: column; align-items: center; gap: 6px; text-decoration: none; color: var(--rs-ink); text-align: center; }
+  .b-arch { width: 100%; aspect-ratio: 3 / 4; border-radius: 999px 999px var(--rs-radius) var(--rs-radius); overflow: hidden; background: var(--rs-stage); margin-bottom: 14px; }
+  .b-arch img { width: 100%; height: 100%; object-fit: cover; transition: transform .7s ease; }
+  .b-item:hover .b-arch img { transform: scale(1.04); }
+  .b-item small { font-size: 13px; color: var(--rs-subtle); }
+  .b-item strong { font-size: 22px; font-weight: 600; }
+  .b-item em { font-style: normal; font-size: 13.5px; font-weight: 600; margin-top: 6px; padding-bottom: 3px; border-bottom: 1.5px solid currentColor; }
+  .b-item:hover em { color: var(--rs-accent); }
+
+  /* C: one large card and two stacked */
+  .c-list { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); grid-template-rows: 1fr 1fr; gap: 20px; height: 620px; }
+  .c-card { position: relative; display: flex; align-items: flex-end; border-radius: var(--rs-radius); overflow: hidden; text-decoration: none; color: #fff; isolation: isolate; }
+  .c-card:first-child { grid-row: span 2; }
+  .c-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; transition: transform .7s ease; }
+  .c-card::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, rgba(28, 20, 15, .7), rgba(28, 20, 15, 0) 55%); }
+  .c-card:hover img { transform: scale(1.04); }
+  .c-body { padding: 28px; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+  .c-card:first-child .c-body { padding: 40px; }
+  .c-body small { font-size: 13px; opacity: .85; }
+  .c-body strong { font-size: 24px; font-weight: 600; }
+  .c-card:first-child .c-body strong { font-size: 34px; }
+  .c-body em { font-style: normal; font-size: 13.5px; font-weight: 600; margin-top: 8px; padding-bottom: 3px; border-bottom: 1.5px solid #fff; }
+</style>
+</head>
+<body>
+  <section class="rs-container opt">
+    <p class="opt__label"><b>أ</b><span>صور طولية كبيرة، والاسم على الصورة في المنتصف</span></p>
+    <div class="a-list" data-opt="a"></div>
+  </section>
+
+  <section class="opt">
+    <p class="rs-container opt__label"><b>ب</b><span>إطار مقوّس مثل قارورة العطر، والاسم تحت الصورة على خلفية عاجية</span></p>
+    <div class="b-wrap"><div class="rs-container"><div class="b-list" data-opt="b"></div></div></div>
+  </section>
+
+  <section class="rs-container opt">
+    <p class="opt__label"><b>ج</b><span>صورة كبيرة للقسم الرئيسي وبجانبها صورتان</span></p>
+    <div class="c-list" data-opt="c"></div>
+  </section>
+
+  <script src="../data/store.js"></script>
+  <script>
+    (function () {
+      var P = window.RESAS_STORE.products;
+      function prod(n) { return P.filter(function (p) { return p.name === n; })[0]; }
+      function img(u, w) { return "https://media.zid.store/cdn-cgi/image/w=" + w + ",q=82,f=auto/" + u; }
+      function count(cat) { return P.filter(function (p) { return p.in_stock && p.categories.indexOf(cat) > -1; }).length; }
+      var items = [
+        { eyebrow: "اختيار عملائنا", title: "الأكثر مبيعاً", product: "عنبر", cat: "الاكثر مبيعاً" },
+        { eyebrow: "مجموعة خاصة", title: "عطور رساس الخاصة", product: "ليدي روز", cat: "عطور خاصة" },
+        { eyebrow: "من الشرق", title: "البخور والعود", product: "بخور رساس", cat: "البخور والعود" }
+      ];
+      document.querySelector('[data-opt="a"]').innerHTML = items.map(function (t) {
+        return '<a class="a-card" href="#"><img src="' + img(prod(t.product).image, 900) + '" alt=""><span class="a-body"><small>' + t.eyebrow + "</small><strong>" + t.title + "</strong><em>تسوّق الآن</em></span></a>";
+      }).join("");
+      document.querySelector('[data-opt="b"]').innerHTML = items.map(function (t) {
+        return '<a class="b-item" href="#"><span class="b-arch"><img src="' + img(prod(t.product).image, 800) + '" alt=""></span><small>' + (function (n) { return n + (n <= 10 ? " منتجات" : " منتجاً"); })(count(t.cat)) + "</small><strong>" + t.title + "</strong><em>تسوّق الآن</em></a>";
+      }).join("");
+      document.querySelector('[data-opt="c"]').innerHTML = items.map(function (t) {
+        return '<a class="c-card" href="#"><img src="' + img(prod(t.product).image, 1100) + '" alt=""><span class="c-body"><small>' + t.eyebrow + "</small><strong>" + t.title + "</strong><em>تسوّق الآن</em></span></a>";
+      }).join("");
+    })();
+  </script>
+</body>
+</html>

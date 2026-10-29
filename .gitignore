@@ -1,0 +1,14 @@
+# Only the design is published. Everything below stays on this computer.
+.claude/
+.mcp.json
+mcp/
+node_modules/
+reports/
+cro-audit-*/
+design/
+.taste-skill/
+skills-lock.json
+storefront/tools/zid-export/
+storefront/tools/zid-export-raw/
+*.env
+.env*

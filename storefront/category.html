@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>رساس للعطور</title>
+  <meta name="description" content="متجر رساس للعطور.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://media.zid.store" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="assets/css/resas.css">
+</head>
+<body>
+  <a class="rs-skip" href="#main">تخطَّ إلى المحتوى</a>
+
+  <div class="rs-announce" data-store="announcement"></div>
+
+  <header class="rs-header" data-header>
+    <div class="rs-container rs-header__top">
+      <div class="rs-header__start">
+        <button class="rs-icon-btn rs-header__menu" type="button" aria-label="القائمة" aria-controls="rs-drawer" aria-expanded="false" data-open-drawer>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+        </button>
+        <button class="rs-icon-btn" type="button" aria-label="بحث" aria-expanded="false" aria-controls="rs-search-panel" data-toggle-search>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg>
+        </button>
+      </div>
+      <a class="rs-header__logo" href="index.html" aria-label="رساس، الصفحة الرئيسية"><img data-store-src="logo" alt="رساس" width="121" height="60"></a>
+      <div class="rs-header__actions">
+        <a class="rs-icon-btn rs-hide-sm" href="/auth/login" aria-label="حسابي"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="3.5"/><path d="M5 20c1.5-3.5 4-5 7-5s5.5 1.5 7 5"/></svg></a>
+        <button class="rs-icon-btn rs-cart-btn" type="button" aria-label="السلة" data-open-cart>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1.2 12H6.2z"/><path d="M9 8V6.5a3 3 0 016 0V8"/></svg>
+          <span class="rs-cart-btn__badge" data-cart-count hidden>0</span>
+        </button>
+      </div>
+    </div>
+    <nav class="rs-header__nav" aria-label="الأقسام">
+      <ul class="rs-container" data-render="menu"></ul>
+    </nav>
+    <div class="rs-search" id="rs-search-panel" data-search hidden>
+      <div class="rs-container rs-search__inner">
+        <svg class="rs-search__icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg>
+        <input class="rs-search__input" id="rs-search-input" type="search" placeholder="ابحث عن عطر، عود، أو هدية" autocomplete="off"
+               role="combobox" aria-expanded="false" aria-controls="rs-search-list" aria-autocomplete="list" aria-label="ابحث في رساس">
+        <ul class="rs-search__list" id="rs-search-list" role="listbox" aria-label="نتائج البحث" hidden></ul>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" data-category-page>
+    <header class="rs-container rs-cathead">
+      <nav class="rs-crumbs" aria-label="مسار الصفحة"><ol data-render="cat-crumbs"></ol></nav>
+      <h1 class="rs-cathead__title" data-render="cat-title"></h1>
+      <p class="rs-cathead__desc" data-render="cat-desc"></p>
+    </header>
+
+    <nav class="rs-cattabs" aria-label="أقسام فرعية" data-subcats hidden>
+      <ul class="rs-container rs-cattabs__list" data-render="cat-chips"></ul>
+    </nav>
+
+    <div class="rs-container rs-toolbar">
+      <button class="rs-toolbar__btn" type="button" aria-controls="rs-filters" aria-expanded="false" data-open-filters>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>
+        <span>تصفية</span><span class="rs-toolbar__badge" data-filter-count hidden></span>
+      </button>
+      <p class="rs-toolbar__count" data-render="cat-count" aria-live="polite"></p>
+      <label class="rs-sort"><span class="rs-sort__label">ترتيب</span>
+        <select id="rs-sort" data-sort>
+          <option value="featured">المقترح</option>
+          <option value="price-asc">السعر: من الأقل</option>
+          <option value="price-desc">السعر: من الأعلى</option>
+          <option value="new">الأحدث</option>
+          <option value="rating">الأعلى تقييماً</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="rs-container rs-shop__main">
+      <ul class="rs-activechips" data-render="active-filters" aria-label="التصفية المفعّلة"></ul>
+
+      <ul class="rs-grid rs-grid--shop" data-render="cat-grid"></ul>
+
+      <div class="rs-empty" data-cat-empty hidden>
+        <h2>لا توجد منتجات تطابق اختيارك</h2>
+        <p class="rs-muted">جرّب إزالة بعض التصفية، أو تصفّح الأقسام الأخرى.</p>
+        <button class="rs-btn rs-btn--outline" type="button" data-filter-reset>مسح التصفية</button>
+      </div>
+
+      <div class="rs-loadmore" data-loadmore hidden>
+        <p class="rs-muted" data-render="cat-progress"></p>
+        <button class="rs-btn rs-btn--outline" type="button" data-more>عرض المزيد</button>
+      </div>
+    </div>
+
+    <section class="rs-container rs-catabout" data-cat-about hidden>
+      <h2>عن <span data-render="cat-name"></span></h2>
+      <p class="rs-muted" data-render="cat-about"></p>
+    </section>
+
+    <aside class="rs-filters" id="rs-filters" role="dialog" aria-modal="true" aria-labelledby="rs-filters-title" data-filters>
+      <div class="rs-filters__head">
+        <h2 id="rs-filters-title">تصفية</h2>
+        <button class="rs-icon-btn" type="button" aria-label="إغلاق" data-close-filters><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+      <div class="rs-filters__body">
+        <fieldset class="rs-fgroup">
+          <legend>السعر</legend>
+          <div class="rs-options" role="group" aria-label="نطاق السعر" data-render="filter-price"></div>
+        </fieldset>
+        <fieldset class="rs-fgroup">
+          <legend>العرض</legend>
+          <label class="rs-option" for="f-stock"><input type="checkbox" id="f-stock" data-filter-stock checked><span>المتوفر فقط</span></label>
+          <label class="rs-option" for="f-sale"><input type="checkbox" id="f-sale" data-filter-sale><span>عليه خصم</span></label>
+        </fieldset>
+      </div>
+      <div class="rs-filters__foot">
+        <button class="rs-filters__clear" type="button" data-filter-reset>مسح الكل</button>
+        <button class="rs-btn" type="button" data-close-filters data-filter-apply>عرض النتائج</button>
+      </div>
+    </aside>
+    <div class="rs-filters__scrim" data-close-filters hidden></div>
+  </main>
+
+  <footer class="rs-footer">
+    <div class="rs-container rs-footer__grid">
+      <div class="rs-footer__col">
+        <h3>تسوّق</h3>
+        <ul data-render="footer-shop"></ul>
+      </div>
+      <div class="rs-footer__news">
+        <img data-store-src="logo" alt="رساس" width="89" height="44">
+        <h3 id="rs-news-title">النشرة البريدية</h3>
+        <p class="rs-muted">اشترك ليصلك جديد رساس وعروضها أولاً.</p>
+        <form class="rs-news" aria-labelledby="rs-news-title" data-newsletter>
+          <label class="rs-visually-hidden" for="rs-news-email">بريدك الإلكتروني</label>
+          <input id="rs-news-email" type="email" name="email" placeholder="بريدك الإلكتروني" autocomplete="email" required>
+          <button class="rs-btn" type="submit">اشترك</button>
+        </form>
+        <ul class="rs-social" data-render="social"></ul>
+      </div>
+      <div class="rs-footer__col">
+        <h3>المساعدة</h3>
+        <ul>
+          <li><a href="/shipping-and-payment">خيارات الدفع والتوصيل</a></li>
+          <li><a href="/pages/refund-exchange-policy">سياسة الاستبدال والاسترجاع</a></li>
+          <li><a href="/pages/terms-and-conditions">سياسة الاستخدام والخصوصية</a></li>
+          <li><a href="/blogs/المدونة">المدونة</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="rs-container rs-footer__bottom">
+      <ul class="rs-pay" data-render="payments" aria-label="طرق الدفع"></ul>
+      <p class="rs-footer__legal">
+        <span>الرقم الضريبي: <bdi data-store="vat_number"></bdi></span>
+        <span>السجل التجاري: <bdi data-store="commercial_registration"></bdi></span>
+        <span>© <span data-year></span> رساس</span>
+      </p>
+    </div>
+  </footer>
+
+  <div class="rs-drawer" id="rs-drawer" role="dialog" aria-modal="true" aria-label="القائمة" hidden>
+    <div class="rs-drawer__scrim" data-close-drawer></div>
+    <div class="rs-drawer__panel" tabindex="-1">
+      <div class="rs-drawer__head">
+        <img data-store-src="logo" alt="رساس" width="73" height="36">
+        <button class="rs-icon-btn" type="button" aria-label="إغلاق" data-close-drawer><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+      <ul class="rs-drawer__list" data-render="drawer-menu"></ul>
+    </div>
+  </div>
+
+  <div class="rs-drawer rs-cart" id="rs-cart" role="dialog" aria-modal="true" aria-labelledby="rs-cart-title" hidden>
+    <div class="rs-drawer__scrim" data-close-cart></div>
+    <div class="rs-drawer__panel rs-cart__panel" tabindex="-1">
+      <div class="rs-drawer__head">
+        <h2 id="rs-cart-title">السلة</h2>
+        <button class="rs-icon-btn" type="button" aria-label="إغلاق" data-close-cart><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+      <ul class="rs-cart__list" data-render="cart"></ul>
+      <div class="rs-cart__foot">
+        <div class="rs-cart__total"><span>الإجمالي شامل الضريبة</span><strong data-cart-total>0.00 ر.س</strong></div>
+        <a class="rs-btn rs-btn--block" href="/cart" data-link="/cart">عرض السلة وإتمام الطلب</a>
+        <p class="rs-cart__note" data-preview-note>سلة معاينة محلية. بعد التركيب في زد تستخدم سلة المتجر نفسها.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="rs-toast" role="status" aria-live="polite" data-toast hidden></div>
+
+  <script src="data/store.js"></script>
+  <script src="data/home.js"></script>
+  <script src="assets/js/resas.js"></script>
+</body>
+</html>

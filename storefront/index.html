@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>رساس للعطور | عطور وبخور وعود منذ 2008</title>
+  <meta name="description" content="متجر رساس للعطور: عطور فرنسية وشرقية، وبخور وعود، وتوزيعات وهدايا. قسّمها على 4 دفعات مع تمارا وتابي.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://media.zid.store" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="assets/css/resas.css">
+</head>
+<body>
+  <a class="rs-skip" href="#main">تخطَّ إلى المحتوى</a>
+
+  <div class="rs-announce" data-store="announcement"></div>
+
+  <header class="rs-header" data-header>
+    <div class="rs-container rs-header__top">
+      <div class="rs-header__start">
+        <button class="rs-icon-btn rs-header__menu" type="button" aria-label="القائمة" aria-controls="rs-drawer" aria-expanded="false" data-open-drawer>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+        </button>
+        <button class="rs-icon-btn" type="button" aria-label="بحث" aria-expanded="false" aria-controls="rs-search-panel" data-toggle-search>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg>
+        </button>
+      </div>
+      <a class="rs-header__logo" href="/" aria-label="رساس، الصفحة الرئيسية"><img data-store-src="logo" alt="رساس" width="121" height="60"></a>
+      <div class="rs-header__actions">
+        <a class="rs-icon-btn rs-hide-sm" href="/auth/login" aria-label="حسابي"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="3.5"/><path d="M5 20c1.5-3.5 4-5 7-5s5.5 1.5 7 5"/></svg></a>
+        <button class="rs-icon-btn rs-cart-btn" type="button" aria-label="السلة" data-open-cart>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1.2 12H6.2z"/><path d="M9 8V6.5a3 3 0 016 0V8"/></svg>
+          <span class="rs-cart-btn__badge" data-cart-count hidden>0</span>
+        </button>
+      </div>
+    </div>
+    <nav class="rs-header__nav" aria-label="الأقسام">
+      <ul class="rs-container" data-render="menu"></ul>
+    </nav>
+    <div class="rs-search" id="rs-search-panel" data-search hidden>
+      <div class="rs-container rs-search__inner">
+        <svg class="rs-search__icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg>
+        <input class="rs-search__input" id="rs-search-input" type="search" placeholder="ابحث عن عطر، عود، أو هدية" autocomplete="off"
+               role="combobox" aria-expanded="false" aria-controls="rs-search-list" aria-autocomplete="list" aria-label="ابحث في رساس">
+        <ul class="rs-search__list" id="rs-search-list" role="listbox" aria-label="نتائج البحث" hidden></ul>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="rs-hero" aria-roledescription="عرض متتالي" aria-label="العروض الرئيسية">
+      <div class="rs-hero__track" data-render="hero"></div>
+      <div class="rs-hero__dots" data-render="hero-dots"></div>
+    </section>
+
+    <section class="rs-arches" aria-label="تسوّق حسب القسم">
+      <div class="rs-container">
+        <ul class="rs-arches__list" data-render="arches"></ul>
+      </div>
+    </section>
+
+    <section class="rs-section rs-container rs-picks" aria-label="منتجات رساس">
+      <div class="rs-pills" role="tablist" aria-label="منتجات رساس" data-render="pick-tabs"></div>
+      <div data-render="pick-panels"></div>
+    </section>
+
+    <section class="rs-story" aria-labelledby="rs-story-title">
+      <div class="rs-container rs-story__inner">
+        <div class="rs-story__body">
+          <span class="rs-eyebrow" data-render="story-eyebrow"></span>
+          <h2 class="rs-story__title" id="rs-story-title" data-render="story-title"></h2>
+          <p class="rs-muted" data-render="story-text"></p>
+          <a class="rs-link" data-render="story-cta"></a>
+        </div>
+        <img class="rs-story__img" data-render="story-image" alt="" width="720" height="560">
+      </div>
+    </section>
+
+    <section class="rs-section rs-container" aria-labelledby="rs-featured-title">
+      <h2 class="rs-heading" id="rs-featured-title" data-home="featured.title"></h2>
+      <ul class="rs-mini" data-render="featured"></ul>
+    </section>
+
+    <section class="rs-container rs-duo" aria-label="عروض">
+      <ul class="rs-duo__list" data-render="duo"></ul>
+    </section>
+
+    <section class="rs-section rs-container" aria-labelledby="rs-posts-title">
+      <h2 class="rs-heading" id="rs-posts-title" data-home="posts.title"></h2>
+      <ul class="rs-posts" data-render="posts"></ul>
+      <p class="rs-posts__more"><a class="rs-link" data-render="posts-more"></a></p>
+    </section>
+
+    <section class="rs-section rs-insta" aria-labelledby="rs-insta-title">
+      <div class="rs-container rs-insta__head">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r=".6"/></svg>
+        <h2 class="rs-heading" id="rs-insta-title" data-home="instagram.title"></h2>
+        <a class="rs-insta__handle" data-render="insta-handle" target="_blank" rel="noopener"></a>
+      </div>
+      <ul class="rs-insta__grid" data-render="instagram"></ul>
+    </section>
+  </main>
+
+  <footer class="rs-footer">
+    <div class="rs-container rs-footer__grid">
+      <div class="rs-footer__col">
+        <h3>تسوّق</h3>
+        <ul data-render="footer-shop"></ul>
+      </div>
+      <div class="rs-footer__news">
+        <img data-store-src="logo" alt="رساس" width="89" height="44">
+        <h3 id="rs-news-title">النشرة البريدية</h3>
+        <p class="rs-muted">اشترك ليصلك جديد رساس وعروضها أولاً.</p>
+        <form class="rs-news" aria-labelledby="rs-news-title" data-newsletter>
+          <label class="rs-visually-hidden" for="rs-news-email">بريدك الإلكتروني</label>
+          <input id="rs-news-email" type="email" name="email" placeholder="بريدك الإلكتروني" autocomplete="email" required>
+          <button class="rs-btn" type="submit">اشترك</button>
+        </form>
+        <ul class="rs-social" data-render="social"></ul>
+      </div>
+      <div class="rs-footer__col">
+        <h3>المساعدة</h3>
+        <ul>
+          <li><a href="/shipping-and-payment">خيارات الدفع والتوصيل</a></li>
+          <li><a href="/pages/refund-exchange-policy">سياسة الاستبدال والاسترجاع</a></li>
+          <li><a href="/pages/terms-and-conditions">سياسة الاستخدام والخصوصية</a></li>
+          <li><a href="/blogs/المدونة">المدونة</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="rs-container rs-footer__bottom">
+      <ul class="rs-pay" data-render="payments" aria-label="طرق الدفع"></ul>
+      <p class="rs-footer__legal">
+        <span>الرقم الضريبي: <bdi data-store="vat_number"></bdi></span>
+        <span>السجل التجاري: <bdi data-store="commercial_registration"></bdi></span>
+        <span>© <span data-year></span> رساس</span>
+      </p>
+    </div>
+  </footer>
+
+  <div class="rs-drawer" id="rs-drawer" role="dialog" aria-modal="true" aria-label="القائمة" hidden>
+    <div class="rs-drawer__scrim" data-close-drawer></div>
+    <div class="rs-drawer__panel" tabindex="-1">
+      <div class="rs-drawer__head">
+        <img data-store-src="logo" alt="رساس" width="73" height="36">
+        <button class="rs-icon-btn" type="button" aria-label="إغلاق" data-close-drawer><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+      <ul class="rs-drawer__list" data-render="drawer-menu"></ul>
+    </div>
+  </div>
+
+  <div class="rs-drawer rs-cart" id="rs-cart" role="dialog" aria-modal="true" aria-labelledby="rs-cart-title" hidden>
+    <div class="rs-drawer__scrim" data-close-cart></div>
+    <div class="rs-drawer__panel rs-cart__panel" tabindex="-1">
+      <div class="rs-drawer__head">
+        <h2 id="rs-cart-title">السلة</h2>
+        <button class="rs-icon-btn" type="button" aria-label="إغلاق" data-close-cart><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+      <ul class="rs-cart__list" data-render="cart"></ul>
+      <div class="rs-cart__foot">
+        <div class="rs-cart__total"><span>الإجمالي شامل الضريبة</span><strong data-cart-total>0.00 ر.س</strong></div>
+        <a class="rs-btn rs-btn--block" href="/cart" data-link="/cart">عرض السلة وإتمام الطلب</a>
+        <p class="rs-cart__note" data-preview-note>سلة معاينة محلية. بعد التركيب في زد تستخدم سلة المتجر نفسها.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="rs-toast" role="status" aria-live="polite" data-toast hidden></div>
+
+  <script src="data/store.js"></script>
+  <script src="data/home.js"></script>
+  <script src="assets/js/resas.js"></script>
+</body>
+</html>
