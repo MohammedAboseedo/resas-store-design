@@ -324,6 +324,43 @@ main, footer { position: relative; z-index: 1; }
 }
 @keyframes drift { from { transform: scale(1); } to { transform: scale(1.07); } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+/* ---------- Phones and tablets: a layout of their own, everything centred ---------- */
+@media (max-width: 899px) {
+  :root { --header: 124px; }                    /* bar 68 + search row 56 */
+  .header__bar { height: auto; grid-template-rows: 68px 56px; }
+  .header__start { display: contents; }
+  .menu-btn { grid-area: 1 / 1; justify-self: start; }
+  .logo { grid-area: 1 / 2; }
+  .tools { grid-area: 1 / 3; }
+  .search { display: flex; grid-area: 2 / 1 / 3 / 4; align-self: start; width: 100%; }
+  .sec__head { flex-direction: column; align-items: center; justify-content: center; gap: 16px; text-align: center; }
+  .sec__title { text-wrap: balance; }
+  .tabs { justify-content: center; }
+  .about__body, .dband__text, .duo__body { align-items: center; text-align: center; }
+  .drow { text-align: start; }
+  .tile { align-items: center; text-align: center; }
+  .post { align-items: center; text-align: center; }
+  .foot__top { justify-items: center; text-align: center; }
+  .news { width: 100%; margin-inline: auto; }
+  .foot ul { display: grid; justify-items: center; }
+  .foot__bottom { flex-direction: column; align-items: center; justify-content: center; margin-top: 48px; text-align: center; }
+}
+@media (max-width: 599px) {
+  .hero__img { height: 280px; aspect-ratio: auto; object-fit: cover; object-position: left center; }
+  .arches { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); scrollbar-width: none; }
+  .arches::-webkit-scrollbar { display: none; }
+  .arches > li { flex: 0 0 112px; scroll-snap-align: center; }
+  .mini { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .mini__item { grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 8px; padding: 12px; text-align: center; }
+  .mini__img { width: 100%; }
+  .mini__body { width: 100%; }
+  .mini__body .pc__rate, .mini__body .pc__price { justify-content: center; }
+  .mini__add { grid-column: 1; width: 100%; }
+}
+/* very wide screens: the banner stops growing and stays centred */
+@media (min-width: 1700px) {
+  .hero__img { max-height: 680px; object-fit: cover; object-position: center; }
+}
 </style>
 </head>
 <body>

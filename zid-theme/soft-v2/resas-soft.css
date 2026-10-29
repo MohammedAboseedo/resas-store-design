@@ -353,6 +353,35 @@ body .footer-copyrights, body .vat-crn-sections span { color: #C9BBAA !important
 body .footer-theme-text-for-primary-bg { color: #E2D6C6 !important; }
 @media (max-width: 899px) { body footer .footer-store-section { border-radius: 50% 50% 0 0 / 60px 60px 0 0; } body footer a { display: block; padding: 12px 0; } }
 
+/* ---------- Phones and tablets: everything centred, with a layout of its own ---------- */
+@media (max-width: 899px) {
+  .rs-sec__head { flex-direction: column; align-items: center; justify-content: center; gap: 16px; text-align: center; }
+  .rs-sec__title { text-align: center !important; text-wrap: balance; }
+  .rs-tabs { justify-content: center; }
+  .rs-about__body, .rs-dband__text, .rs-duo__body { align-items: center; text-align: center; }
+  .rs-drow { text-align: start; }
+  .rs-tile { align-items: center; text-align: center; }
+  .rs-post { align-items: center; text-align: center; }
+  body footer .footer-store-section, body footer .footer-store-section * { text-align: center !important; }
+  body [section-id="bab059dc-abb8-477a-b2ed-2ec96d0fa81a"] .section-title { text-align: center !important; }
+}
+@media (max-width: 599px) {
+  .rs-hero__img { height: 280px; aspect-ratio: auto; object-fit: cover; object-position: left center; }
+  .rs-arches { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; margin-inline: calc(var(--rs-gutter) * -1); padding-inline: var(--rs-gutter); scrollbar-width: none; }
+  .rs-arches::-webkit-scrollbar { display: none; }
+  .rs-arches > li { flex: 0 0 112px; scroll-snap-align: center; }
+  .rs-mini { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .rs-mini__item { grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 8px; padding: 12px; text-align: center; }
+  .rs-mini__img { width: 100%; }
+  .rs-mini__body { width: 100%; }
+  .rs-mini__rate { justify-content: center; }
+  .rs-mini__add { grid-column: 1; width: 100%; }
+}
+/* very wide screens: the banner stops growing and stays centred */
+@media (min-width: 1700px) {
+  .rs-hero__img { max-height: 680px; object-fit: cover; object-position: center; }
+}
+
 /* ---------- Motion: only when motion is welcome; content stays visible if script fails ---------- */
 @media (prefers-reduced-motion: no-preference) {
   .rs-about__media img { animation: rs-drift 22s ease-in-out infinite alternate; }
