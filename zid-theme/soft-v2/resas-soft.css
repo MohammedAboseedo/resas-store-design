@@ -56,6 +56,8 @@
 /* ---------- Base ---------- */
 body, body.rtl, body button, body input, body select, body textarea,
 body h1, body h2, body h3, body h4, body h5, body h6, body p, body a, body span { font-family: var(--rs-font) !important; }
+/* Multi-colour icon glyphs (the cart) are drawn by .path1, .path2 spans; the text-font rule above must not replace their icon font. */
+body span[class^="path"], body span[class*=" path"] { font-family: "icomoon" !important; }
 body { background: #fff linear-gradient(180deg, #fff 0%, var(--rs-ivory) 16%, #fff 34%, var(--rs-ivory) 52%, #fff 70%, var(--rs-ivory) 88%, #fff 100%); color: var(--rs-ink); } /* page ground fades between white and ivory down the page, as the owner asked. taste-skill-ignore */
 :focus-visible { outline: 2px solid var(--rs-cognac) !important; outline-offset: 2px; }
 body .btn-primary, body .btn.primary {
@@ -98,6 +100,8 @@ body .header-cart .language-currency, body .header-cart .language-currency * { b
 body .header-cart .language-btn { background: none !important; color: var(--rs-muted) !important; font-size: var(--rs-fs-s) !important; padding: 0 4px !important; }
 body .header-cart .language-btn .icon-language_white { display: none; }
 @media (max-width: 991px) { body .header-cart .language-currency { display: none !important; } }
+/* On phones the account button moves out of the bar (it is in the side menu), so the logo can sit exactly in the middle. */
+@media (max-width: 991px) { body .account-area { display: none !important; } }
 
 /* Desktop search field on the start side: a filled field, no outline */
 body .search-input.lg-search-div { padding: 0 !important; max-width: 260px; }
