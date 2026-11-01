@@ -166,6 +166,9 @@ body.rtl .slick-next { left: 0 !important; right: auto !important; z-index: 2; }
 
 /* ---------- Homepage: the dashboard sections that the new design has already used ---------- */
 .home .rs-used { display: none !important; }
+/* The dashboard's other banners and gallery stay, restyled to match the page. */
+.home section.ss, .home .gallery-section { margin-top: var(--rs-space); }
+.home section.ss img, .home .gallery-section img { border-radius: var(--rs-r-l); }
 
 /* ---------- Shared pieces of the new sections ---------- */
 .rs-wrap { width: 100%; max-width: calc(1360px + 2 * var(--rs-gutter)); margin-inline: auto; padding-inline: var(--rs-gutter); }

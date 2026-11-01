@@ -4,10 +4,10 @@
      - the banner: the first banner section of the home page
      - the category row: the category sections (names, images, links)
      - the product tabs: every product section (its title and its first products)
-     - the tiles, "featured products", sale band and Instagram photos: taken from those same products
-     - the blog posts: the three newest posts of the store blog
+     - every other section you add in the dashboard (banners, gallery...) stays on the page, in its order
      - reviews, menu, footer, store logo
-   What is written here, in RESAS below: the top announcement, the WhatsApp number, the "about" text, and a few fallbacks. */
+   Nothing else is added by this file. Extra blocks (about, tiles, sale band, featured products, two banners, blog,
+   Instagram) exist but are OFF; switch one on in RESAS.extras below. */
 (function () {
   "use strict";
 
@@ -19,6 +19,8 @@
     /* Shown only when the dashboard has no banner section. */
     bannerFallback: "https://mohammedaboseedo.github.io/resas-store-design/storefront/assets/img/banner.webp",
     about: { title: "ثمانية عشر عاماً في صناعة الرائحة", text: "نشأت رساس في المملكة العربية السعودية عام 2008، لتقدم عطوراً فرنسية وشرقية بأسلوب دافئ وأنيق، وبخوراً وعوداً من أجود الأنواع.", cta: "تسوّق عطور رساس" },
+    /* Extra blocks the dashboard does not have. All off: set true to show one. */
+    extras: { about: false, tiles: false, deals: false, featured: false, duo: false, blog: false, instagram: false },
     tileText: "اكتشف المجموعة",
     tabLimit: 10,
     featuredCount: 6,
@@ -110,7 +112,7 @@
       var hi = live($$("img", ss[0]))[0], ha = hi && hi.closest("a");
       if (hi) S.hero = { src: (hi.getAttribute("src") || "").trim() || (hi.currentSrc || ""), url: ha ? ha.getAttribute("href") : "", alt: hi.getAttribute("alt") || "" };
     }
-    S.used = S.used.concat(ss, $$(".gallery-section", root));
+    if (ss[0]) S.used.push(ss[0]);
     $$(".home-categories-section", root).forEach(function (sec) {
       S.used.push(sec);
       live($$(".category-item a", sec)).forEach(function (a) {
@@ -135,6 +137,7 @@
   function home() {
     var root = $(".home");
     if (!root || root.classList.contains("rs-ready")) return;
+    var EX = RESAS.extras || {};
     var S = readStore(root);
     if (!S.sections.length) return;
     var anchor = root.firstElementChild;
@@ -233,7 +236,7 @@
     var onSale = S.cards.filter(function (c) { return c.oldNum > c.priceNum && c.priceNum > 0; }).map(function (c) {
       return { url: c.url, title: c.name, price: c.price, old: c.oldHtml, pct: Math.round((1 - c.priceNum / c.oldNum) * 100), image: c.image };
     });
-    var dealsReady = onSale.length ? Promise.resolve(onSale) : Promise.all((RESAS.dealUrls || []).map(loadProduct)).then(function (list) {
+    var dealsReady = !EX.deals ? Promise.resolve([]) : onSale.length ? Promise.resolve(onSale) : Promise.all((RESAS.dealUrls || []).map(loadProduct)).then(function (list) {
       return list.filter(function (p) { return p && p.old && num(p.old) > num(p.price) && p.image; }).map(function (p) {
         return { url: p.url, title: p.title, price: esc(p.price), old: esc(p.old), pct: Math.round((1 - num(p.price) / num(p.old)) * 100), image: "https://media.zid.store/" + p.image };
       });
@@ -284,7 +287,7 @@
 
     /* Blog: the newest posts of the store blog, read from the blog itself. */
     var blog = el('<section class="rs-sec" aria-labelledby="rs-blog-title" hidden><div class="rs-wrap"><div class="rs-sec__head"><h2 class="rs-title rs-sec__title" id="rs-blog-title">من مدونة رساس</h2></div><div class="rs-posts"></div><div class="rs-posts__more"><a class="rs-link" href="/blogs/المدونة">كل المقالات</a></div></div></section>');
-    fetch("/blogs/المدونة", { credentials: "same-origin" }).then(function (r) { return r.ok ? r.text() : Promise.reject(); }).then(function (html) {
+    if (EX.blog) fetch("/blogs/المدونة", { credentials: "same-origin" }).then(function (r) { return r.ok ? r.text() : Promise.reject(); }).then(function (html) {
       var d = new DOMParser().parseFromString(html, "text/html"), links = [];
       $$("a[href]", d).forEach(function (a) {
         var u; try { u = new URL(a.getAttribute("href"), location.origin); } catch (e) { return; }
@@ -314,20 +317,20 @@
       '<h2 class="rs-title rs-sec__title" id="rs-insta-title"' + rise(0) + '>تابعنا على إنستغرام</h2><a class="rs-insta__handle" href="https://www.instagram.com/' + RESAS.instagram + '" target="_blank" rel="noopener">@' + RESAS.instagram + '</a></div><ul class="rs-insta__grid">' +
       igPics.map(function (m) { return '<li><a href="https://www.instagram.com/' + RESAS.instagram + '" target="_blank" rel="noopener" aria-label="رساس على إنستغرام"><img src="' + esc(sized(m, 480)) + '" alt="" loading="lazy"></a></li>'; }).join("") + "</ul></section>");
 
-    /* Order: banner, categories, about, product tabs, tiles, sale band, the store's reviews, featured, two banners, blog, Instagram. */
+    /* Order: banner, categories, product tabs, then the dashboard's other sections in their own order, then the store's reviews.
+       The optional extras (RESAS.extras) go in the places the first design gave them. */
     var after = anchor;
     function put(node) { if (!node) return; after.parentNode.insertBefore(node, after.nextSibling); after = node; }
     anchor.parentNode.insertBefore(hero, anchor);
-    put(arches); put(about); put(picks); put(tiles); put(deals);
+    put(arches); put(EX.about ? about : null); put(picks); put(EX.tiles ? tiles : null); put(EX.deals ? deals : null);
+    put(EX.featured ? featured : null); put(EX.duo ? duo : null); put(EX.blog ? blog : null); put(EX.instagram ? insta : null);
     var rv = $(".testimonials-slider", root), reviews = rv && rv.closest("[section-id]");
     if (reviews) {
       /* The store left this section's title empty in the dashboard. */
       var rt = $(".section-title", reviews);
       if (rt && !rt.textContent.trim()) rt.textContent = "آراء عملائنا";
-      after.parentNode.insertBefore(reviews, after.nextSibling);
-      after = reviews;
+      root.appendChild(reviews);
     }
-    put(featured); put(duo); put(blog); put(insta);
     /* Only now hide the sections that were used, so a failure above never leaves the page empty. */
     S.used.forEach(function (n) { n.classList.add("rs-used"); });
     root.classList.add("rs-ready");
