@@ -106,13 +106,20 @@
     };
   }
   function readStore(root) {
-    var S = { hero: null, cats: [], sections: [], cards: [], used: [] };
+    var S = { hero: null, cats: [], sections: [], cards: [], used: [], banners: [] };
     var ss = $$("section.ss", root);
     if (ss[0]) {
       var hi = live($$("img", ss[0]))[0], ha = hi && hi.closest("a");
       if (hi) S.hero = { src: (hi.getAttribute("src") || "").trim() || (hi.currentSrc || ""), url: ha ? ha.getAttribute("href") : "", alt: hi.getAttribute("alt") || "" };
     }
-    if (ss[0]) S.used.push(ss[0]);
+    S.used = S.used.concat(ss, $$(".gallery-section", root));
+    S.banners = [];
+    ss.slice(1).concat($$(".gallery-section", root)).forEach(function (sec) {
+      live($$("img", sec)).forEach(function (im) {
+        var a = im.closest("a"), src = (im.getAttribute("src") || "").trim() || (im.getAttribute("srcset") || "").split(",").pop().trim().split(" ")[0];
+        if (src && !S.banners.some(function (b) { return b.src === src; })) S.banners.push({ src: src, url: a ? a.getAttribute("href") : "", alt: im.getAttribute("alt") || "" });
+      });
+    });
     $$(".home-categories-section", root).forEach(function (sec) {
       S.used.push(sec);
       live($$(".category-item a", sec)).forEach(function (a) {
@@ -221,6 +228,16 @@
       });
     });
 
+    /* The dashboard's other banners and gallery, laid out as one tidy grid; wide strips take a full row. */
+    var banners = S.banners.length ? el('<section class="rs-sec" aria-label="عروض"><div class="rs-wrap"><div class="rs-banners">' + S.banners.map(function (b, i) {
+      var inner = '<img src="' + esc(sized(b.src, 1200)) + '" alt="' + esc(b.alt) + '" loading="lazy">';
+      return (b.url ? '<a class="rs-banner" href="' + esc(b.url) + '"' + rise((i % 2) * 90) + ">" : '<div class="rs-banner"' + rise((i % 2) * 90) + ">") + inner + (b.url ? "</a>" : "</div>");
+    }).join("") + "</div></div></section>") : null;
+    if (banners) $$(".rs-banner img", banners).forEach(function (im) {
+      var f = function () { if (im.naturalWidth / im.naturalHeight >= 3.4) im.closest(".rs-banner").classList.add("rs-banner--wide"); };
+      if (im.complete && im.naturalWidth) f(); else im.addEventListener("load", f);
+    });
+
     /* Tiles: the first four product sections, each with its first product photo. */
     var KINDS = ["photo a", "sand", "dark", "photo d"];
     var tiles = el('<section class="rs-sec" aria-label="أقسام مختارة"><div class="rs-wrap"><ul class="rs-tiles">' + S.sections.slice(0, 4).map(function (sec, i) {
@@ -322,7 +339,7 @@
     var after = anchor;
     function put(node) { if (!node) return; after.parentNode.insertBefore(node, after.nextSibling); after = node; }
     anchor.parentNode.insertBefore(hero, anchor);
-    put(arches); put(EX.about ? about : null); put(picks); put(EX.tiles ? tiles : null); put(EX.deals ? deals : null);
+    put(arches); put(EX.about ? about : null); put(picks); put(banners); put(EX.tiles ? tiles : null); put(EX.deals ? deals : null);
     put(EX.featured ? featured : null); put(EX.duo ? duo : null); put(EX.blog ? blog : null); put(EX.instagram ? insta : null);
     var rv = $(".testimonials-slider", root), reviews = rv && rv.closest("[section-id]");
     if (reviews) {
