@@ -14,3 +14,5 @@ storefront/tools/zid-export-raw/
 .env*
 zid-theme/soft-v2/previews/home-v2-FINAL.html
 zid-theme/soft-v2/previews/home-v2-preview.html
+PROGRESS.md
+.claude/
