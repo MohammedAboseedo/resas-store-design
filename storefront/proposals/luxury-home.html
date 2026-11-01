@@ -8,10 +8,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://media.zid.store" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap">
 <style>
 /* Resas homepage, selling order: banner, categories, about, products, tiles, deals, help.
-   Flat colour fields, no shadows, gradients or hairlines. Display type is Aref Ruqaa; text is IBM Plex Sans Arabic.
+   Flat colour fields, no shadows, gradients or hairlines. One family throughout: IBM Plex Sans Arabic.
    One thin gold thread runs behind the content down the page margins and is drawn by scrolling. */
 :root {
   --paper: #fff;         /* page ground: clean white, as the owner liked it */
@@ -32,7 +32,7 @@
   --star-off: #DDD6CD;
   --sale: #B02F27;
   --tone: var(--linen);   /* resting fill of secondary buttons; changes on linen grounds */
-  --display: "Aref Ruqaa", "Amiri", serif;
+  --display: var(--body);   /* headings use the same family as the text */
   --body: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
   /* five sizes plus the headline */
   --fs-s: 14px;
@@ -135,7 +135,7 @@ main, footer { position: relative; z-index: 1; }
 /* ---------- Section frame ---------- */
 .sec { position: relative; padding-top: var(--space); }
 .sec__head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 16px 32px; margin-bottom: var(--sp-head); }
-.sec__title { font-family: var(--display); font-weight: 700; font-size: var(--fs-h2); line-height: 1.5; }
+.sec__title { font-family: var(--display); font-weight: 600; font-size: var(--fs-h2); line-height: 1.5; }
 .sec__lede { max-width: 34em; margin-top: 4px; color: var(--muted); font-size: var(--fs-l); }
 
 /* ---------- Categories: arched frames in a grid, no sideways scroll ---------- */
@@ -155,7 +155,7 @@ main, footer { position: relative; z-index: 1; }
 .about__panel { display: grid; grid-template-columns: minmax(0, 1fr) auto; background: var(--linen); border-radius: var(--r-l); overflow: hidden; }
 .about__body { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 12px; padding: var(--pad-panel); }
 .about__kicker { font-size: var(--fs-b); font-weight: 600; color: var(--cognac-deep); }
-.about__title { font-family: var(--display); font-weight: 700; font-size: var(--fs-h2); line-height: 1.5; }
+.about__title { font-family: var(--display); font-weight: 600; font-size: var(--fs-h2); line-height: 1.5; }
 .about__text { max-width: 30em; color: var(--muted); font-size: var(--fs-l); line-height: 1.95; }
 .about__cta { margin-top: 12px; }
 .about__media { width: clamp(340px, 38vw, 560px); min-height: 380px; background: var(--sand); overflow: hidden; }
@@ -202,7 +202,7 @@ main, footer { position: relative; z-index: 1; }
 @media (min-width: 1024px) { .tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; } }
 .tile { position: relative; display: flex; flex-direction: column; justify-content: flex-end; min-height: 260px; padding: 24px; border-radius: var(--r-l); overflow: hidden; text-decoration: none; isolation: isolate; }
 @media (min-width: 1024px) { .tile { min-height: 420px; padding: 28px; } }
-.tile__title { font-family: var(--display); font-weight: 700; font-size: var(--fs-h3); line-height: 1.4; white-space: pre-line; }
+.tile__title { font-family: var(--display); font-weight: 600; font-size: var(--fs-h3); line-height: 1.4; white-space: pre-line; }
 .tile__text { margin-top: 4px; font-size: var(--fs-b); line-height: 1.7; }
 .tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; transition: transform 1s cubic-bezier(.2, .7, .1, 1); }
 .tile:hover img { transform: scale(1.05); }
@@ -223,7 +223,7 @@ main, footer { position: relative; z-index: 1; }
 .dband { display: grid; grid-template-columns: minmax(0, 1fr) auto; background: var(--linen); border-radius: var(--r-l); overflow: hidden; }
 .dband__text { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 12px; padding: var(--pad-panel); }
 .dband__kicker { font-size: var(--fs-b); font-weight: 600; color: var(--cognac-deep); }
-.dband__title { font-family: var(--display); font-weight: 700; font-size: var(--fs-h2); line-height: 1.4; }
+.dband__title { font-family: var(--display); font-weight: 600; font-size: var(--fs-h2); line-height: 1.4; }
 .dband__lede { color: var(--muted); font-size: var(--fs-l); }
 .dband__list { display: grid; gap: 12px; width: 100%; margin-top: 8px; }
 .drow { display: grid; grid-template-columns: 72px minmax(0, 1fr) auto; align-items: center; gap: 16px; padding: 12px; border-radius: var(--r-m); background: var(--bone); text-decoration: none; transition: background-color .2s ease; }
@@ -262,7 +262,7 @@ main, footer { position: relative; z-index: 1; }
 .duo__item { display: flex; align-items: stretch; height: 100%; min-height: 300px; border-radius: var(--r-l); overflow: hidden; background: var(--linen); text-decoration: none; }
 .duo__body { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 8px; padding: var(--pad-panel); }
 .duo__kicker { font-size: var(--fs-s); font-weight: 600; color: var(--cognac-deep); }
-.duo__title { font-family: var(--display); font-weight: 700; font-size: var(--fs-h3); line-height: 1.4; white-space: pre-line; }
+.duo__title { font-family: var(--display); font-weight: 600; font-size: var(--fs-h3); line-height: 1.4; white-space: pre-line; }
 .duo__text { font-size: var(--fs-b); color: var(--muted); margin-bottom: 8px; }
 .duo__item img { width: 46%; flex-shrink: 0; object-fit: cover; transition: transform .8s cubic-bezier(.2, .7, .1, 1); }
 .duo__item:hover img { transform: scale(1.04); }
@@ -296,7 +296,7 @@ main, footer { position: relative; z-index: 1; }
 .foot { border-radius: 50% 50% 0 0 / 110px 110px 0 0; padding-top: var(--sp-foot); padding-bottom: 28px; }
 .foot__top { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr); gap: var(--sp-foot-gap); }
 .foot__top > div { min-width: 0; }
-.foot__title { font-family: var(--display); font-weight: 700; font-size: var(--fs-h3); line-height: 1.5; color: var(--champagne); }
+.foot__title { font-family: var(--display); font-weight: 600; font-size: var(--fs-h3); line-height: 1.5; color: var(--champagne); }
 .foot p { color: #E2D6C6; }
 .news { display: flex; gap: 12px; margin-top: 24px; max-width: 440px; }
 .news input { flex: 1; width: 100%; min-width: 0; min-height: var(--h-m); padding: 0 24px; border: 0; border-radius: 999px; background: var(--espresso-2); color: #F1E8DC; font: inherit; }

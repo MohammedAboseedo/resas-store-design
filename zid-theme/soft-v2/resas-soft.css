@@ -2,7 +2,7 @@
    Replaces the store's previous custom CSS (backup: zid-theme/backup-2026-10-26/custom.css).
    Paste the whole file into Zid: المظهر ← تخصيص الثيم ← CSS مخصص.
    Flat colour fields: no shadows, gradients (except the scrim under text on photos), hairlines or glass. */
-@import url("https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap");
 
 :root {
   --rs-ivory: #FAF8F0;   /* the page ground fades between white and this */
@@ -21,7 +21,7 @@
   --rs-star: #B07A1A;
   --rs-sale: #B02F27;
   --rs-tone: var(--rs-linen);
-  --rs-display: "Aref Ruqaa", "Amiri", serif;
+  --rs-display: var(--rs-font);   /* headings use the same family as the text */
   --rs-font: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
   --rs-fs-s: 14px;
   --rs-fs-b: 16px;
@@ -66,7 +66,7 @@ body .btn-primary:hover, body .btn.primary:hover { background: var(--rs-cognac-d
 /* Soft's container stops at 1110px; widen it to match the new sections. */
 @media (min-width: 1200px) { body .container { max-width: 1360px; } }
 /* The Display type used for headlines only; Soft gives headings a tall line-height. */
-.rs-title { font-family: var(--rs-display) !important; font-weight: 700 !important; line-height: 1.5 !important; }
+.rs-title { font-family: var(--rs-display) !important; font-weight: 600 !important; line-height: 1.5 !important; }
 
 /* ---------- Announcement bar (added by resas-soft.js) ---------- */
 .rs-announce { background: var(--rs-espresso); color: #F1E8DC; font-size: var(--rs-fs-s); font-weight: 500; text-align: center; padding: 8px 16px; }
@@ -233,7 +233,7 @@ body.rtl .slick-next { left: 0 !important; right: auto !important; z-index: 2; }
 @media (min-width: 1024px) { .rs-tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; } }
 .rs-tile { position: relative; display: flex; flex-direction: column; justify-content: flex-end; min-height: 320px; padding: 24px; border-radius: var(--rs-r-l); overflow: hidden; text-decoration: none !important; isolation: isolate; }
 @media (min-width: 1024px) { .rs-tile { min-height: 420px; padding: 28px; } }
-.rs-tile__title { font-family: var(--rs-display) !important; font-weight: 700; font-size: var(--rs-fs-h3); line-height: 1.4; white-space: pre-line; }
+.rs-tile__title { font-family: var(--rs-display) !important; font-weight: 600; font-size: var(--rs-fs-h3); line-height: 1.4; white-space: pre-line; }
 .rs-tile__text { margin-top: 4px; font-size: var(--rs-fs-b); line-height: 1.7; }
 .rs-tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; transition: transform 1s cubic-bezier(.2, .7, .1, 1); }
 .rs-tile:hover img { transform: scale(1.05); }
@@ -337,7 +337,7 @@ body .testimonials-customer-card .card-body::before { content: "★★★★★"
 body .testimonials-customer-icon { color: var(--rs-subtle) !important; }
 body .testimonials-customer-name { font-size: var(--rs-fs-b) !important; font-weight: 600 !important; color: var(--rs-ink) !important; margin: 0 !important; }
 body .testimonials-customer-text { font-size: var(--rs-fs-b) !important; line-height: 1.8; color: var(--rs-muted) !important; margin-top: 8px; }
-body [section-id="bab059dc-abb8-477a-b2ed-2ec96d0fa81a"] .section-title { font-family: var(--rs-display) !important; font-weight: 700 !important; line-height: 1.5 !important; font-size: var(--rs-fs-h2) !important; text-align: start !important; margin-bottom: 32px !important; }
+body [section-id="bab059dc-abb8-477a-b2ed-2ec96d0fa81a"] .section-title { font-family: var(--rs-display) !important; font-weight: 600 !important; line-height: 1.5 !important; font-size: var(--rs-fs-h2) !important; text-align: start !important; margin-bottom: 32px !important; }
 body [section-id="bab059dc-abb8-477a-b2ed-2ec96d0fa81a"] { padding-top: var(--rs-space); }
 
 /* ---------- Footer: dark, curved top ---------- */
