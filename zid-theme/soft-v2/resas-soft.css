@@ -164,20 +164,8 @@ body .slick-arrow > span { color: var(--rs-ink) !important; font-size: 24px !imp
 body.rtl .slick-prev { right: 0 !important; left: auto !important; z-index: 2; }
 body.rtl .slick-next { left: 0 !important; right: auto !important; z-index: 2; }
 
-/* ---------- Homepage: Soft sections that the new design replaces ---------- */
-.home [section-id="4a10951e-63db-4f5f-b051-c1ce2a7d3c33"],
-.home [section-id="ab1e0858-74b7-4b0b-b5d5-df01b44627a9"],
-.home [section-id="c4ab66b0-4e18-4750-b83b-01ba88f6935b"],
-.home [section-id="7c743a60-946c-46b4-aeaf-64d5797c015c"],
-.home [section-id="2d533b6c-0df2-4b36-b700-7794cda68182"],
-.home [section-id="d6cde594-54dc-4d53-8b72-8422d3116049"],
-.home [section-id="f2ad7233-fcab-4495-b4b4-d13f0130e87e"],
-.home.rs-ready [section-id="df0d438a-b345-41db-a20e-65838c8b4a43"],
-.home.rs-ready [section-id="8d250eae-5a8d-4c8a-befa-67f7ebea301a"],
-.home.rs-ready [section-id="22d7da3a-1c52-4096-b53d-2786a4077918"],
-.home.rs-ready [section-id="5ad035fa-0854-410e-8f83-9cc9d86b68a2"],
-.home.rs-ready [section-id="a5461952-4f19-4a03-858a-6270c84858f6"],
-.home.rs-ready [section-id="508d303b-2adf-42b0-aea6-3b3b71461f5b"] { display: none !important; }
+/* ---------- Homepage: the dashboard sections that the new design has already used ---------- */
+.home .rs-used { display: none !important; }
 
 /* ---------- Shared pieces of the new sections ---------- */
 .rs-wrap { width: 100%; max-width: calc(1360px + 2 * var(--rs-gutter)); margin-inline: auto; padding-inline: var(--rs-gutter); }
@@ -197,12 +185,13 @@ body.rtl .slick-next { left: 0 !important; right: auto !important; z-index: 2; }
 
 /* ---------- Banner: one image, full width ---------- */
 .rs-hero { background: var(--rs-bone); }
-.rs-hero__img { display: block; width: 100%; height: auto; aspect-ratio: 1280 / 494; }
+.rs-hero__img { display: block; width: 100%; height: auto; }
+.rs-hero a { display: block; }
 
 /* ---------- Categories: arched frames in a grid ---------- */
-.rs-arches { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px 12px; list-style: none; margin: 0; padding: 0; }
+.rs-arches { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px 12px; justify-content: center; list-style: none; margin: 0; padding: 0; }
 @media (min-width: 768px) { .rs-arches { gap: 36px 20px; } }
-@media (min-width: 1024px) { .rs-arches { grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 24px; } }
+@media (min-width: 1024px) { .rs-arches { grid-template-columns: repeat(auto-fit, minmax(112px, 148px)); gap: 24px; } }
 .rs-arch-link { display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; text-decoration: none !important; color: var(--rs-ink) !important; }
 .rs-arch-link__frame { display: block; width: 100%; aspect-ratio: 4 / 5; margin-bottom: 12px; border-radius: 999px 999px var(--rs-r-m) var(--rs-r-m); overflow: hidden; background: var(--rs-linen); }
 .rs-arch-link__frame img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s cubic-bezier(.2, .7, .1, 1); }
@@ -300,7 +289,7 @@ body .rs-mini__add:hover { background: var(--rs-cognac-deep) !important; color: 
 
 /* ---------- Two banners: the royal gifts, and help on WhatsApp ---------- */
 .rs-duo { display: grid; gap: 16px; }
-@media (min-width: 900px) { .rs-duo { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 20px; } }
+@media (min-width: 900px) { .rs-duo { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 20px; } .rs-duo > :only-child { grid-column: 1 / -1; } }
 .rs-duo__item { display: flex; align-items: stretch; height: 100%; min-height: 300px; border-radius: var(--rs-r-l); overflow: hidden; background: var(--rs-linen); text-decoration: none !important; color: var(--rs-ink) !important; }
 .rs-duo__body { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 8px; padding: var(--rs-pad-panel); }
 .rs-duo__kicker { font-size: var(--rs-fs-s); font-weight: 600; color: var(--rs-cognac-deep); }
@@ -370,7 +359,7 @@ body .footer-theme-text-for-primary-bg { color: #E2D6C6 !important; }
   body [section-id="bab059dc-abb8-477a-b2ed-2ec96d0fa81a"] .section-title { text-align: center !important; }
 }
 @media (max-width: 599px) {
-  .rs-hero__img { height: 280px; aspect-ratio: auto; object-fit: cover; object-position: left center; }
+  .rs-hero__img[data-crop] { height: 280px; object-fit: cover; object-position: left center; }
   .rs-arches { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; margin-inline: calc(var(--rs-gutter) * -1); padding-inline: var(--rs-gutter); scrollbar-width: none; }
   .rs-arches::-webkit-scrollbar { display: none; }
   .rs-arches > li { flex: 0 0 112px; scroll-snap-align: center; }

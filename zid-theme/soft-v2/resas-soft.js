@@ -1,66 +1,30 @@
-/* Resas on Zid's Soft theme, v2: the approved luxury homepage, built around the store's own product sections.
-   Replaces the store's previous custom JS (backup: zid-theme/backup-2026-10-26/custom-scripts.js).
+/* Resas on Zid's Soft theme: the approved homepage design, built from the store's own dashboard sections.
    Paste the whole file into Zid: المظهر ← تخصيص الثيم ← JavaScript مخصص.
-   Everything editable is in RESAS below. Product cards, prices, stock and add to cart come live from Zid. */
+   What comes from the dashboard (change it there, the page follows):
+     - the banner: the first banner section of the home page
+     - the category row: the category sections (names, images, links)
+     - the product tabs: every product section (its title and its first products)
+     - the tiles, "featured products", sale band and Instagram photos: taken from those same products
+     - the blog posts: the three newest posts of the store blog
+     - reviews, menu, footer, store logo
+   What is written here, in RESAS below: the top announcement, the WhatsApp number, the "about" text, and a few fallbacks. */
 (function () {
   "use strict";
 
-  var M = "640fc833-23b0-408d-8400-ab3e292a7099/";
   var RESAS = {
     announcement: "قسّم مشترياتك على 4 دفعات مع تمارا وتابي، بدون فوائد",
     whatsapp: "966590000902",
-    /* Header logo. Better: upload the same file under Zid's store logo, then clear this line. */
+    /* Header logo override. Better: upload the logo in Zid's store settings and leave this empty. */
     logo: "https://mohammedaboseedo.github.io/resas-store-design/storefront/assets/img/logo.svg",
-    /* Banner: one image across the page. Upload it to Zid (Files) and paste its address here to host it on the store. */
-    banner: { image: "https://mohammedaboseedo.github.io/resas-store-design/storefront/assets/img/banner.webp", alt: "رساس: كل زجاجة تحمل قصة وكل رائحة توقيع" },
-    arches: [
-      { title: "الأكثر مبيعاً", url: "/categories/1385910/الاكثر-مبيعا", image: M + "7f45bf7f-b2ae-4e43-a751-079cac07c99d.jpeg" },
-      { title: "عطور", url: "/categories/358519/عطور", image: M + "dc857f06-41cd-4df4-940a-4938a84ae9d0.jpeg" },
-      { title: "عطور خاصة", url: "/categories/1162806/عطور-خاصة", image: M + "7964b07d-82a5-49ae-94d9-27a8ce1b5364.jpeg" },
-      { title: "البخور والعود", url: "/categories/218590/أجود-أنواع-البخور-والعود-20-70", image: M + "4ddff223-1e42-46c9-9d42-307d89e719d6.jpg" },
-      { title: "الهدايا الملكية", url: "/categories/265764/الهدايا-الملكية", image: M + "d27754d3-1a8c-4b49-b5e8-b9d7d1723dc9.jpeg" },
-      { title: "توزيعات", url: "/categories/673261/توزيعات", image: M + "5bf99d88-4231-4c30-b3c4-bd7bdc7549fd.jpeg" },
-      { title: "عطور جو ومفارش", url: "/categories/141977/عطور-جو-ومفارش", image: M + "53c10af0-3ea9-41ec-b792-3766ad9a2d79.jpeg" },
-      { title: "فواحات اعواد", url: "/categories/141504/فواحات", image: M + "b78ad718-252d-4c22-98d8-7752b4f0d245.jpg" }
-    ],
-    about: { title: "ثمانية عشر عاماً في صناعة الرائحة", text: "نشأت رساس في المملكة العربية السعودية عام 2008، لتقدم عطوراً فرنسية وشرقية بأسلوب دافئ وأنيق، وبخوراً وعوداً من أجود الأنواع.", image: M + "d227b714-bf96-4d10-b8a0-519b70c57270.jpg", cta: { label: "تسوّق عطور رساس", url: "/categories/358519/عطور" } },
-    /* Tabs over the store's own product sections (Zid section ids), in this order. */
-    tabs: [
-      { section: "a5461952-4f19-4a03-858a-6270c84858f6", url: "/categories/1162806/عطور-خاصة" },
-      { section: "508d303b-2adf-42b0-aea6-3b3b71461f5b" },
-      { section: "8d250eae-5a8d-4c8a-befa-67f7ebea301a" },
-      { section: "22d7da3a-1c52-4096-b53d-2786a4077918", url: "/categories/218590/أجود-أنواع-البخور-والعود-20-70" },
-      { section: "5ad035fa-0854-410e-8f83-9cc9d86b68a2", url: "/categories/673261/توزيعات" }
-    ],
+    /* Shown only when the dashboard has no banner section. */
+    bannerFallback: "https://mohammedaboseedo.github.io/resas-store-design/storefront/assets/img/banner.webp",
+    about: { title: "ثمانية عشر عاماً في صناعة الرائحة", text: "نشأت رساس في المملكة العربية السعودية عام 2008، لتقدم عطوراً فرنسية وشرقية بأسلوب دافئ وأنيق، وبخوراً وعوداً من أجود الأنواع.", cta: "تسوّق عطور رساس" },
+    tileText: "اكتشف المجموعة",
     tabLimit: 10,
-    tiles: [
-      { kind: "photo a", title: "عطور رساس\nالخاصة", text: "تراكيب لا تجدها في مكان آخر.", image: M + "6ea3fd1d-aee6-44d5-a229-70ebd8e50d4c.jpg", url: "/categories/1162806/عطور-خاصة" },
-      { kind: "sand", title: "صُنعت\nبعناية", text: "خبرة رساس منذ 2008.", image: M + "3779b10e-8d49-4290-9825-106a2c8a019a.jpeg", url: "/categories/358519/عطور" },
-      { kind: "dark", title: "قسّمها على\n4 دفعات", text: "مع تمارا وتابي، بدون فوائد.", image: M + "a24d71a3-9fa6-43ff-ba9e-b712bc742342.jpeg", url: "/categories/673261/توزيعات" },
-      { kind: "photo d", title: "الهدايا\nالملكية", text: "مباخر وأطقم لمن تحب.", image: M + "d27754d3-1a8c-4b49-b5e8-b9d7d1723dc9.jpeg", url: "/categories/265764/الهدايا-الملكية" }
-    ],
-    /* Deals: these product pages are read; only those that really show an old price appear. The section hides itself when none do. */
-    deals: ["/products/رساس", "/products/مجموعة-سجى-saja-perfumes", "/products/ربع-تولة", "/products/5-كريمات-لليدين"],
-    /* Featured: six small cards. Prices are read live from each product page. */
-    featured: [
-      { name: "عود كمبودي", id: "d980e779-7321-4a39-97cb-c5461a3efc1c", rating: [5, 1], url: "/products/عود-كمبودي", image: M + "8ed99edd-2a52-4268-b0ac-ecaeb9145066.jpg" },
-      { name: "سوفاج 100 مل", id: "75c11848-018b-47fd-90a6-79766675ca2d", rating: [0, 0], url: "/products/سوفاج", image: M + "995e6258-0fb6-4bf5-9ad9-0b23287dd7b1.jpg" },
-      { name: "سوسبيرو 100 مل", id: "2b2a99aa-3130-4265-a629-2c6c329cc6a9", rating: [0, 0], url: "/products/dg-femme", image: M + "db679ab0-6a3b-4925-b53c-f129107f2cb4.jpg" },
-      { name: "ليدي عنبر", id: "40e0c2ee-cd22-49e8-83dc-a0dfb62aa212", rating: [5, 4], url: "/products/ليدي-عنبر", image: M + "ae0cd722-6462-47a3-96d0-ac22188a9f32.jpg" },
-      { name: "Hair Mist مسك", id: "2ec42122-dbb3-4afe-947f-c603c24524e2", rating: [5, 1], url: "/products/مسك", image: M + "ac695418-4e04-4005-818b-7c0e0e71d9c4.jpg" },
-      { name: "مبخرة اعواد العود", id: "608761f1-a369-41d6-b52b-e50fdaddf57c", rating: [0, 0], url: "/products/مبخرة-اعواد-العود", image: M + "46e78547-cc7f-458a-a11c-9cea3184105c.jpg" }
-    ],
-    duo: [
-      { kicker: "للمناسبات", title: "الهدايا\nالملكية", text: "مباخر وأطقم تليق بمن تحب.", cta: "تسوّق الهدايا", url: "/categories/265764/الهدايا-الملكية", image: M + "d27754d3-1a8c-4b49-b5e8-b9d7d1723dc9.jpeg" },
-      { kicker: "محتار في اختيار عطرك؟", title: "نساعدك تختار\nعطرك المناسب", text: "فريق رساس يرد عليك على واتساب، لك أو لهديتك.", cta: "تحدّث معنا على واتساب", url: "https://wa.me/966590000902", image: M + "94736846-a84f-4b46-b140-b0d4f21ed080.jpg" }
-    ],
-    /* Blog: the store's three posts, with product photos until they get covers. */
-    posts: [
-      { title: "كيف تختار العطر المناسب لك", text: "دليل يساعدك تختار عطراً يدوم ويعبّر عنك، حسب شخصيتك ونوع بشرتك والمناسبة.", url: "/blogs/كيفية-اختيار-العطر-المناسب-دليل-شامل-لاختيار-عطرك-المثالي", image: M + "dc857f06-41cd-4df4-940a-4938a84ae9d0.jpeg" },
-      { title: "أنواع العطور الرجالية", text: "الشرقية والخشبية والمنعشة: كيف تختار منها ما يناسب شخصيتك ومناسباتك.", url: "/blogs/أنواع-العطور-الرجالية-دليل-شامل-لاختيار-أفضل-عطر-يناسبك", image: M + "3779b10e-8d49-4290-9825-106a2c8a019a.jpeg" },
-      { title: "5 عطور نسائية من رساس", text: "عطور تجمع الأناقة والثبات العالي، تناسب كل الأذواق والمناسبات.", url: "/blogs/أفضل-عطور-نسائية-5-عطور-من-رساس-يجب-أن-تجربها", image: M + "d227b714-bf96-4d10-b8a0-519b70c57270.jpg" }
-    ],
-    instagram: { handle: "resas_perfume", images: [M + "8ed99edd-2a52-4268-b0ac-ecaeb9145066.jpg", M + "ae0cd722-6462-47a3-96d0-ac22188a9f32.jpg", M + "a24d71a3-9fa6-43ff-ba9e-b712bc742342.jpeg", M + "bdca83c2-3fcf-4ad2-a89a-879141c7e86d.jpg", M + "6ea3fd1d-aee6-44d5-a229-70ebd8e50d4c.jpg", M + "9f5f127f-2c9c-4e28-8ffb-5dd3240254b9.jpeg"] }
+    featuredCount: 6,
+    /* Product pages checked for an old price when no product on the home page is on sale. Optional. */
+    dealUrls: ["/products/رساس", "/products/مجموعة-سجى-saja-perfumes", "/products/ربع-تولة", "/products/5-كريمات-لليدين"],
+    instagram: "resas_perfume"
   };
 
   function $(sel, root) { return (root || document).querySelector(sel); }
@@ -123,136 +87,223 @@
     if (lang) lang.style.display = "none";
   }
 
+  /* ---------- reading the store's own sections ---------- */
+  function sized(src, w) { src = String(src || "").trim(); return /cdn-cgi\/image\//.test(src) ? src.replace(/w=\d+/, "w=" + w) : src; }
+  function txt(e) { return e ? e.textContent.replace(/\s+/g, " ").trim() : ""; }
+  function live(list) { return list.filter(function (e) { return !e.closest(".slick-cloned"); }); }
+  function cardInfo(c) {
+    var a = $('a[href*="/products/"]', c), im = $("img[id^='product-card-img']", c), pr = $(".product-price span", c);
+    var old = $(".product-price del, .product-price .old-price, .product-price [class*='old']", c);
+    var rt = $(".product-card-rating", c), rc = $(".product-card-rating-count", c), w = $("[data-wishlist-id]", c);
+    if (!a || !im) return null;
+    return {
+      url: a.getAttribute("href"), name: txt($(".product-title", c)), image: im.getAttribute("src"),
+      price: pr ? pr.innerHTML : "", priceNum: num(txt(pr)), oldHtml: old ? old.innerHTML : "", oldNum: old ? num(txt(old)) : 0,
+      rating: rt ? parseFloat(rt.getAttribute("data-rating")) || 0 : 0, count: rc ? num(txt(rc)) : 0,
+      id: w ? w.getAttribute("data-wishlist-id") : "", canAdd: !!$(".product-card-add-to-cart", c), inStock: !$(".btn-product-card-out-of-stock", c), node: c
+    };
+  }
+  function readStore(root) {
+    var S = { hero: null, cats: [], sections: [], cards: [], used: [] };
+    var ss = $$("section.ss", root);
+    if (ss[0]) {
+      var hi = live($$("img", ss[0]))[0], ha = hi && hi.closest("a");
+      if (hi) S.hero = { src: (hi.getAttribute("src") || "").trim() || (hi.currentSrc || ""), url: ha ? ha.getAttribute("href") : "", alt: hi.getAttribute("alt") || "" };
+    }
+    S.used = S.used.concat(ss, $$(".gallery-section", root));
+    $$(".home-categories-section", root).forEach(function (sec) {
+      S.used.push(sec);
+      live($$(".category-item a", sec)).forEach(function (a) {
+        var im = $("img", a), url = a.getAttribute("href");
+        if (!im || S.cats.some(function (c) { return c.url === url; })) return;
+        S.cats.push({ name: txt($("h3", a)) || im.getAttribute("alt") || "", url: url, image: im.getAttribute("src") });
+      });
+    });
+    var seen = {};
+    $$(".home-products-section", root).forEach(function (sec) {
+      S.used.push(sec);
+      var cards = live($$(".product-item", sec)).map(cardInfo).filter(Boolean);
+      if (!cards.length) return;
+      S.sections.push({ title: txt($(".section-title", sec)), cards: cards });
+      cards.forEach(function (c) { if (!seen[c.url]) { seen[c.url] = 1; S.cards.push(c); } });
+    });
+    return S;
+  }
+  function catFor(S, title) { return S.cats.filter(function (c) { return c.name && c.name === title; })[0]; }
+
   /* ---------- homepage ---------- */
   function home() {
     var root = $(".home");
     if (!root || root.classList.contains("rs-ready")) return;
-    var soft = $('[section-id="df0d438a-b345-41db-a20e-65838c8b4a43"]', root);
-    var anchor = soft || root.firstElementChild;
+    var S = readStore(root);
+    if (!S.sections.length) return;
+    var anchor = root.firstElementChild;
+    var fav = S.cards.filter(function (c) { return c.inStock; });
+    var top = fav.slice().sort(function (a, b) { return (b.rating * 10 + b.count) - (a.rating * 10 + a.count); });
 
-    var hero = el('<section class="rs-hero" aria-label="العرض الرئيسي"><img class="rs-hero__img" src="' + esc(RESAS.banner.image) + '" width="1280" height="494" alt="' + esc(RESAS.banner.alt) + '" fetchpriority="high"></section>');
+    var hero;
+    if (S.hero) {
+      var himg = '<img class="rs-hero__img" src="' + esc(S.hero.src) + '" alt="' + esc(S.hero.alt || "العرض الرئيسي") + '" fetchpriority="high">';
+      hero = el('<section class="rs-hero" aria-label="العرض الرئيسي">' + (S.hero.url ? '<a href="' + esc(S.hero.url) + '">' + himg + "</a>" : himg) + "</section>");
+    } else {
+      hero = el('<section class="rs-hero" aria-label="العرض الرئيسي"><img class="rs-hero__img" src="' + esc(RESAS.bannerFallback) + '" width="1280" height="494" alt="" fetchpriority="high"></section>');
+    }
+    (function (im) { var f = function () { if (im.naturalWidth && Math.abs(im.naturalWidth / im.naturalHeight - 2.59) < 0.12) im.setAttribute("data-crop", ""); }; if (im.complete) f(); else im.addEventListener("load", f); })($("img", hero));
 
-    var arches = el('<section class="rs-sec" aria-labelledby="rs-cat-title"><div class="rs-wrap"><div class="rs-sec__head"><h2 class="rs-title rs-sec__title" id="rs-cat-title"' + rise(0) + '>تسوّق حسب القسم</h2>' +
+    var arches = S.cats.length ? el('<section class="rs-sec" aria-labelledby="rs-cat-title"><div class="rs-wrap"><div class="rs-sec__head"><h2 class="rs-title rs-sec__title" id="rs-cat-title"' + rise(0) + '>تسوّق حسب القسم</h2>' +
       '<a class="rs-link" href="/categories"' + rise(80) + '>عرض كل الأقسام</a></div><ul class="rs-arches">' +
-      RESAS.arches.map(function (a, i) {
-        return '<li' + rise(i * 55) + '><a class="rs-arch-link" href="' + esc(a.url) + '"><span class="rs-arch-link__frame"><img src="' + esc(img(a.image, 420)) + '" alt="" loading="lazy"></span><span class="rs-arch-link__name">' + esc(a.title) + "</span></a></li>";
-      }).join("") + "</ul></div></section>");
+      S.cats.slice(0, 12).map(function (a, i) {
+        return '<li' + rise(i * 55) + '><a class="rs-arch-link" href="' + esc(a.url) + '"><span class="rs-arch-link__frame"><img src="' + esc(sized(a.image, 420)) + '" alt="" loading="lazy"></span><span class="rs-arch-link__name">' + esc(a.name) + "</span></a></li>";
+      }).join("") + "</ul></div></section>") : null;
 
-    var A = RESAS.about;
+    var A = RESAS.about, aimg = (top[0] || S.cards[0]).image;
     var about = el('<section class="rs-sec" aria-labelledby="rs-about-title"><div class="rs-wrap"><div class="rs-about__panel"><div class="rs-about__body"><span class="rs-about__kicker"' + rise(0) + '>عن رساس</span>' +
       '<h2 class="rs-title rs-about__title" id="rs-about-title"' + rise(60) + ">" + esc(A.title) + "</h2><p class=\"rs-about__text\"" + rise(120) + ">" + esc(A.text) + "</p>" +
-      '<div class="rs-about__cta"' + rise(180) + '><a class="rs-btn" href="' + esc(A.cta.url) + '">' + esc(A.cta.label) + "</a></div></div>" +
-      '<div class="rs-about__media"' + rise(120) + '><img src="' + esc(img(A.image, 900)) + '" alt=""></div></div></div></section>');
+      '<div class="rs-about__cta"' + rise(180) + '><a class="rs-btn" href="' + esc((S.cats[1] || S.cats[0] || { url: "/categories" }).url) + '">' + esc(A.cta) + "</a></div></div>" +
+      '<div class="rs-about__media"' + rise(120) + '><img src="' + esc(sized(aimg, 900)) + '" alt=""></div></div></div></section>');
 
-    /* Tabs: each tab is one of the store's product sections, shown as a grid of its first cards. */
-    var tabs = RESAS.tabs.map(function (t) {
-      var sec = $('[section-id="' + t.section + '"]', root);
-      if (!sec) return null;
-      var title = $(".section-title", sec);
-      var cards = $$(".product-item", sec).filter(function (c) { return !c.closest(".slick-cloned"); }).slice(0, RESAS.tabLimit);
-      if (!cards.length) return null;
-      return { label: title ? title.textContent.trim() : "", url: t.url, cards: cards };
-    }).filter(Boolean);
-    var picks = null;
-    if (tabs.length) {
-      picks = el('<section class="rs-sec" aria-labelledby="rs-pop-title"><div class="rs-wrap"><div class="rs-sec__head"><h2 class="rs-title rs-sec__title" id="rs-pop-title"' + rise(0) + '>اختيارات رساس</h2>' +
-        '<div class="rs-tabs" role="tablist" aria-label="منتجات رساس"' + rise(80) + '></div></div><div class="rs-panels"></div></div></section>');
-      var bar = $(".rs-tabs", picks), panels = $(".rs-panels", picks);
-      tabs.forEach(function (t, i) {
-        bar.appendChild(el('<button type="button" role="tab" id="rs-tab-' + i + '" aria-controls="rs-panel-' + i + '" aria-selected="' + (i ? "false" : "true") + '"' + (i ? ' tabindex="-1"' : "") + ">" + esc(t.label) + "</button>"));
-        var panel = el('<div role="tabpanel" id="rs-panel-' + i + '" aria-labelledby="rs-tab-' + i + '"' + (i ? " hidden" : "") + '><div class="rs-grid rs-grid--five"></div></div>');
-        var grid = $(".rs-grid", panel);
-        t.cards.forEach(function (c, k) {
-          var li = document.createElement("div");
-          li.setAttribute("data-rise", ""); li.style.setProperty("--d", (k % 5) * 70 + "ms");
-          var card = c.cloneNode(true);
-          /* Zid sends 235px thumbnails for sliders; the grid needs larger photos. */
-          $$("img[id^='product-card-img']", card).forEach(function (im) { im.src = im.getAttribute("src").trim().replace(/w=\d+/, "w=600"); });
-          li.appendChild(card); grid.appendChild(li);
-        });
-        if (t.url) panel.appendChild(el('<p class="rs-more"><a class="rs-btn rs-btn--tone" href="' + esc(t.url) + '">عرض الكل</a></p>'));
-        panels.appendChild(panel);
+    /* Tabs: one per product section of the home page, in the dashboard order. */
+    var tabs = S.sections.map(function (sec) {
+      var cat = catFor(S, sec.title);
+      return { label: sec.title, url: cat ? cat.url : "", cards: sec.cards.slice(0, RESAS.tabLimit).map(function (c) { return c.node; }) };
+    });
+    var picks = el('<section class="rs-sec" aria-labelledby="rs-pop-title"><div class="rs-wrap"><div class="rs-sec__head"><h2 class="rs-title rs-sec__title" id="rs-pop-title"' + rise(0) + '>اختيارات رساس</h2>' +
+      '<div class="rs-tabs" role="tablist" aria-label="منتجات رساس"' + rise(80) + '></div></div><div class="rs-panels"></div></div></section>');
+    var bar = $(".rs-tabs", picks), panels = $(".rs-panels", picks);
+    tabs.forEach(function (t, i) {
+      bar.appendChild(el('<button type="button" role="tab" id="rs-tab-' + i + '" aria-controls="rs-panel-' + i + '" aria-selected="' + (i ? "false" : "true") + '"' + (i ? ' tabindex="-1"' : "") + ">" + esc(t.label) + "</button>"));
+      var panel = el('<div role="tabpanel" id="rs-panel-' + i + '" aria-labelledby="rs-tab-' + i + '"' + (i ? " hidden" : "") + '><div class="rs-grid rs-grid--five"></div></div>');
+      var grid = $(".rs-grid", panel);
+      t.cards.forEach(function (c, k) {
+        var li = document.createElement("div");
+        li.setAttribute("data-rise", ""); li.style.setProperty("--d", (k % 5) * 70 + "ms");
+        var card = c.cloneNode(true);
+        /* Zid sends 235px thumbnails for sliders; the grid needs larger photos. */
+        $$("img[id^='product-card-img']", card).forEach(function (im) { im.src = sized(im.getAttribute("src"), 600); });
+        li.appendChild(card); grid.appendChild(li);
       });
-      var btns = $$("[role=tab]", bar);
-      var select = function (i, focus) {
-        btns.forEach(function (b, j) { b.setAttribute("aria-selected", j === i ? "true" : "false"); b.tabIndex = j === i ? 0 : -1; $("#rs-panel-" + j).hidden = j !== i; });
-        if (focus) btns[i].focus();
-        observe(picks);
-      };
-      btns.forEach(function (b, i) {
-        b.addEventListener("click", function () { select(i); });
-        /* RTL: the next tab is to the left. */
-        b.addEventListener("keydown", function (e) {
-          var n = { ArrowLeft: i + 1, ArrowRight: i - 1, Home: 0, End: btns.length - 1 }[e.key];
-          if (n === undefined) return;
-          e.preventDefault();
-          select((n + btns.length) % btns.length, true);
-        });
+      if (t.url) panel.appendChild(el('<p class="rs-more"><a class="rs-btn rs-btn--tone" href="' + esc(t.url) + '">عرض الكل</a></p>'));
+      panels.appendChild(panel);
+    });
+    var btns = $$("[role=tab]", bar);
+    var select = function (i, focus) {
+      btns.forEach(function (b, j) { b.setAttribute("aria-selected", j === i ? "true" : "false"); b.tabIndex = j === i ? 0 : -1; $("#rs-panel-" + j).hidden = j !== i; });
+      if (focus) btns[i].focus();
+      observe(picks);
+    };
+    btns.forEach(function (b, i) {
+      b.addEventListener("click", function () { select(i); });
+      /* RTL: the next tab is to the left. */
+      b.addEventListener("keydown", function (e) {
+        var n = { ArrowLeft: i + 1, ArrowRight: i - 1, Home: 0, End: btns.length - 1 }[e.key];
+        if (n === undefined) return;
+        e.preventDefault();
+        select((n + btns.length) % btns.length, true);
       });
-    }
+    });
 
-    var tiles = el('<section class="rs-sec" aria-label="أقسام مختارة"><div class="rs-wrap"><ul class="rs-tiles">' + RESAS.tiles.map(function (t, i) {
-      var k = t.kind.split(" ");
+    /* Tiles: the first four product sections, each with its first product photo. */
+    var KINDS = ["photo a", "sand", "dark", "photo d"];
+    var tiles = el('<section class="rs-sec" aria-label="أقسام مختارة"><div class="rs-wrap"><ul class="rs-tiles">' + S.sections.slice(0, 4).map(function (sec, i) {
+      var k = KINDS[i].split(" "), first = sec.cards.filter(function (c) { return c.inStock; })[0] || sec.cards[0], cat = catFor(S, sec.title);
       var cls = "rs-tile rs-tile--" + k[0] + (k[1] ? " rs-tile--" + k[1] : "");
-      var text = '<span class="rs-tile__title">' + esc(t.title) + '</span><span class="rs-tile__text">' + esc(t.text) + "</span>";
-      var pic = '<img src="' + esc(img(t.image, 700)) + '" alt="" loading="lazy">';
-      return '<li' + rise(i * 90) + '><a class="' + cls + '" href="' + esc(t.url) + '">' + (k[0] === "photo" ? pic + text : text + pic) + "</a></li>";
+      var text = '<span class="rs-tile__title">' + esc(sec.title) + '</span><span class="rs-tile__text">' + esc(RESAS.tileText) + "</span>";
+      var pic = '<img src="' + esc(sized(first.image, 700)) + '" alt="" loading="lazy">';
+      return '<li' + rise(i * 90) + '><a class="' + cls + '" href="' + esc(cat ? cat.url : first.url) + '">' + (k[0] === "photo" ? pic + text : text + pic) + "</a></li>";
     }).join("") + "</ul></div></section>");
 
-    /* Sale band: read from the product pages; it appears only when a product really shows an old price. */
+    /* Sale band: products on the home page that show an old price; if none do, the optional pages in RESAS.dealUrls are checked. */
     var deals = el('<section class="rs-sec" aria-labelledby="rs-deals-title" hidden><div class="rs-wrap"><div class="rs-dband"></div></div></section>');
-    Promise.all(RESAS.deals.map(loadProduct)).then(function (list) {
-      var on = list.filter(function (p) { return p && p.old && num(p.old) > num(p.price) && p.image; });
+    var onSale = S.cards.filter(function (c) { return c.oldNum > c.priceNum && c.priceNum > 0; }).map(function (c) {
+      return { url: c.url, title: c.name, price: c.price, old: c.oldHtml, pct: Math.round((1 - c.priceNum / c.oldNum) * 100), image: c.image };
+    });
+    var dealsReady = onSale.length ? Promise.resolve(onSale) : Promise.all((RESAS.dealUrls || []).map(loadProduct)).then(function (list) {
+      return list.filter(function (p) { return p && p.old && num(p.old) > num(p.price) && p.image; }).map(function (p) {
+        return { url: p.url, title: p.title, price: esc(p.price), old: esc(p.old), pct: Math.round((1 - num(p.price) / num(p.old)) * 100), image: "https://media.zid.store/" + p.image };
+      });
+    });
+    dealsReady.then(function (on) {
+      on = on.sort(function (a, b) { return b.pct - a.pct; }).slice(0, 4);
       if (!on.length) return;
-      var pct = function (p) { return Math.round((1 - num(p.price) / num(p.old)) * 100); };
-      var max = on.reduce(function (m, p) { return Math.max(m, pct(p)); }, 0);
-      var lead = on.filter(function (p) { return /saja/i.test(p.url); })[0] || on[0];
+      var max = on[0].pct, lead = on[0];
       $(".rs-dband", deals).innerHTML = '<div class="rs-dband__text"><span class="rs-dband__kicker"' + rise(0) + '>عروض رساس</span><h2 class="rs-title rs-dband__title" id="rs-deals-title"' + rise(60) + ">وفّر حتى " + max + "%</h2>" +
         '<p class="rs-dband__lede"' + rise(120) + ">تخفيضات على " + on.length + " منتجات مختارة من رساس، والأسعار شاملة الضريبة.</p>" +
         '<div class="rs-dband__list">' + on.map(function (p, i) {
-          return '<a class="rs-drow"' + rise(180 + i * 70) + ' href="' + esc(p.url) + '"><img src="' + esc(img(p.image, 200)) + '" alt="" loading="lazy"><span><span class="rs-drow__name">' + esc(p.title) + '</span><span class="rs-drow__price"><strong>' + esc(p.price) + "</strong><del>" + esc(p.old) + '</del></span></span><span class="rs-drow__off">' + pct(p) + "%</span></a>";
+          return '<a class="rs-drow"' + rise(180 + i * 70) + ' href="' + esc(p.url) + '"><img src="' + esc(sized(p.image, 200)) + '" alt="" loading="lazy"><span><span class="rs-drow__name">' + esc(p.title) + '</span><span class="rs-drow__price"><strong>' + p.price + "</strong><del>" + p.old + '</del></span></span><span class="rs-drow__off">' + p.pct + "%</span></a>";
         }).join("") + "</div></div>" +
-        '<div class="rs-dband__media"><img src="' + esc(img(lead.image, 1000)) + '" alt="' + esc(lead.title) + '" loading="lazy"></div>';
+        '<div class="rs-dband__media"><img src="' + esc(sized(lead.image, 1000)) + '" alt="' + esc(lead.title) + '" loading="lazy"></div>';
       deals.hidden = false;
       observe(deals);
     });
 
+    /* Featured: the best rated in-stock products of the home page, with the real add-to-cart. */
     var STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg>';
     function stars(avg) { var o = ""; for (var k = 1; k <= 5; k++) o += STAR.replace("<svg", '<svg class="' + (k <= Math.round(avg) ? "on" : "") + '"'); return o; }
+    var picked = top.slice(0, RESAS.featuredCount);
     var featured = el('<section class="rs-sec" aria-labelledby="rs-mini-title"><div class="rs-wrap"><div class="rs-sec__head"><h2 class="rs-title rs-sec__title" id="rs-mini-title"' + rise(0) + '>منتجات مختارة</h2></div><div class="rs-mini">' +
-      RESAS.featured.map(function (f, i) {
-        var r = f.rating || [0, 0];
-        return '<article class="rs-mini__item"' + rise((i % 3) * 70) + '><a class="rs-mini__img" href="' + esc(f.url) + '" tabindex="-1" aria-hidden="true"><img src="' + esc(img(f.image, 240)) + '" alt="" loading="lazy"></a>' +
+      picked.map(function (f, i) {
+        var add = f.canAdd && f.id
+          ? '<a class="btn btn-primary product-card-add-to-cart rs-mini__add" href="' + esc(f.url) + '" onclick="event.preventDefault(); event.stopPropagation(); productCartAddToCart(this,\'' + esc(f.id) + '\')"><img class="add-to-cart-progress d-none" src="https://static.zid.store/00e1f94e/spinner.gif?v=v2.55.0" width="20" height="20" alt="">أضف إلى السلة</a>'
+          : '<a class="btn btn-primary rs-mini__add" href="' + esc(f.url) + '">عرض المنتج</a>';
+        return '<article class="rs-mini__item"' + rise((i % 3) * 70) + '><a class="rs-mini__img" href="' + esc(f.url) + '" tabindex="-1" aria-hidden="true"><img src="' + esc(sized(f.image, 240)) + '" alt="" loading="lazy"></a>' +
           '<div class="rs-mini__body"><h3 class="rs-mini__name"><a href="' + esc(f.url) + '">' + esc(f.name) + '</a></h3>' +
-          '<div class="rs-mini__rate"><span class="rs-mini__stars" role="img" aria-label="' + (r[1] ? "التقييم " + r[0] + " من 5" : "لا تقييمات بعد") + '">' + stars(r[0]) + "</span>" + (r[1] ? "<span>(" + r[1] + ")</span>" : "") + "</div>" +
-          '<p class="rs-mini__price" data-mini-price="' + i + '"></p></div>' +
-          '<a class="btn btn-primary product-card-add-to-cart rs-mini__add" href="' + esc(f.url) + '" onclick="event.preventDefault(); event.stopPropagation(); productCartAddToCart(this,\'' + esc(f.id) + '\')"><img class="add-to-cart-progress d-none" src="https://static.zid.store/00e1f94e/spinner.gif?v=v2.55.0" width="20" height="20" alt="">أضف إلى السلة</a></article>';
+          '<div class="rs-mini__rate"><span class="rs-mini__stars" role="img" aria-label="' + (f.count ? "التقييم " + f.rating + " من 5" : "لا تقييمات بعد") + '">' + stars(f.rating) + "</span>" + (f.count ? "<span>(" + f.count + ")</span>" : "") + "</div>" +
+          '<p class="rs-mini__price">' + f.price + "</p></div>" + add + "</article>";
       }).join("") + "</div></div></section>");
-    RESAS.featured.forEach(function (f, i) {
-      loadProduct(f.url).then(function (p) { var e = $('[data-mini-price="' + i + '"]', featured); if (e && p && p.price) e.textContent = p.price; });
-    });
 
-    var duo = el('<section class="rs-sec" aria-label="هدايا ومساعدة"><div class="rs-wrap"><div class="rs-duo">' + RESAS.duo.map(function (d, i) {
+    /* Two banners: the gifts category (found by name in the store's categories) and WhatsApp help. */
+    var gifts = S.cats.filter(function (c) { return /هدايا|هدية/.test(c.name); })[0];
+    if (!gifts) {
+      var gl = $$('a[href*="/categories/"]').filter(function (a) { return /هدايا|هدية/.test(txt(a)); })[0];
+      if (gl) gifts = { name: txt(gl), url: gl.getAttribute("href") };
+    }
+    var brazier = S.cards.filter(function (c) { return /مبخر/.test(c.name); })[0] || top[0];
+    var duoItems = [];
+    if (gifts) duoItems.push({ kicker: "للمناسبات", title: gifts.name, text: "اختر الأنسب لمن تحب.", cta: "تسوّق " + gifts.name, url: gifts.url, image: brazier.image });
+    duoItems.push({ kicker: "محتار في اختيار عطرك؟", title: "نساعدك تختار عطرك المناسب", text: "فريق رساس يرد عليك على واتساب، لك أو لهديتك.", cta: "تحدّث معنا على واتساب", url: "https://wa.me/" + RESAS.whatsapp, image: (top[1] || top[0]).image });
+    var duo = el('<section class="rs-sec" aria-label="هدايا ومساعدة"><div class="rs-wrap"><div class="rs-duo">' + duoItems.map(function (d, i) {
       var ext = /^https?:/.test(d.url);
-      return '<a class="rs-duo__item"' + rise(i * 90) + ' href="' + esc(d.url) + '"' + (ext ? ' target="_blank" rel="noopener"' : "") + '><span class="rs-duo__body"><span class="rs-duo__kicker">' + esc(d.kicker) + '</span><span class="rs-title rs-duo__title">' + esc(d.title) + '</span><span class="rs-duo__text">' + esc(d.text) + '</span><span class="rs-link">' + esc(d.cta) + '</span></span><span class="rs-duo__img"><img src="' + esc(img(d.image, 720)) + '" alt="" loading="lazy"></span></a>';
+      return '<a class="rs-duo__item"' + rise(i * 90) + ' href="' + esc(d.url) + '"' + (ext ? ' target="_blank" rel="noopener"' : "") + '><span class="rs-duo__body"><span class="rs-duo__kicker">' + esc(d.kicker) + '</span><span class="rs-title rs-duo__title">' + esc(d.title) + '</span><span class="rs-duo__text">' + esc(d.text) + '</span><span class="rs-link">' + esc(d.cta) + '</span></span><span class="rs-duo__img"><img src="' + esc(sized(d.image, 720)) + '" alt="" loading="lazy"></span></a>';
     }).join("") + "</div></div></section>");
 
-    var blog = el('<section class="rs-sec" aria-labelledby="rs-blog-title"><div class="rs-wrap"><div class="rs-sec__head"><h2 class="rs-title rs-sec__title" id="rs-blog-title"' + rise(0) + '>من مدونة رساس</h2></div><div class="rs-posts">' +
-      RESAS.posts.map(function (b, i) {
-        return '<a class="rs-post"' + rise(i * 90) + ' href="' + esc(b.url) + '"><span class="rs-post__img"><img src="' + esc(img(b.image, 800)) + '" alt="" loading="lazy"></span><h3 class="rs-post__title">' + esc(b.title) + '</h3><p class="rs-post__text">' + esc(b.text) + '</p><span class="rs-link">اقرأ المزيد</span></a>';
-      }).join("") + '</div><div class="rs-posts__more"><a class="rs-link" href="/blogs/المدونة">كل المقالات</a></div></div></section>');
+    /* Blog: the newest posts of the store blog, read from the blog itself. */
+    var blog = el('<section class="rs-sec" aria-labelledby="rs-blog-title" hidden><div class="rs-wrap"><div class="rs-sec__head"><h2 class="rs-title rs-sec__title" id="rs-blog-title">من مدونة رساس</h2></div><div class="rs-posts"></div><div class="rs-posts__more"><a class="rs-link" href="/blogs/المدونة">كل المقالات</a></div></div></section>');
+    fetch("/blogs/المدونة", { credentials: "same-origin" }).then(function (r) { return r.ok ? r.text() : Promise.reject(); }).then(function (html) {
+      var d = new DOMParser().parseFromString(html, "text/html"), links = [];
+      $$("a[href]", d).forEach(function (a) {
+        var u; try { u = new URL(a.getAttribute("href"), location.origin); } catch (e) { return; }
+        if (u.origin !== location.origin || u.pathname.indexOf("/blogs/") !== 0 || decodeURIComponent(u.pathname) === "/blogs/المدونة" || links.indexOf(u.pathname) > -1) return;
+        links.push(u.pathname);
+      });
+      return Promise.all(links.slice(0, 3).map(function (p) {
+        return fetch(p, { credentials: "same-origin" }).then(function (r) { return r.text(); }).then(function (h) {
+          var pd = new DOMParser().parseFromString(h, "text/html"), m = function (n) { return (pd.querySelector('meta[property="' + n + '"]') || {}).content || ""; };
+          return { url: p, title: m("og:title") || txt($("h1", pd)), text: m("og:description"), image: m("og:image") };
+        }).catch(function () { return null; });
+      }));
+    }).then(function (posts) {
+      posts = (posts || []).filter(function (p) { return p && p.title && p.image; });
+      if (!posts.length) return;
+      $(".rs-posts", blog).innerHTML = posts.map(function (b, i) {
+        return '<a class="rs-post"' + rise(i * 90) + ' href="' + esc(b.url) + '"><span class="rs-post__img"><img src="' + esc(b.image) + '" alt="" loading="lazy"></span><h3 class="rs-post__title">' + esc(b.title) + '</h3><p class="rs-post__text">' + esc(b.text) + '</p><span class="rs-link">اقرأ المزيد</span></a>';
+      }).join("");
+      blog.hidden = false;
+      observe(blog);
+    }).catch(function () {});
 
-    var I = RESAS.instagram;
+    /* Instagram: product photos spread across the store until real posts are linked. */
+    var step = Math.max(1, Math.floor(fav.length / 6)), igPics = [];
+    for (var q = 0; q < fav.length && igPics.length < 6; q += step) igPics.push(fav[q].image);
     var insta = el('<section class="rs-insta" aria-labelledby="rs-insta-title"><div class="rs-wrap rs-insta__head"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r=".6"/></svg>' +
-      '<h2 class="rs-title rs-sec__title" id="rs-insta-title"' + rise(0) + '>تابعنا على إنستغرام</h2><a class="rs-insta__handle" href="https://www.instagram.com/' + I.handle + '" target="_blank" rel="noopener">@' + I.handle + '</a></div><ul class="rs-insta__grid">' +
-      I.images.map(function (m) { return '<li><a href="https://www.instagram.com/' + I.handle + '" target="_blank" rel="noopener" aria-label="رساس على إنستغرام"><img src="' + esc(img(m, 480)) + '" alt="" loading="lazy"></a></li>'; }).join("") + "</ul></section>");
+      '<h2 class="rs-title rs-sec__title" id="rs-insta-title"' + rise(0) + '>تابعنا على إنستغرام</h2><a class="rs-insta__handle" href="https://www.instagram.com/' + RESAS.instagram + '" target="_blank" rel="noopener">@' + RESAS.instagram + '</a></div><ul class="rs-insta__grid">' +
+      igPics.map(function (m) { return '<li><a href="https://www.instagram.com/' + RESAS.instagram + '" target="_blank" rel="noopener" aria-label="رساس على إنستغرام"><img src="' + esc(sized(m, 480)) + '" alt="" loading="lazy"></a></li>'; }).join("") + "</ul></section>");
 
-    /* Order after the banner: categories, about, product tabs, tiles, sale band, the store's reviews, featured, two banners, blog, Instagram. */
+    /* Order: banner, categories, about, product tabs, tiles, sale band, the store's reviews, featured, two banners, blog, Instagram. */
     var after = anchor;
     function put(node) { if (!node) return; after.parentNode.insertBefore(node, after.nextSibling); after = node; }
     anchor.parentNode.insertBefore(hero, anchor);
     put(arches); put(about); put(picks); put(tiles); put(deals);
-    var reviews = $('[section-id="bab059dc-abb8-477a-b2ed-2ec96d0fa81a"]', root);
+    var rv = $(".testimonials-slider", root), reviews = rv && rv.closest("[section-id]");
     if (reviews) {
       /* The store left this section's title empty in the dashboard. */
       var rt = $(".section-title", reviews);
@@ -261,15 +312,16 @@
       after = reviews;
     }
     put(featured); put(duo); put(blog); put(insta);
-    /* Only now hide Soft's original sections, so a failure above never leaves the page empty. */
-    if (picks) root.classList.add("rs-ready");
+    /* Only now hide the sections that were used, so a failure above never leaves the page empty. */
+    S.used.forEach(function (n) { n.classList.add("rs-used"); });
+    root.classList.add("rs-ready");
     observe(root);
   }
 
   /* Soft starts the reviews slider only on some loads (a known timing bug); start it here when it did not run. Phones keep Soft's stacked cards. */
   function reviewsSlider() {
     var jq = window.jQuery;
-    var slider = $('[section-id="bab059dc-abb8-477a-b2ed-2ec96d0fa81a"] .testimonials-slider');
+    var slider = $(".home .testimonials-slider");
     if (!jq || !jq.fn || !jq.fn.slick || !slider || slider.classList.contains("slick-initialized") || (window.innerWidth || 0) < 768) return;
     var rtl = window.appDirection !== "ltr";
     var nextCls = rtl ? "icon-keyboard_arrow_left" : "icon-keyboard_arrow_right", prevCls = rtl ? "icon-keyboard_arrow_right" : "icon-keyboard_arrow_left";
