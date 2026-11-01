@@ -105,7 +105,7 @@ main, footer { position: relative; z-index: 1; }
 .search input::placeholder { color: var(--muted); }
 .search input:focus-visible { outline: 0; }
 .search:focus-within { outline: 2px solid var(--cognac); outline-offset: 2px; }
-.logo img { height: 76px; width: auto; mix-blend-mode: multiply; }
+.logo img { display: block; height: 64px; width: auto; max-width: 100%; }
 .tools { display: flex; justify-content: flex-end; gap: 4px; }
 .icon-btn { position: relative; display: inline-grid; place-items: center; width: var(--h-s); height: var(--h-s); border: 0; border-radius: 50%; background: none; cursor: pointer; text-decoration: none; transition: background-color .2s ease; }
 .icon-btn:hover { background: var(--bone); }
@@ -124,7 +124,7 @@ main, footer { position: relative; z-index: 1; }
   .nav a { margin-block: 0; padding: 16px 0; border-bottom: 0; font-size: var(--fs-l); }
   .header.menu-open .nav-row { display: block; }
   .menu-btn { display: inline-grid; }
-  .logo img { height: 56px; }
+  .logo img { height: 40px; }
   .tools .acct { display: none; }
 }
 
@@ -346,6 +346,7 @@ main, footer { position: relative; z-index: 1; }
   .foot__bottom { flex-direction: column; align-items: center; justify-content: center; margin-top: 48px; text-align: center; }
 }
 @media (max-width: 599px) {
+  .logo img { height: 32px; }
   .hero__img { height: 280px; aspect-ratio: auto; object-fit: cover; object-position: left center; }
   .arches { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); scrollbar-width: none; }
   .arches::-webkit-scrollbar { display: none; }
@@ -370,7 +371,7 @@ main, footer { position: relative; z-index: 1; }
       <button class="icon-btn menu-btn" type="button" aria-label="القائمة" aria-expanded="false" aria-controls="nav-row" id="menu-btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16M4 16h10"/></svg></button>
       <form class="search" role="search" id="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg><label class="visually-hidden" for="q">بحث</label><input id="q" type="search" name="q" placeholder="ابحث عن عطر، عود، أو هدية" autocomplete="off"></form>
     </div>
-    <a class="logo" href="#top" aria-label="رساس، الصفحة الرئيسية"><img id="logo" alt="رساس" width="112" height="56"></a>
+    <a class="logo" href="#top" aria-label="رساس، الصفحة الرئيسية"><img id="logo" src="../assets/img/logo.svg" alt="رساس" width="340" height="64"></a>
     <div class="tools">
       <a class="icon-btn acct" href="https://resas.sa.com/auth/login" aria-label="حسابي"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="3.5"/><path d="M5 20c1.5-3.5 4-5 7-5s5.5 1.5 7 5"/></svg></a>
       <a class="icon-btn" href="https://resas.sa.com/account/favorites" aria-label="المفضلة"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.6-7 10-7 10z"/></svg></a>
@@ -568,7 +569,6 @@ main, footer { position: relative; z-index: 1; }
   function topUp(list, n) { var ids = list.map(function (p) { return p.id; }); return list.concat(rated.filter(function (p) { return ids.indexOf(p.id) === -1; })).slice(0, n); }
 
   /* static bindings */
-  $("#logo").src = cdn(S.logo, 240);
   $("#year").textContent = new Date().getFullYear();
   function bind(scope) {
     $$("[data-cat]", scope).forEach(function (a) { a.href = catHref(a.getAttribute("data-cat")); });

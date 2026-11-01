@@ -9,6 +9,8 @@
   var RESAS = {
     announcement: "قسّم مشترياتك على 4 دفعات مع تمارا وتابي، بدون فوائد",
     whatsapp: "966590000902",
+    /* Header logo. Better: upload the same file under Zid's store logo, then clear this line. */
+    logo: "https://mohammedaboseedo.github.io/resas-store-design/storefront/assets/img/logo.svg",
     /* Banner: one image across the page. Upload it to Zid (Files) and paste its address here to host it on the store. */
     banner: { image: "https://mohammedaboseedo.github.io/resas-store-design/storefront/assets/img/banner.webp", alt: "رساس: كل زجاجة تحمل قصة وكل رائحة توقيع" },
     arches: [
@@ -115,6 +117,8 @@
     if (cart && mobileSearch) cart.insertBefore(mobileSearch, cart.firstChild);
     if (cart && region) cart.insertBefore(region, cart.firstChild);
     if (cart && cartLink && cartLink.parentNode !== cart) cart.appendChild(cartLink.parentNode);
+    var logoImg = $(".header-logo .image-logo");
+    if (RESAS.logo && logoImg) { logoImg.removeAttribute("srcset"); logoImg.src = RESAS.logo; }
     var lang = $(".account-lang-currency");
     if (lang) lang.style.display = "none";
   }
