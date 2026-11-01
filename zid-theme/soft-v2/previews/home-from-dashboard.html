@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="no-js" lang="ar" dir="rtl" style="--vh: 7.86px; scroll-behavior: auto;"><head><base href="https://resas.sa.com/">
+<html class="no-js" lang="ar" dir="rtl" style="--vh: 8.44px;"><head><base href="https://resas.sa.com/">
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
 
@@ -403,9 +403,19 @@ body.rtl .slick-next { left: 0 !important; right: auto !important; z-index: 2; }
 .rs-hero a { display: block; }
 
 /* ---------- Categories: arched frames in a grid ---------- */
-.rs-arches { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px 12px; justify-content: center; list-style: none; margin: 0; padding: 0; }
-@media (min-width: 768px) { .rs-arches { gap: 36px 20px; } }
-@media (min-width: 1024px) { .rs-arches { grid-template-columns: repeat(auto-fit, minmax(112px, 148px)); gap: 24px; } }
+.rs-rail { position: relative; }
+.rs-arches { --n: 8; --g: 24px; display: flex; gap: var(--g); justify-content: safe center; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; list-style: none; margin: 0; padding: 0; }
+.rs-arches::-webkit-scrollbar { display: none; }
+.rs-arches > li { flex: 0 0 calc((100% - (var(--n) - 1) * var(--g)) / var(--n)); min-width: 0; scroll-snap-align: start; }
+@media (max-width: 1023px) { .rs-arches { --n: 5; --g: 20px; } }
+@media (max-width: 767px) { .rs-arches { --n: 4; --g: 12px; } }
+.rs-rail__btn { position: absolute; top: calc((100% - 56px) / 2 - 28px); z-index: 2; display: inline-grid; place-items: center; width: var(--rs-h-m); height: var(--rs-h-m); padding: 0; border: 0; border-radius: 50%; background: #fff; color: var(--rs-ink); cursor: pointer; transition: background-color .2s ease, color .2s ease, opacity .2s ease; }
+.rs-rail__btn:hover { background: var(--rs-cognac); color: var(--rs-ink); }
+.rs-rail__btn:disabled { opacity: 0; pointer-events: none; }
+.rs-rail__btn svg { width: var(--rs-icon-m); height: var(--rs-icon-m); fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.rs-rail__btn--prev { inset-inline-start: -16px; }
+.rs-rail__btn--next { inset-inline-end: -16px; }
+@media (max-width: 599px) { .rs-rail__btn { display: none !important; } }
 .rs-arch-link { display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; text-decoration: none !important; color: var(--rs-ink) !important; }
 .rs-arch-link__frame { display: block; width: 100%; aspect-ratio: 4 / 5; margin-bottom: 12px; border-radius: 999px 999px var(--rs-r-m) var(--rs-r-m); overflow: hidden; background: var(--rs-linen); }
 .rs-arch-link__frame img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s cubic-bezier(.2, .7, .1, 1); }
@@ -574,9 +584,7 @@ body .footer-theme-text-for-primary-bg { color: #E2D6C6 !important; }
 }
 @media (max-width: 599px) {
   .rs-hero__img[data-crop] { height: 280px; object-fit: cover; object-position: left center; }
-  .rs-arches { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; margin-inline: calc(var(--rs-gutter) * -1); padding-inline: var(--rs-gutter); scrollbar-width: none; }
-  .rs-arches::-webkit-scrollbar { display: none; }
-  .rs-arches > li { flex: 0 0 112px; scroll-snap-align: center; }
+  .rs-arches { --n: 3.4; --g: 12px; margin-inline: calc(var(--rs-gutter) * -1); padding-inline: var(--rs-gutter); }
   .rs-mini { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   .rs-mini__item { grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 8px; padding: 12px; text-align: center; }
   .rs-mini__img { width: 100%; }
@@ -1026,7 +1034,7 @@ body .footer-theme-text-for-primary-bg { color: #E2D6C6 !important; }
           </div></div></div>
     </div>
   </div>
-</section><section class="rs-sec" aria-labelledby="rs-cat-title"><div class="rs-wrap"><div class="rs-sec__head"><h2 class="rs-title rs-sec__title rs-in" id="rs-cat-title" data-rise="" style="--d:0ms">تسوّق حسب القسم</h2><a class="rs-link rs-in" href="/categories" data-rise="" style="--d:80ms">عرض كل الأقسام</a></div><ul class="rs-arches"><li data-rise="" style="--d:0ms" class="rs-in"><a class="rs-arch-link" href="/categories/673261/توزيعات"><span class="rs-arch-link__frame"><img src="https://media.zid.store/cdn-cgi/image/w=420,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/9e5fba2f-2755-4c5b-b179-f3d94237f7ee.png" alt=""></span><span class="rs-arch-link__name">توزيعات</span></a></li><li data-rise="" style="--d:55ms" class="rs-in"><a class="rs-arch-link" href="/categories/358519/عطور"><span class="rs-arch-link__frame"><img src="https://media.zid.store/cdn-cgi/image/w=420,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/413f204c-e14d-44bb-a6ae-0d7eba42d5e6.png" alt=""></span><span class="rs-arch-link__name">عطور</span></a></li><li data-rise="" style="--d:110ms" class="rs-in"><a class="rs-arch-link" href="/categories/218590/أجود-أنواع-البخور-والعود-20-70"><span class="rs-arch-link__frame"><img src="https://media.zid.store/cdn-cgi/image/w=420,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/1f7badce-a459-49f5-b423-59ed59361900.png" alt=""></span><span class="rs-arch-link__name">البخور والعود</span></a></li><li data-rise="" style="--d:165ms" class="rs-in"><a class="rs-arch-link" href="/categories/141977/عطور-جو-ومفارش"><span class="rs-arch-link__frame"><img src="https://media.zid.store/cdn-cgi/image/w=420,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/1e36e351-e99f-4504-ae1e-6666f26aeca7.png" alt=""></span><span class="rs-arch-link__name">عطور جو ومفارش</span></a></li><li data-rise="" style="--d:220ms" class="rs-in"><a class="rs-arch-link" href="/categories/141504/فواحات"><span class="rs-arch-link__frame"><img src="https://media.zid.store/cdn-cgi/image/w=420,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/9e0d8955-1945-499e-b915-69943aebbcee.png" alt=""></span><span class="rs-arch-link__name">فواحات اعواد</span></a></li><li data-rise="" style="--d:275ms" class="rs-in"><a class="rs-arch-link" href="/categories/227422/منتجات-عناية"><span class="rs-arch-link__frame"><img src="https://media.zid.store/cdn-cgi/image/w=420,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/c1050dc1-7ba7-4497-80d0-afa0afda35a8.png" alt=""></span><span class="rs-arch-link__name">منتجات عناية</span></a></li><li data-rise="" style="--d:330ms" class="rs-in"><a class="rs-arch-link" href="/categories/141500/عطور-زيتية"><span class="rs-arch-link__frame"><img src="https://media.zid.store/cdn-cgi/image/w=420,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/fc7093a2-80f1-4154-83b1-b0a0934662ce.png" alt=""></span><span class="rs-arch-link__name">عطور زيتية</span></a></li><li data-rise="" style="--d:385ms" class="rs-in"><a class="rs-arch-link" href="/categories/1162806/عطور-خاصة"><span class="rs-arch-link__frame"><img src="https://media.zid.store/cdn-cgi/image/w=420,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/0955e83c-5455-4eef-9215-efc302563b5c.png" alt=""></span><span class="rs-arch-link__name">عطور خاصة</span></a></li><li data-rise="" style="--d:440ms" class="rs-in"><a class="rs-arch-link" href="/categories/181154/عطور-أطفال"><span class="rs-arch-link__frame"><img src="https://media.zid.store/cdn-cgi/image/w=420,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/923b5604-8a4e-4445-b72d-1e55c9cf7b09.png" alt=""></span><span class="rs-arch-link__name">عطور أطفال</span></a></li><li data-rise="" style="--d:495ms" class="rs-in"><a class="rs-arch-link" href="/categories/1308364/عطور-مستوحاه"><span class="rs-arch-link__frame"><img src="https://media.zid.store/cdn-cgi/image/w=420,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/93618adb-fcf5-461d-92ff-ade645ed914b.png" alt=""></span><span class="rs-arch-link__name">عطور مستوحاه</span></a></li><li data-rise="" style="--d:550ms" class="rs-in"><a class="rs-arch-link" href="/categories/218606/عطور-الشعر"><span class="rs-arch-link__frame"><img src="https://media.zid.store/cdn-cgi/image/w=420,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/c70d52fc-8baf-49e8-b15d-cb050a56dc3f.png" alt=""></span><span class="rs-arch-link__name">عطور الشعر</span></a></li></ul></div></section><section class="rs-sec" aria-labelledby="rs-about-title"><div class="rs-wrap"><div class="rs-about__panel"><div class="rs-about__body"><span class="rs-about__kicker rs-in" data-rise="" style="--d:0ms">عن رساس</span><h2 class="rs-title rs-about__title rs-in" id="rs-about-title" data-rise="" style="--d:60ms">ثمانية عشر عاماً في صناعة الرائحة</h2><p class="rs-about__text rs-in" data-rise="" style="--d:120ms">نشأت رساس في المملكة العربية السعودية عام 2008، لتقدم عطوراً فرنسية وشرقية بأسلوب دافئ وأنيق، وبخوراً وعوداً من أجود الأنواع.</p><div class="rs-about__cta rs-in" data-rise="" style="--d:180ms"><a class="rs-btn" href="/categories/358519/عطور">تسوّق عطور رساس</a></div></div><div class="rs-about__media rs-in" data-rise="" style="--d:120ms"><img src="https://media.zid.store/cdn-cgi/image/w=900,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/ae0cd722-6462-47a3-96d0-ac22188a9f32.jpg" alt=""></div></div></div></section><section class="rs-sec" aria-labelledby="rs-pop-title"><div class="rs-wrap"><div class="rs-sec__head"><h2 class="rs-title rs-sec__title rs-in" id="rs-pop-title" data-rise="" style="--d:0ms">اختيارات رساس</h2><div class="rs-tabs rs-in" role="tablist" aria-label="منتجات رساس" data-rise="" style="--d:80ms"><button type="button" role="tab" id="rs-tab-0" aria-controls="rs-panel-0" aria-selected="true">عطور خاصة</button><button type="button" role="tab" id="rs-tab-1" aria-controls="rs-panel-1" aria-selected="false" tabindex="-1">عطور كلاسيك 100 مل</button><button type="button" role="tab" id="rs-tab-2" aria-controls="rs-panel-2" aria-selected="false" tabindex="-1">البخور والعود</button><button type="button" role="tab" id="rs-tab-3" aria-controls="rs-panel-3" aria-selected="false" tabindex="-1">توزيعات</button><button type="button" role="tab" id="rs-tab-4" aria-controls="rs-panel-4" aria-selected="false" tabindex="-1">عطور كلاسيك 50 مل</button></div></div><div class="rs-panels"><div role="tabpanel" id="rs-panel-0" aria-labelledby="rs-tab-0"><div class="rs-grid rs-grid--five"><div data-rise="" style="--d: 0ms;" class="rs-in"><div class="product-item position-relative ">
+</section><section class="rs-sec" aria-labelledby="rs-cat-title"><div class="rs-wrap"><div class="rs-sec__head"><h2 class="rs-title rs-sec__title rs-in" id="rs-cat-title" data-rise="" style="--d:0ms">تسوّق حسب القسم</h2><a class="rs-link rs-in" href="/categories" data-rise="" style="--d:80ms">عرض كل الأقسام</a></div><div class="rs-rail"><ul class="rs-arches"><li data-rise="" style="--d:0ms" class="rs-in"><a class="rs-arch-link" href="/categories/673261/توزيعات"><span class="rs-arch-link__frame"><img src="https://media.zid.store/cdn-cgi/image/w=420,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/9e5fba2f-2755-4c5b-b179-f3d94237f7ee.png" alt=""></span><span class="rs-arch-link__name">توزيعات</span></a></li><li data-rise="" style="--d:55ms" class="rs-in"><a class="rs-arch-link" href="/categories/358519/عطور"><span class="rs-arch-link__frame"><img src="https://media.zid.store/cdn-cgi/image/w=420,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/413f204c-e14d-44bb-a6ae-0d7eba42d5e6.png" alt=""></span><span class="rs-arch-link__name">عطور</span></a></li><li data-rise="" style="--d:110ms" class="rs-in"><a class="rs-arch-link" href="/categories/218590/أجود-أنواع-البخور-والعود-20-70"><span class="rs-arch-link__frame"><img src="https://media.zid.store/cdn-cgi/image/w=420,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/1f7badce-a459-49f5-b423-59ed59361900.png" alt=""></span><span class="rs-arch-link__name">البخور والعود</span></a></li><li data-rise="" style="--d:165ms" class="rs-in"><a class="rs-arch-link" href="/categories/141977/عطور-جو-ومفارش"><span class="rs-arch-link__frame"><img src="https://media.zid.store/cdn-cgi/image/w=420,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/1e36e351-e99f-4504-ae1e-6666f26aeca7.png" alt=""></span><span class="rs-arch-link__name">عطور جو ومفارش</span></a></li><li data-rise="" style="--d:220ms" class="rs-in"><a class="rs-arch-link" href="/categories/141504/فواحات"><span class="rs-arch-link__frame"><img src="https://media.zid.store/cdn-cgi/image/w=420,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/9e0d8955-1945-499e-b915-69943aebbcee.png" alt=""></span><span class="rs-arch-link__name">فواحات اعواد</span></a></li><li data-rise="" style="--d:275ms" class="rs-in"><a class="rs-arch-link" href="/categories/227422/منتجات-عناية"><span class="rs-arch-link__frame"><img src="https://media.zid.store/cdn-cgi/image/w=420,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/c1050dc1-7ba7-4497-80d0-afa0afda35a8.png" alt=""></span><span class="rs-arch-link__name">منتجات عناية</span></a></li><li data-rise="" style="--d:330ms" class="rs-in"><a class="rs-arch-link" href="/categories/141500/عطور-زيتية"><span class="rs-arch-link__frame"><img src="https://media.zid.store/cdn-cgi/image/w=420,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/fc7093a2-80f1-4154-83b1-b0a0934662ce.png" alt=""></span><span class="rs-arch-link__name">عطور زيتية</span></a></li><li data-rise="" style="--d:385ms" class="rs-in"><a class="rs-arch-link" href="/categories/1162806/عطور-خاصة"><span class="rs-arch-link__frame"><img src="https://media.zid.store/cdn-cgi/image/w=420,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/0955e83c-5455-4eef-9215-efc302563b5c.png" alt=""></span><span class="rs-arch-link__name">عطور خاصة</span></a></li><li data-rise="" style="--d:385ms" class="rs-in"><a class="rs-arch-link" href="/categories/181154/عطور-أطفال"><span class="rs-arch-link__frame"><img src="https://media.zid.store/cdn-cgi/image/w=420,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/923b5604-8a4e-4445-b72d-1e55c9cf7b09.png" alt=""></span><span class="rs-arch-link__name">عطور أطفال</span></a></li><li data-rise="" style="--d:385ms" class="rs-in"><a class="rs-arch-link" href="/categories/1308364/عطور-مستوحاه"><span class="rs-arch-link__frame"><img src="https://media.zid.store/cdn-cgi/image/w=420,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/93618adb-fcf5-461d-92ff-ade645ed914b.png" alt=""></span><span class="rs-arch-link__name">عطور مستوحاه</span></a></li><li data-rise="" style="--d:385ms" class="rs-in"><a class="rs-arch-link" href="/categories/218606/عطور-الشعر"><span class="rs-arch-link__frame"><img src="https://media.zid.store/cdn-cgi/image/w=420,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/c70d52fc-8baf-49e8-b15d-cb050a56dc3f.png" alt=""></span><span class="rs-arch-link__name">عطور الشعر</span></a></li></ul><button class="rs-rail__btn rs-rail__btn--prev" type="button" aria-label="الأقسام السابقة"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></button><button class="rs-rail__btn rs-rail__btn--next" type="button" aria-label="الأقسام التالية"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button></div></div></section><section class="rs-sec" aria-labelledby="rs-about-title"><div class="rs-wrap"><div class="rs-about__panel"><div class="rs-about__body"><span class="rs-about__kicker rs-in" data-rise="" style="--d:0ms">عن رساس</span><h2 class="rs-title rs-about__title rs-in" id="rs-about-title" data-rise="" style="--d:60ms">ثمانية عشر عاماً في صناعة الرائحة</h2><p class="rs-about__text rs-in" data-rise="" style="--d:120ms">نشأت رساس في المملكة العربية السعودية عام 2008، لتقدم عطوراً فرنسية وشرقية بأسلوب دافئ وأنيق، وبخوراً وعوداً من أجود الأنواع.</p><div class="rs-about__cta rs-in" data-rise="" style="--d:180ms"><a class="rs-btn" href="/categories/358519/عطور">تسوّق عطور رساس</a></div></div><div class="rs-about__media rs-in" data-rise="" style="--d:120ms"><img src="https://media.zid.store/cdn-cgi/image/w=900,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/ae0cd722-6462-47a3-96d0-ac22188a9f32.jpg" alt=""></div></div></div></section><section class="rs-sec" aria-labelledby="rs-pop-title"><div class="rs-wrap"><div class="rs-sec__head"><h2 class="rs-title rs-sec__title rs-in" id="rs-pop-title" data-rise="" style="--d:0ms">اختيارات رساس</h2><div class="rs-tabs rs-in" role="tablist" aria-label="منتجات رساس" data-rise="" style="--d:80ms"><button type="button" role="tab" id="rs-tab-0" aria-controls="rs-panel-0" aria-selected="true">عطور خاصة</button><button type="button" role="tab" id="rs-tab-1" aria-controls="rs-panel-1" aria-selected="false" tabindex="-1">عطور كلاسيك 100 مل</button><button type="button" role="tab" id="rs-tab-2" aria-controls="rs-panel-2" aria-selected="false" tabindex="-1">البخور والعود</button><button type="button" role="tab" id="rs-tab-3" aria-controls="rs-panel-3" aria-selected="false" tabindex="-1">توزيعات</button><button type="button" role="tab" id="rs-tab-4" aria-controls="rs-panel-4" aria-selected="false" tabindex="-1">عطور كلاسيك 50 مل</button></div></div><div class="rs-panels"><div role="tabpanel" id="rs-panel-0" aria-labelledby="rs-tab-0"><div class="rs-grid rs-grid--five"><div data-rise="" style="--d: 0ms;" class="rs-in"><div class="product-item position-relative ">
       <span class="add-to-wishlist" data-wishlist-id="05b33b45-b1ae-4423-8d08-841bf4ac7882">
         <span zid-visible-customer="true">
             <button zid-visible-wishlist="05b33b45-b1ae-4423-8d08-841bf4ac7882" class="icon-heart-mask filled" onclick="addToWishlist(this, '05b33b45-b1ae-4423-8d08-841bf4ac7882')"></button>
@@ -3240,48 +3248,17 @@ body .footer-theme-text-for-primary-bg { color: #E2D6C6 !important; }
         </div>
 
     
-</div></div></div></div></div></div></section><section class="rs-sec" aria-label="أقسام مختارة"><div class="rs-wrap"><ul class="rs-tiles"><li data-rise="" style="--d:0ms" class="rs-in"><a class="rs-tile rs-tile--photo rs-tile--a" href="/categories/1162806/عطور-خاصة"><img src="https://media.zid.store/cdn-cgi/image/w=700,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/7964b07d-82a5-49ae-94d9-27a8ce1b5364.jpeg" alt=""><span class="rs-tile__title">عطور خاصة</span><span class="rs-tile__text">اكتشف المجموعة</span></a></li><li data-rise="" style="--d:90ms" class="rs-in"><a class="rs-tile rs-tile--sand" href="/products/لافي-لانكوم"><span class="rs-tile__title">عطور كلاسيك 100 مل</span><span class="rs-tile__text">اكتشف المجموعة</span><img src="https://media.zid.store/cdn-cgi/image/w=700,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/1ae71aa5-1269-438c-b169-a1d1b2bfeb9d.jpg" alt=""></a></li><li data-rise="" style="--d:180ms" class="rs-in"><a class="rs-tile rs-tile--dark" href="/categories/218590/أجود-أنواع-البخور-والعود-20-70"><span class="rs-tile__title">البخور والعود</span><span class="rs-tile__text">اكتشف المجموعة</span><img src="https://media.zid.store/cdn-cgi/image/w=700,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/96e608ff-eb85-43eb-b3aa-0d3ceb1c8b95.jpg" alt=""></a></li><li data-rise="" style="--d:270ms" class="rs-in"><a class="rs-tile rs-tile--photo rs-tile--d" href="/categories/673261/توزيعات"><img src="https://media.zid.store/cdn-cgi/image/w=700,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/e7e86049-7bcf-481b-8fc0-186d10ef926d.jpg" alt=""><span class="rs-tile__title">توزيعات</span><span class="rs-tile__text">اكتشف المجموعة</span></a></li></ul></div></section><section class="rs-sec" aria-labelledby="rs-deals-title"><div class="rs-wrap"><div class="rs-dband"><div class="rs-dband__text"><span class="rs-dband__kicker rs-in" data-rise="" style="--d:0ms">عروض رساس</span><h2 class="rs-title rs-dband__title rs-in" id="rs-deals-title" data-rise="" style="--d:60ms">وفّر حتى 70%</h2><p class="rs-dband__lede rs-in" data-rise="" style="--d:120ms">تخفيضات على 2 منتجات مختارة من رساس، والأسعار شاملة الضريبة.</p><div class="rs-dband__list"><a class="rs-drow rs-in" data-rise="" style="--d:180ms" href="/products/5-كريمات-لليدين"><img src="https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/15c9041b-f544-40e9-b757-cb079431f2f9.jpg" alt=""><span><span class="rs-drow__name">5 كريمات لليدين</span><span class="rs-drow__price"><strong>45.00 <svg class="riyal-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1124.14 1256.39" width="14" height="16" style="display:inline-block;vertical-align:-0.125em">
-      <path fill="currentColor" d="M699.62,1113.02h0c-20.06,44.48-33.32,92.75-38.4,143.37l424.51-90.24c20.06-44.47,33.31-92.75,38.4-143.37l-424.51,90.24Z"></path>
-      <path fill="currentColor" d="M1085.73,895.8c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.33v-135.2l292.27-62.11c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.27V66.13c-50.67,28.45-95.67,66.32-132.25,110.99v403.35l-132.25,28.11V0c-50.67,28.44-95.67,66.32-132.25,110.99v525.69l-295.91,62.88c-20.06,44.47-33.33,92.75-38.42,143.37l334.33-71.05v170.26l-358.3,76.14c-20.06,44.47-33.32,92.75-38.4,143.37l375.04-79.7c30.53-6.35,56.77-24.4,73.83-49.24l68.78-101.97v-.02c7.14-10.55,11.3-23.27,11.3-36.97v-149.98l132.25-28.11v270.4l424.53-90.28Z"></path>
-    </svg></strong><del>150.01 <svg class="riyal-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1124.14 1256.39" width="13" height="14" style="display:inline-block;vertical-align:-0.125em">
-      <path fill="currentColor" d="M699.62,1113.02h0c-20.06,44.48-33.32,92.75-38.4,143.37l424.51-90.24c20.06-44.47,33.31-92.75,38.4-143.37l-424.51,90.24Z"></path>
-      <path fill="currentColor" d="M1085.73,895.8c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.33v-135.2l292.27-62.11c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.27V66.13c-50.67,28.45-95.67,66.32-132.25,110.99v403.35l-132.25,28.11V0c-50.67,28.44-95.67,66.32-132.25,110.99v525.69l-295.91,62.88c-20.06,44.47-33.33,92.75-38.42,143.37l334.33-71.05v170.26l-358.3,76.14c-20.06,44.47-33.32,92.75-38.4,143.37l375.04-79.7c30.53-6.35,56.77-24.4,73.83-49.24l68.78-101.97v-.02c7.14-10.55,11.3-23.27,11.3-36.97v-149.98l132.25-28.11v270.4l424.53-90.28Z"></path>
-    </svg></del></span></span><span class="rs-drow__off">70%</span></a><a class="rs-drow rs-in" data-rise="" style="--d:250ms" href="/products/مجموعة-سجى-saja-perfumes"><img src="https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/3dcc5890-dd50-4dce-b64b-0b2d52e35ee4.jpeg" alt=""><span><span class="rs-drow__name">مجموعة سجى | Saja perfumes</span><span class="rs-drow__price"><strong>199.01 <svg class="riyal-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1124.14 1256.39" width="14" height="16" style="display:inline-block;vertical-align:-0.125em">
-      <path fill="currentColor" d="M699.62,1113.02h0c-20.06,44.48-33.32,92.75-38.4,143.37l424.51-90.24c20.06-44.47,33.31-92.75,38.4-143.37l-424.51,90.24Z"></path>
-      <path fill="currentColor" d="M1085.73,895.8c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.33v-135.2l292.27-62.11c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.27V66.13c-50.67,28.45-95.67,66.32-132.25,110.99v403.35l-132.25,28.11V0c-50.67,28.44-95.67,66.32-132.25,110.99v525.69l-295.91,62.88c-20.06,44.47-33.33,92.75-38.42,143.37l334.33-71.05v170.26l-358.3,76.14c-20.06,44.47-33.32,92.75-38.4,143.37l375.04-79.7c30.53-6.35,56.77-24.4,73.83-49.24l68.78-101.97v-.02c7.14-10.55,11.3-23.27,11.3-36.97v-149.98l132.25-28.11v270.4l424.53-90.28Z"></path>
-    </svg></strong><del>598.00 <svg class="riyal-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1124.14 1256.39" width="13" height="14" style="display:inline-block;vertical-align:-0.125em">
-      <path fill="currentColor" d="M699.62,1113.02h0c-20.06,44.48-33.32,92.75-38.4,143.37l424.51-90.24c20.06-44.47,33.31-92.75,38.4-143.37l-424.51,90.24Z"></path>
-      <path fill="currentColor" d="M1085.73,895.8c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.33v-135.2l292.27-62.11c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.27V66.13c-50.67,28.45-95.67,66.32-132.25,110.99v403.35l-132.25,28.11V0c-50.67,28.44-95.67,66.32-132.25,110.99v525.69l-295.91,62.88c-20.06,44.47-33.33,92.75-38.42,143.37l334.33-71.05v170.26l-358.3,76.14c-20.06,44.47-33.32,92.75-38.4,143.37l375.04-79.7c30.53-6.35,56.77-24.4,73.83-49.24l68.78-101.97v-.02c7.14-10.55,11.3-23.27,11.3-36.97v-149.98l132.25-28.11v270.4l424.53-90.28Z"></path>
-    </svg></del></span></span><span class="rs-drow__off">67%</span></a></div></div><div class="rs-dband__media"><img src="https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/15c9041b-f544-40e9-b757-cb079431f2f9.jpg" alt="5 كريمات لليدين"></div></div></div></section><section id="bab059dc-abb8-477a-b2ed-2ec96d0fa81a" section-id="bab059dc-abb8-477a-b2ed-2ec96d0fa81a" data-lg-scroll-offset="130" data-md-scroll-offset="130" data-sm-scroll-offset="94">
+</div></div></div></div></div></div></section><section class="rs-sec" aria-label="أقسام مختارة"><div class="rs-wrap"><ul class="rs-tiles"><li data-rise="" style="--d:0ms" class="rs-in"><a class="rs-tile rs-tile--photo rs-tile--a" href="/categories/1162806/عطور-خاصة"><img src="https://media.zid.store/cdn-cgi/image/w=700,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/7964b07d-82a5-49ae-94d9-27a8ce1b5364.jpeg" alt=""><span class="rs-tile__title">عطور خاصة</span><span class="rs-tile__text">اكتشف المجموعة</span></a></li><li data-rise="" style="--d:90ms" class="rs-in"><a class="rs-tile rs-tile--sand" href="/products/لافي-لانكوم"><span class="rs-tile__title">عطور كلاسيك 100 مل</span><span class="rs-tile__text">اكتشف المجموعة</span><img src="https://media.zid.store/cdn-cgi/image/w=700,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/1ae71aa5-1269-438c-b169-a1d1b2bfeb9d.jpg" alt=""></a></li><li data-rise="" style="--d:180ms" class="rs-in"><a class="rs-tile rs-tile--dark" href="/categories/218590/أجود-أنواع-البخور-والعود-20-70"><span class="rs-tile__title">البخور والعود</span><span class="rs-tile__text">اكتشف المجموعة</span><img src="https://media.zid.store/cdn-cgi/image/w=700,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/96e608ff-eb85-43eb-b3aa-0d3ceb1c8b95.jpg" alt=""></a></li><li data-rise="" style="--d:270ms" class="rs-in"><a class="rs-tile rs-tile--photo rs-tile--d" href="/categories/673261/توزيعات"><img src="https://media.zid.store/cdn-cgi/image/w=700,q=85,f=auto/https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/e7e86049-7bcf-481b-8fc0-186d10ef926d.jpg" alt=""><span class="rs-tile__title">توزيعات</span><span class="rs-tile__text">اكتشف المجموعة</span></a></li></ul></div></section><section class="rs-sec" aria-labelledby="rs-deals-title"><div class="rs-wrap"><div class="rs-dband"><div class="rs-dband__text"><span class="rs-dband__kicker rs-in" data-rise="" style="--d:0ms">عروض رساس</span><h2 class="rs-title rs-dband__title rs-in" id="rs-deals-title" data-rise="" style="--d:60ms">وفّر حتى 70%</h2><p class="rs-dband__lede rs-in" data-rise="" style="--d:120ms">تخفيضات على 2 منتجات مختارة من رساس، والأسعار شاملة الضريبة.</p><div class="rs-dband__list"><a class="rs-drow rs-in" data-rise="" style="--d:180ms" href="/products/5-كريمات-لليدين"><img src="https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/15c9041b-f544-40e9-b757-cb079431f2f9.jpg" alt=""><span><span class="rs-drow__name">5 كريمات لليدين</span><span class="rs-drow__price"><strong>45.00 ر.س</strong><del>150.01 ر.س</del></span></span><span class="rs-drow__off">70%</span></a><a class="rs-drow rs-in" data-rise="" style="--d:250ms" href="/products/مجموعة-سجى-saja-perfumes"><img src="https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/3dcc5890-dd50-4dce-b64b-0b2d52e35ee4.jpeg" alt=""><span><span class="rs-drow__name">مجموعة سجى | Saja perfumes</span><span class="rs-drow__price"><strong>199.01 ر.س</strong><del>598.00 ر.س</del></span></span><span class="rs-drow__off">67%</span></a></div></div><div class="rs-dband__media"><img src="https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/15c9041b-f544-40e9-b757-cb079431f2f9.jpg" alt="5 كريمات لليدين"></div></div></div></section><section id="bab059dc-abb8-477a-b2ed-2ec96d0fa81a" section-id="bab059dc-abb8-477a-b2ed-2ec96d0fa81a" data-lg-scroll-offset="130" data-md-scroll-offset="130" data-sm-scroll-offset="94">
     <div class="container section-slider-padding-space slider-container">
         <h2 class="section-title theme-text-primary">آراء عملائنا</h2>
 
         <div class="testimonials-slider-wrapper" style="position: relative">
 
 
-            <div class="testimonials-slider s-slider slick-initialized slick-slider"><button class="slick-prev slick-arrow slick-disabled" aria-label="السابق" type="button" aria-disabled="true" style=""><span class="icon-keyboard_arrow_right"></span></button>
+            <div class="testimonials-slider s-slider">
 
 
-                
-
-
-                
-
-
-                
-
-
-                
-
-
-                
-
-
-                
-
-
-
-            <div class="slick-list draggable"><div class="slick-track" style="opacity: 1; width: 1620px; transform: translate3d(0px, 0px, 0px);"><div class="testimonials-customer-card bg-transparent slick-slide slick-current slick-active" tabindex="0" style="width: 247.5px;" data-slick-index="0" aria-hidden="false">
+                <div class="testimonials-customer-card bg-transparent">
                     <div class="card-body">
                         <div class="d-flex">
                             <span class="icon-account_circle_black_24dp testimonials-customer-icon"></span>
@@ -3290,7 +3267,10 @@ body .footer-theme-text-for-primary-bg { color: #E2D6C6 !important; }
                         </div>
                         <p class="testimonials-customer-text">من جد انتم مبدعيين وعطوركم جمييله اشكركم على جودتكم </p>
                     </div>
-                </div><div class="testimonials-customer-card bg-transparent slick-slide slick-active" tabindex="0" style="width: 247.5px;" data-slick-index="1" aria-hidden="false">
+                </div>
+
+
+                <div class="testimonials-customer-card bg-transparent">
                     <div class="card-body">
                         <div class="d-flex">
                             <span class="icon-account_circle_black_24dp testimonials-customer-icon"></span>
@@ -3299,7 +3279,10 @@ body .footer-theme-text-for-primary-bg { color: #E2D6C6 !important; }
                         </div>
                         <p class="testimonials-customer-text">العطور ماشاء الله تجنن الله يبارك لكم في رزقكم </p>
                     </div>
-                </div><div class="testimonials-customer-card bg-transparent slick-slide" tabindex="-1" style="width: 247.5px;" data-slick-index="2" aria-hidden="true">
+                </div>
+
+
+                <div class="testimonials-customer-card bg-transparent">
                     <div class="card-body">
                         <div class="d-flex">
                             <span class="icon-account_circle_black_24dp testimonials-customer-icon"></span>
@@ -3308,7 +3291,10 @@ body .footer-theme-text-for-primary-bg { color: #E2D6C6 !important; }
                         </div>
                         <p class="testimonials-customer-text">شكرا من القلب صدق الروائح تجنننن</p>
                     </div>
-                </div><div class="testimonials-customer-card bg-transparent slick-slide" tabindex="-1" style="width: 247.5px;" data-slick-index="3" aria-hidden="true">
+                </div>
+
+
+                <div class="testimonials-customer-card bg-transparent">
                     <div class="card-body">
                         <div class="d-flex">
                             <span class="icon-account_circle_black_24dp testimonials-customer-icon"></span>
@@ -3317,7 +3303,10 @@ body .footer-theme-text-for-primary-bg { color: #E2D6C6 !important; }
                         </div>
                         <p class="testimonials-customer-text">عطور مميزه وثباتها قوي </p>
                     </div>
-                </div><div class="testimonials-customer-card bg-transparent slick-slide" tabindex="-1" style="width: 247.5px;" data-slick-index="4" aria-hidden="true">
+                </div>
+
+
+                <div class="testimonials-customer-card bg-transparent">
                     <div class="card-body">
                         <div class="d-flex">
                             <span class="icon-account_circle_black_24dp testimonials-customer-icon"></span>
@@ -3326,7 +3315,10 @@ body .footer-theme-text-for-primary-bg { color: #E2D6C6 !important; }
                         </div>
                         <p class="testimonials-customer-text">سرعة بالتوصيل ماشاء الله يعطيكم العافية </p>
                     </div>
-                </div><div class="testimonials-customer-card bg-transparent slick-slide" tabindex="-1" style="width: 247.5px;" data-slick-index="5" aria-hidden="true">
+                </div>
+
+
+                <div class="testimonials-customer-card bg-transparent">
                     <div class="card-body">
                         <div class="d-flex">
                             <span class="icon-account_circle_black_24dp testimonials-customer-icon"></span>
@@ -3335,7 +3327,11 @@ body .footer-theme-text-for-primary-bg { color: #E2D6C6 !important; }
                         </div>
                         <p class="testimonials-customer-text">مو اخر تعامل معكم عطر عنبر التوب ون عندي والمفضل </p>
                     </div>
-                </div></div></div><button class="slick-next slick-arrow" aria-label="التالي" type="button" style="" aria-disabled="false"><span class="icon-keyboard_arrow_left"></span></button></div>
+                </div>
+
+
+
+            </div>
 
         </div>
 
@@ -6897,7 +6893,7 @@ body .footer-theme-text-for-primary-bg { color: #E2D6C6 !important; }
 <section id="2d533b6c-0df2-4b36-b700-7794cda68182" section-id="2d533b6c-0df2-4b36-b700-7794cda68182" data-lg-scroll-offset="130" data-md-scroll-offset="130" data-sm-scroll-offset="94" class="ss rs-used">
   <div class="container container-slider">
     <div class="main-slider slider s-slider slick-initialized slick-slider">
-          <div class="slick-list draggable"><div class="slick-track" style="opacity: 1; width: 0px; transform: translate3d(0px, 0px, 0px);"><div class="slider-item slick-slide" data-slick-index="0" aria-hidden="true" tabindex="-1" style="width: 0px;">
+          <div class="slick-list draggable"><div class="slick-track" style="opacity: 1; width: 0px; transform: translate3d(0px, 0px, 0px); transition: transform 500ms;"><div class="slider-item slick-slide slick-current slick-active" data-slick-index="0" aria-hidden="false" tabindex="-1" style="width: 0px;">
             <div class="box-1-1 ratio21_9">
               <div class="content">
                 <a href="/" class="d-flex flex-column justify-content-start" style="position: relative; width: 100%; height: 100%; " tabindex="-1">
@@ -6925,7 +6921,7 @@ body .footer-theme-text-for-primary-bg { color: #E2D6C6 !important; }
                 </a>
               </div>
             </div>
-          </div><div class="slider-item slick-slide slick-current slick-active" data-slick-index="1" aria-hidden="false" tabindex="0" style="width: 0px;">
+          </div><div class="slider-item slick-slide" data-slick-index="1" aria-hidden="true" tabindex="0" style="width: 0px;">
             <div class="box-1-1 ratio21_9">
               <div class="content">
                 <a href="/" class="d-flex flex-column justify-content-start" style="position: relative; width: 100%; height: 100%; " tabindex="0">
@@ -7716,4 +7712,4 @@ body .footer-theme-text-for-primary-bg { color: #E2D6C6 !important; }
 
 
 
-<script>(function(){var $=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};var tabs=$('.rs-tabs [role=tab]');tabs.forEach(function(b,i){b.addEventListener('click',function(){tabs.forEach(function(x,j){x.setAttribute('aria-selected',j===i?'true':'false');var p=document.getElementById('rs-panel-'+j);if(p)p.hidden=j!==i})})})})();</script></body></html>
+<script>(function(){var $=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};var tabs=$('.rs-tabs [role=tab]');tabs.forEach(function(b,i){b.addEventListener('click',function(){tabs.forEach(function(x,j){x.setAttribute('aria-selected',j===i?'true':'false');var p=document.getElementById('rs-panel-'+j);if(p)p.hidden=j!==i})})});var rail=$('.rs-rail')[0];if(rail){var list=$('.rs-arches',rail)[0],prev=$('.rs-rail__btn--prev',rail)[0],next=$('.rs-rail__btn--next',rail)[0];var sync=function(){var span=list.scrollWidth-list.clientWidth,at=Math.abs(list.scrollLeft),more=span>4;prev.hidden=next.hidden=!more;prev.disabled=at<4;next.disabled=at>span-4};prev.addEventListener('click',function(){list.scrollBy({left:list.clientWidth*0.9,behavior:'smooth'})});next.addEventListener('click',function(){list.scrollBy({left:-list.clientWidth*0.9,behavior:'smooth'})});list.addEventListener('scroll',sync,{passive:true});window.addEventListener('resize',sync);window.addEventListener('load',sync);setTimeout(sync,300)}})();</script></body></html>

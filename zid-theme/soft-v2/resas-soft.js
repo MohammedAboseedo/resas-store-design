@@ -150,11 +150,27 @@
     }
     (function (im) { var f = function () { if (im.naturalWidth && Math.abs(im.naturalWidth / im.naturalHeight - 2.59) < 0.12) im.setAttribute("data-crop", ""); }; if (im.complete) f(); else im.addEventListener("load", f); })($("img", hero));
 
+    var CHEV = function (d) { return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + d + '"/></svg>'; };
     var arches = S.cats.length ? el('<section class="rs-sec" aria-labelledby="rs-cat-title"><div class="rs-wrap"><div class="rs-sec__head"><h2 class="rs-title rs-sec__title" id="rs-cat-title"' + rise(0) + '>تسوّق حسب القسم</h2>' +
-      '<a class="rs-link" href="/categories"' + rise(80) + '>عرض كل الأقسام</a></div><ul class="rs-arches">' +
-      S.cats.slice(0, 12).map(function (a, i) {
-        return '<li' + rise(i * 55) + '><a class="rs-arch-link" href="' + esc(a.url) + '"><span class="rs-arch-link__frame"><img src="' + esc(sized(a.image, 420)) + '" alt="" loading="lazy"></span><span class="rs-arch-link__name">' + esc(a.name) + "</span></a></li>";
-      }).join("") + "</ul></div></section>") : null;
+      '<a class="rs-link" href="/categories"' + rise(80) + '>عرض كل الأقسام</a></div><div class="rs-rail"><ul class="rs-arches">' +
+      S.cats.slice(0, 16).map(function (a, i) {
+        return '<li' + rise(Math.min(i, 7) * 55) + '><a class="rs-arch-link" href="' + esc(a.url) + '"><span class="rs-arch-link__frame"><img src="' + esc(sized(a.image, 420)) + '" alt="" loading="lazy"></span><span class="rs-arch-link__name">' + esc(a.name) + "</span></a></li>";
+      }).join("") + '</ul><button class="rs-rail__btn rs-rail__btn--prev" type="button" aria-label="الأقسام السابقة" hidden>' + CHEV("M9 6l6 6-6 6") + '</button><button class="rs-rail__btn rs-rail__btn--next" type="button" aria-label="الأقسام التالية" hidden>' + CHEV("M15 6l-6 6 6 6") + "</button></div></div></section>") : null;
+    if (arches) (function (rail) {
+      var list = $(".rs-arches", rail), prev = $(".rs-rail__btn--prev", rail), next = $(".rs-rail__btn--next", rail);
+      function sync() {
+        var span = list.scrollWidth - list.clientWidth, at = Math.abs(list.scrollLeft), more = span > 4;
+        prev.hidden = next.hidden = !more;
+        prev.disabled = at < 4; next.disabled = at > span - 4;
+      }
+      /* RTL: the list starts on the right and scrolls toward negative values; "next" goes left. */
+      prev.addEventListener("click", function () { list.scrollBy({ left: list.clientWidth * 0.9, behavior: "smooth" }); });
+      next.addEventListener("click", function () { list.scrollBy({ left: -list.clientWidth * 0.9, behavior: "smooth" }); });
+      list.addEventListener("scroll", sync, { passive: true });
+      window.addEventListener("resize", sync);
+      window.addEventListener("load", sync);
+      setTimeout(sync, 300);
+    })($(".rs-rail", arches));
 
     var A = RESAS.about, aimg = (top[0] || S.cards[0]).image;
     var about = el('<section class="rs-sec" aria-labelledby="rs-about-title"><div class="rs-wrap"><div class="rs-about__panel"><div class="rs-about__body"><span class="rs-about__kicker"' + rise(0) + '>عن رساس</span>' +
