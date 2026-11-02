@@ -106,6 +106,13 @@
     });
   }
 
+  /* The all-categories page shows Zid's English label; the store is Arabic. */
+  function allCategoriesLabel() {
+    $$(".breadcrumb-item.active, .breadcrumb-item.active *").forEach(function (e) {
+      if (e.children.length === 0 && /^\W*all categories\W*$/i.test(e.textContent.trim())) e.textContent = "كل التصنيفات";
+    });
+  }
+
   /* ---------- header: menu and search on the start side, logo centred, account and cart on the end side ---------- */
   function header() {
     var bar = $(".search-header-bar");
@@ -499,6 +506,7 @@
     try { announcement(); } catch (e) { console.error("Resas announcement:", e); }
     try { header(); } catch (e) { console.error("Resas header:", e); }
     try { navCurrent(); } catch (e) { console.error("Resas nav:", e); }
+    try { allCategoriesLabel(); } catch (e) { console.error("Resas label:", e); }
     try { home(); } catch (e) { console.error("Resas home:", e); }
     try { reviewsSlider(); } catch (e) { console.error("Resas reviews:", e); }
     try { catCols(); window.addEventListener("resize", catCols); } catch (e) { console.error("Resas categories:", e); }

@@ -604,6 +604,12 @@ body .category-second-card a:hover { color: var(--rs-cognac-deep) !important; }
 /* ---------- Wishlist heart on cards: a clean round button ---------- */
 body .product-item .add-to-wishlist { border-radius: 50% !important; background: rgba(255, 255, 255, .92) !important; }
 
+/* ---------- Content text normalised (rich text from the editor carries its own sizes) ---------- */
+body section.blog .blog-text p, body section.blog .blog-text span, body section.blog .blog-text li, body section.blog .blog-text div { font-size: var(--rs-fs-b) !important; line-height: 2.05 !important; }
+body section.blog .blog-text p:empty, body section.blog .blog-text p:has(> br:only-child) { display: none; }
+body section.blog .blog-text p { margin: 0 0 12px; }
+body .card-categories .box-1-1 .content, body .card-categories .box-1-1 { background: var(--rs-linen) !important; }
+
 /* ---------- Motion: only when motion is welcome; content stays visible if script fails ---------- */
 @media (prefers-reduced-motion: no-preference) {
   .rs-about__media img { animation: rs-drift 22s ease-in-out infinite alternate; }
