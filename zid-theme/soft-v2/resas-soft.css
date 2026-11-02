@@ -160,6 +160,9 @@ body .slick-arrow > span { color: var(--rs-ink) !important; font-size: 24px !imp
 body.rtl .slick-prev { right: 0 !important; left: auto !important; z-index: 2; }
 body.rtl .slick-next { left: 0 !important; right: auto !important; z-index: 2; }
 
+/* The language/currency strip above the header: the script used to hide it after load, which pushed the whole page up by 60px. */
+.account-lang-currency.upper-bar { display: none !important; }
+
 /* ---------- Homepage: the dashboard sections that the new design has already used ---------- */
 .home .rs-used { display: none !important; }
 /* Until the script has rebuilt the page, show only the first block (the hero banner) so the original Soft sections do not flash and then jump
