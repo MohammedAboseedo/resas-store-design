@@ -504,6 +504,9 @@ body .aigc-section .aigc-story__btn { display: inline-flex !important; align-ite
 body .aigc-section .aigc-story__btn:hover { background: var(--rs-cognac-deep) !important; color: #fff !important; }
 @media (max-width: 899px) { body .aigc-section .aigc-story__content { align-items: center; text-align: center; } body .aigc-section .aigc-story__media { min-height: 0; aspect-ratio: 4 / 3; } }
 
+/* ---------- No hearts on the home cards, as in the design ---------- */
+body .rs-tabs .product-item .add-to-wishlist, body .rs-tabs .product-item [data-wishlist-id] { display: none !important; }
+
 /* ---------- Motion: only when motion is welcome; content stays visible if script fails ---------- */
 @media (prefers-reduced-motion: no-preference) {
   .rs-about__media img { animation: rs-drift 22s ease-in-out infinite alternate; }

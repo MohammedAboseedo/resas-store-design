@@ -116,7 +116,7 @@
     S.banners = [];
     ss.slice(1).concat($$(".gallery-section", root)).forEach(function (sec) {
       live($$("img", sec)).forEach(function (im) {
-        var a = im.closest("a"), src = (im.getAttribute("src") || "").trim() || (im.getAttribute("srcset") || "").split(",").pop().trim().split(" ")[0];
+        var a = im.closest("a"), src = (im.getAttribute("src") || im.getAttribute("data-src") || "").trim() || (im.getAttribute("srcset") || im.getAttribute("data-srcset") || "").split(",").pop().trim().split(" ")[0];
         if (src && !S.banners.some(function (b) { return b.src === src; })) S.banners.push({ src: src, url: a ? a.getAttribute("href") : "", alt: im.getAttribute("alt") || "" });
       });
     });
