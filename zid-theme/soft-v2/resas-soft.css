@@ -517,6 +517,9 @@ body .rs-panels .product-item .add-to-wishlist, body .rs-panels .product-item [d
 /* ---------- Header back arrow on inner pages: it stuck to the logo on the phone ---------- */
 @media (max-width: 991px) { body header .ic-menu-back { display: none !important; } }
 
+/* ---------- Cart totals title spacing on the phone ---------- */
+@media (max-width: 991px) { body .cart-view .col-lg-4 .section-title { margin-top: 32px !important; } }
+
 /* ---------- Motion: only when motion is welcome; content stays visible if script fails ---------- */
 @media (prefers-reduced-motion: no-preference) {
   .rs-about__media img { animation: rs-drift 22s ease-in-out infinite alternate; }
