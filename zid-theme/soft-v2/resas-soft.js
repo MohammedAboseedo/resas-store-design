@@ -20,8 +20,15 @@
     bannerFallback: "https://mohammedaboseedo.github.io/resas-store-design/storefront/assets/img/banner.webp",
     about: { title: "ثمانية عشر عاماً في صناعة الرائحة", text: "نشأت رساس في المملكة العربية السعودية عام 2008، لتقدم عطوراً فرنسية وشرقية بأسلوب دافئ وأنيق، وبخوراً وعوداً من أجود الأنواع.", cta: "تسوّق عطور رساس" },
     /* Extra blocks the dashboard does not have. All off: set true to show one. */
-    extras: { about: false, tiles: false, deals: false, featured: false, duo: false, blog: false, instagram: false },
+    extras: { about: false, tiles: true, deals: true, featured: false, duo: false, blog: false, instagram: false },
     tileText: "اكتشف المجموعة",
+    /* The four tiles of the approved design: copy, link and (for the last one) its own photo. The others take the first product photo of the matching section. */
+    tilesCopy: [
+      { title: "عطور رساس\nالخاصة", text: "تراكيب لا تجدها في مكان آخر.", url: "/categories/1162806/عطور-خاصة" },
+      { title: "صُنعت\nبعناية", text: "خبرة رساس منذ 2008.", url: "/categories/358519/عطور" },
+      { title: "قسّمها على\n4 دفعات", text: "مع تمارا وتابي، بدون فوائد.", url: "/products/" },
+      { title: "الهدايا\nالملكية", text: "مباخر وأطقم لمن تحب.", url: "/categories/265764/الهدايا-الملكية", image: "https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/d27754d3-1a8c-4b49-b5e8-b9d7d1723dc9.jpeg" }
+    ],
     tabLimit: 10,
     featuredCount: 6,
     /* Product pages checked for an old price when no product on the home page is on sale. Optional. */
@@ -243,9 +250,10 @@
     var tiles = el('<section class="rs-sec" aria-label="أقسام مختارة"><div class="rs-wrap"><ul class="rs-tiles">' + S.sections.slice(0, 4).map(function (sec, i) {
       var k = KINDS[i].split(" "), first = sec.cards.filter(function (c) { return c.inStock; })[0] || sec.cards[0], cat = catFor(S, sec.title);
       var cls = "rs-tile rs-tile--" + k[0] + (k[1] ? " rs-tile--" + k[1] : "");
-      var text = '<span class="rs-tile__title">' + esc(sec.title) + '</span><span class="rs-tile__text">' + esc(RESAS.tileText) + "</span>";
-      var pic = '<img src="' + esc(sized(first.image, 700)) + '" alt="" loading="lazy">';
-      return '<li' + rise(i * 90) + '><a class="' + cls + '" href="' + esc(cat ? cat.url : first.url) + '">' + (k[0] === "photo" ? pic + text : text + pic) + "</a></li>";
+      var cp = (RESAS.tilesCopy || [])[i] || {};
+      var text = '<span class="rs-tile__title">' + esc(cp.title || sec.title) + '</span><span class="rs-tile__text">' + esc(cp.text || RESAS.tileText) + "</span>";
+      var pic = '<img src="' + esc(sized(cp.image || first.image, 700)) + '" alt="" loading="lazy">';
+      return '<li' + rise(i * 90) + '><a class="' + cls + '" href="' + esc(cp.url || (cat ? cat.url : first.url)) + '">' + (k[0] === "photo" ? pic + text : text + pic) + "</a></li>";
     }).join("") + "</ul></div></section>");
 
     /* Sale band: products on the home page that show an old price; if none do, the optional pages in RESAS.dealUrls are checked. */
@@ -341,7 +349,7 @@
     anchor.parentNode.insertBefore(hero, anchor);
     /* The "about" panel made with Zid's generator sits right after the categories, as in the design. */
     var aboutSec = $$(".aigc-section", root).filter(function (s) { return /عن رساس/.test(s.textContent); })[0];
-    put(arches); put(EX.about ? about : null); put(aboutSec || null); put(picks); put(banners); put(EX.tiles ? tiles : null); put(EX.deals ? deals : null);
+    put(arches); put(EX.about ? about : null); put(aboutSec || null); put(picks); put(EX.tiles ? tiles : null); put(EX.deals ? deals : null); put(banners);
     put(EX.featured ? featured : null); put(EX.duo ? duo : null); put(EX.blog ? blog : null); put(EX.instagram ? insta : null);
     var rv = $(".testimonials-slider", root), reviews = rv && rv.closest("[section-id]");
     if (reviews) {
