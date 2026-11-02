@@ -536,7 +536,11 @@ body .announcement-bar a { color: inherit !important; text-decoration: none !imp
 body .announcement-bar .ab-close { display: none !important; }
 
 /* ---------- Current menu item: gold underline ---------- */
-@media (min-width: 992px) { body .menu-link.rs-current .clickable-span { border-bottom: 2px solid var(--rs-cognac); padding-bottom: 6px; } }
+/* Every item reserves the underline's space (transparent), so marking the current one after load does not change the header height. */
+@media (min-width: 992px) {
+  body .menu-link .clickable-span { border-bottom: 2px solid transparent; padding-bottom: 6px; }
+  body .menu-link.rs-current .clickable-span { border-bottom-color: var(--rs-cognac); }
+}
 
 /* ---------- Photo strip above the footer: edge to edge, squares, with room before the curved footer ---------- */
 .rs-strip { padding-top: var(--rs-space); padding-bottom: var(--rs-pad-panel); }
