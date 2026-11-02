@@ -68,6 +68,16 @@
     if (header) header.parentNode.insertBefore(el('<div class="rs-announce">' + esc(RESAS.announcement) + "</div>"), header);
   }
 
+  /* The page you are on gets the gold underline in the menu, as in the design (Soft does not mark it). */
+  function navCurrent() {
+    var path = location.pathname, dec = path; try { dec = decodeURIComponent(path); } catch (e) {}
+    $$("header .menu-link, nav .menu-link").forEach(function (a) {
+      var h = (a.getAttribute("href") || "").split("?")[0], d = h; try { d = decodeURIComponent(h); } catch (e) {}
+      var key = d.split("/").slice(0, 3).join("/");
+      a.classList.toggle("rs-current", d === "/" ? path === "/" : d.length > 1 && dec.indexOf(key) === 0);
+    });
+  }
+
   /* ---------- header: menu and search on the start side, logo centred, account and cart on the end side ---------- */
   function header() {
     var bar = $(".search-header-bar");
@@ -436,6 +446,7 @@
     if (!reduce) document.documentElement.classList.add("rs-anim");
     try { announcement(); } catch (e) { console.error("Resas announcement:", e); }
     try { header(); } catch (e) { console.error("Resas header:", e); }
+    try { navCurrent(); } catch (e) { console.error("Resas nav:", e); }
     try { home(); } catch (e) { console.error("Resas home:", e); }
     try { reviewsSlider(); } catch (e) { console.error("Resas reviews:", e); }
     try { catCols(); window.addEventListener("resize", catCols); } catch (e) { console.error("Resas categories:", e); }

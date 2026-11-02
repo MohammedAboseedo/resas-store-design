@@ -533,6 +533,9 @@ body .announcement-bar .announcement-text { margin: 0 !important; padding: 8px 1
 body .announcement-bar a { color: inherit !important; text-decoration: none !important; }
 body .announcement-bar .ab-close { display: none !important; }
 
+/* ---------- Current menu item: gold underline ---------- */
+@media (min-width: 992px) { body .menu-link.rs-current .clickable-span { border-bottom: 2px solid var(--rs-cognac); padding-bottom: 6px; } }
+
 /* ---------- Motion: only when motion is welcome; content stays visible if script fails ---------- */
 @media (prefers-reduced-motion: no-preference) {
   .rs-about__media img { animation: rs-drift 22s ease-in-out infinite alternate; }
