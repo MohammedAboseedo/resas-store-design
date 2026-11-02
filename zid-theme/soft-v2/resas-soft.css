@@ -531,6 +531,7 @@ body .features-section { background: transparent !important; }
 /* ---------- Zid's top bar (شريط التنبيهات): text, colours and link come from the dashboard; only the type is set here ---------- */
 body .announcement-bar .announcement-text { margin: 0 !important; padding: 8px 16px !important; font-family: inherit; font-size: var(--rs-fs-s) !important; font-weight: 500 !important; text-align: center; }
 body .announcement-bar a { color: inherit !important; text-decoration: none !important; }
+body .announcement-bar .ab-close { display: none !important; }
 
 /* ---------- Motion: only when motion is welcome; content stays visible if script fails ---------- */
 @media (prefers-reduced-motion: no-preference) {
