@@ -134,6 +134,9 @@
     /* The brand mark at the top of the phone menu. */
     var drawerTop = $(".slide-menu .menu-header-theme-bg-primary > li:first-child > div, .slide-menu ul > li:first-child > div");
     if (drawerTop && logoImg && !$(".rs-drawer-logo", drawerTop)) { var dl = document.createElement("img"); dl.className = "rs-drawer-logo"; dl.alt = ""; dl.src = logoImg.currentSrc || logoImg.src; drawerTop.appendChild(dl); }
+    /* The store's social links, taken from the footer (set in the dashboard), at the bottom of the phone menu. */
+    var soc = $("footer .social-icons"), topList = $(".slide-menu .menu-header-theme-bg-primary") || $(".slide-menu ul");
+    if (soc && topList && !$(".rs-drawer-social", topList)) { var sli = document.createElement("li"); sli.className = "rs-drawer-social"; sli.appendChild(soc.cloneNode(true)); topList.appendChild(sli); }
     var lang = $(".account-lang-currency");
     if (lang) lang.style.display = "none";
   }
