@@ -145,15 +145,24 @@
     };
   }
   function readStore(root) {
-    var S = { hero: null, cats: [], sections: [], cards: [], used: [], banners: [], tiles: [] };
+    var S = { hero: null, cats: [], sections: [], cards: [], used: [], banners: [], tiles: [], strip: [] };
     var ss = $$("section.ss", root);
     if (ss[0]) {
       var hi = live($$("img", ss[0]))[0], ha = hi && hi.closest("a");
       if (hi) S.hero = { src: (hi.getAttribute("src") || "").trim() || (hi.currentSrc || ""), url: ha ? ha.getAttribute("href") : "", alt: hi.getAttribute("alt") || "" };
     }
-    S.used = S.used.concat(ss, $$(".gallery-section", root));
+    var galleries = $$(".gallery-section", root), strips = galleries.filter(function (g) { return live($$("img", g)).length >= 5; }), plain = galleries.filter(function (g) { return strips.indexOf(g) < 0; });
+    S.used = S.used.concat(ss, galleries);
+    /* The photo strip above the footer: a "مجموعة الصور" section with five or more photos (the photos and their links come from the dashboard). */
+    S.strip = [];
+    strips.slice(0, 1).forEach(function (g) {
+      live($$("img", g)).forEach(function (im) {
+        var a = im.closest("a"), src = (im.getAttribute("src") || im.getAttribute("data-src") || "").trim() || (im.getAttribute("srcset") || im.getAttribute("data-srcset") || "").split(",").pop().trim().split(" ")[0];
+        if (src) S.strip.push({ src: src, url: a ? a.getAttribute("href") : "", alt: im.getAttribute("alt") || "" });
+      });
+    });
     S.banners = [];
-    ss.slice(1).concat($$(".gallery-section", root)).forEach(function (sec) {
+    ss.slice(1).concat(plain).forEach(function (sec) {
       live($$("img", sec)).forEach(function (im) {
         var a = im.closest("a"), src = (im.getAttribute("src") || im.getAttribute("data-src") || "").trim() || (im.getAttribute("srcset") || im.getAttribute("data-srcset") || "").split(",").pop().trim().split(" ")[0];
         if (src && !S.banners.some(function (b) { return b.src === src; })) S.banners.push({ src: src, url: a ? a.getAttribute("href") : "", alt: im.getAttribute("alt") || "" });
@@ -398,6 +407,10 @@
     });
     put(arches); put(EX.about ? about : null); put(aboutSec || null); put(picks); put(EX.tiles ? tiles : null); put(EX.deals ? deals : null); put(banners);
     put(EX.featured ? featured : null); put(EX.duo ? duo : null); put(EX.blog ? blog : null); put(EX.instagram ? insta : null);
+    var strip = !S.strip.length ? null : el('<section class="rs-strip" aria-label="صور"><ul class="rs-strip__grid">' + S.strip.slice(0, 12).map(function (p, i) {
+      var inner = '<img src="' + esc(sized(p.src, 480)) + '" alt="' + esc(p.alt) + '" loading="lazy">';
+      return '<li' + rise((i % 6) * 60) + '>' + (p.url ? '<a href="' + esc(p.url) + '">' + inner + "</a>" : inner) + "</li>";
+    }).join("") + "</ul></section>");
     var rv = $(".testimonials-slider", root), reviews = rv && rv.closest("[section-id]");
     if (reviews) {
       /* The store left this section's title empty in the dashboard. */
@@ -405,6 +418,7 @@
       if (rt && !rt.textContent.trim()) rt.textContent = "آراء عملائنا";
       root.appendChild(reviews);
     }
+    if (strip) root.appendChild(strip);
     /* Only now hide the sections that were used, so a failure above never leaves the page empty. */
     S.used.forEach(function (n) { n.classList.add("rs-used"); });
     root.classList.add("rs-ready");
