@@ -554,6 +554,11 @@
     }).join("") + "</nav>");
     document.body.appendChild(bar);
     document.body.classList.add("rs-has-tabbar");
+    /* "Categories" opens the side menu (the same one the header's menu button opens) instead of leaving the page. */
+    $(".rs-tab--cats", bar).addEventListener("click", function (e) {
+      var m = $(".icon-menu-top");
+      if (m) { e.preventDefault(); m.click(); }
+    });
 
     /* The cart count comes from the header's own badge (Zid keeps it up to date). */
     var count = $(".rs-tab__count", bar), badge = $(".cart-badge");
