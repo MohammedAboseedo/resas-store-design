@@ -685,3 +685,12 @@ body .card-categories .box-1-1 .content, body .card-categories .box-1-1 { backgr
   .rs-buy button:focus-visible { outline: 2px solid var(--rs-ink); outline-offset: 2px; }
 }
 @media (prefers-reduced-motion: reduce) { .rs-buy, .rs-tab { transition: none; } }
+
+/* On phones the cart lives in the bottom bar, so the header keeps only the menu, the logo and search. */
+@media (max-width: 767px) { body.rs-has-tabbar .rs-hcart { display: none !important; } }
+
+/* All categories page: let the card grow with its list (Soft fixes its height), indent the nested categories. */
+body .card-categories-wrapper .card-body { height: auto !important; max-height: none !important; }
+body .categories-subTitle { margin: 0 !important; padding: 0 16px 0 0 !important; list-style: none; }
+body .categories-subTitle li { margin: 0; padding: 4px 0; }
+body .categories-subTitle a { color: var(--rs-muted) !important; font-size: 14px !important; }

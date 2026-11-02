@@ -130,7 +130,7 @@
     if (cart && account) cart.insertBefore(account, cart.firstChild);
     if (cart && mobileSearch) cart.insertBefore(mobileSearch, cart.firstChild);
     if (cart && region) cart.insertBefore(region, cart.firstChild);
-    if (cart && cartLink && cartLink.parentNode !== cart) cart.appendChild(cartLink.parentNode);
+    if (cart && cartLink && cartLink.parentNode !== cart) { cart.appendChild(cartLink.parentNode); cartLink.parentNode.classList.add("rs-hcart"); }
     var logoImg = $(".header-logo .image-logo");
     if (RESAS.logo && logoImg) { logoImg.removeAttribute("srcset"); logoImg.src = RESAS.logo; }
     /* The brand mark at the top of the phone menu. */
