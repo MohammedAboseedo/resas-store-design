@@ -125,10 +125,6 @@ body .sub-menu-block a:hover, body .sub-menu-block a:hover span { color: var(--r
 #fixed-header, body header { background: #fff; box-shadow: none; }
 @media (min-width: 992px) { body .search-header-bar { min-height: 96px; } body .header-logo .image-logo { height: 64px !important; } }
 
-/* Mobile menu */
-body .slide-menu, body .slide-menu ul { background: #fff !important; }
-body .slide-menu .menu-link, body .slide-menu .menu-link span, body .slide-menu-arrow { color: var(--rs-ink) !important; }
-body .slide-menu-ul-li { border-bottom: 0; }
 
 /* ---------- Product card (every list in the store) ---------- */
 body .product-item { width: 100%; max-width: none !important; border: 0 !important; border-radius: 0 !important; padding: 0 !important; background: none !important; box-shadow: none !important; text-align: center; height: 100%; display: flex; flex-direction: column; overflow: visible !important; }
@@ -546,22 +542,22 @@ body .announcement-bar .ab-close { display: none !important; }
 /* the footer's curve shows only when the footer itself has no background of its own */
 body footer { background: transparent !important; }
 
-/* ---------- Mobile menu drawer: dark, like the footer ---------- */
-body.sidenav-open::after { background: rgba(20, 14, 10, .6) !important; }
-body nav.slide-menu { background: var(--rs-espresso) !important; border-radius: 0 var(--rs-r-l) var(--rs-r-l) 0; box-shadow: none !important; }
-[dir="rtl"] body nav.slide-menu, body.rtl nav.slide-menu { border-radius: var(--rs-r-l) 0 0 var(--rs-r-l); }
-body nav.slide-menu ul { background: transparent !important; }
-body nav.slide-menu ul ul { background: var(--rs-espresso) !important; }
-body nav.slide-menu .menu-link { display: flex !important; align-items: center; justify-content: space-between; min-height: 58px; padding: 0 28px !important; border-bottom: 1px solid rgba(233, 223, 193, .14); font-size: var(--rs-fs-l) !important; font-weight: 500 !important; color: #F1E8DC !important; }
-body nav.slide-menu .menu-link span, body nav.slide-menu .menu-link .clickable-span { color: inherit !important; }
-body nav.slide-menu .menu-link:hover, body nav.slide-menu .menu-link.rs-current { background: rgba(174, 144, 59, .16); color: var(--rs-cognac) !important; }
-body nav.slide-menu .menu-link .slide-menu__decorator, body nav.slide-menu .menu-link [class*="icon-arrow"] { color: #B9AB9A !important; font-size: 18px; }
-body nav.slide-menu .slide-menu__backlink { min-height: 58px; padding-inline: 28px; color: var(--rs-cognac) !important; font-weight: 600; background: transparent !important; }
-body nav.slide-menu .rs-drawer-logo { display: block; width: auto; height: 30px; margin: 22px auto 14px; }
-body nav.slide-menu .rs-drawer-social { margin-top: 24px; padding: 0 28px 28px; list-style: none; }
-body nav.slide-menu .rs-drawer-social .social-icons { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
-body nav.slide-menu .rs-drawer-social a { display: inline-grid !important; place-items: center; width: 40px; height: 40px; padding: 0 !important; border: 1px solid rgba(233, 223, 193, .35); border-radius: 50%; color: #F1E8DC !important; }
-body nav.slide-menu .rs-drawer-social a:hover { background: rgba(174, 144, 59, .2); }
+/* ---------- Mobile menu drawer: dark, like the footer (background, text and arrows are all set here, so no piece can end up dark on dark) ---------- */
+body .slide-menu { background: var(--rs-espresso) !important; color: #F1E8DC !important; box-shadow: none !important; }
+body .slide-menu .slide-menu__slider, body .slide-menu ul { background: transparent !important; }
+body .slide-menu ul ul { background: var(--rs-espresso) !important; }
+body .slide-menu a, body .slide-menu a span, body .slide-menu li { color: #F1E8DC !important; }
+body .slide-menu-ul-li { border-top: 0 !important; }
+body .slide-menu .menu-link { display: flex !important; align-items: center; justify-content: space-between; min-height: 58px; padding: 0 28px !important; border-bottom: 1px solid rgba(233, 223, 193, .14); font-size: var(--rs-fs-l) !important; font-weight: 500 !important; }
+body .slide-menu ul ul > li > a:not(.slide-menu__backlink) { display: flex; align-items: center; min-height: 54px; padding: 0 28px !important; border-bottom: 1px solid rgba(233, 223, 193, .14); font-size: var(--rs-fs-b); }
+body .slide-menu .menu-link:hover, body .slide-menu .menu-link.rs-current, body .slide-menu .menu-link.rs-current span { background: rgba(174, 144, 59, .16); color: var(--rs-cognac) !important; }
+body .slide-menu [class*="icon-arrow"], body .slide-menu .slide-menu__decorator, body .slide-menu .slide-menu-arrow, body .slide-menu .slide-menu-arrow-back { color: #B9AB9A !important; font-size: 18px; }
+body .slide-menu .slide-menu__backlink, body .slide-menu .slide-menu__backlink span { min-height: 58px; padding-inline: 28px; color: var(--rs-cognac) !important; font-weight: 600; background: transparent !important; }
+body .slide-menu .rs-drawer-logo { display: block; width: auto; height: 30px; margin: 22px auto 14px; }
+body .slide-menu .rs-drawer-social { margin-top: 24px; padding: 0 28px 28px; list-style: none; }
+body .slide-menu .rs-drawer-social .social-icons { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+body .slide-menu .rs-drawer-social a { display: inline-grid !important; place-items: center; width: 40px; height: 40px; padding: 0 !important; border: 1px solid rgba(233, 223, 193, .35); border-radius: 50%; }
+body .slide-menu .rs-drawer-social a:hover { background: rgba(174, 144, 59, .2); }
 
 /* ---------- Content pages (policies, blog, custom pages) ---------- */
 body section.blog { margin: 0 !important; padding-block: var(--rs-sp-head) var(--rs-space); }
@@ -624,6 +620,9 @@ body .card-categories .box-1-1 .content, body .card-categories .box-1-1 { backgr
 .rs-hero__dots button { width: 10px; height: 10px; padding: 0; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .6); box-shadow: 0 0 0 1px rgba(36, 27, 22, .25); cursor: pointer; transition: width .25s ease, background-color .25s ease; }
 .rs-hero__dots button[aria-current="true"] { width: 26px; border-radius: 999px; background: var(--rs-cognac); }
 .rs-hero__dots button:focus-visible { outline: 2px solid var(--rs-ink); outline-offset: 3px; }
+
+/* ---------- Very narrow phones (320px and below): a smaller logo so it never meets the menu button ---------- */
+@media (max-width: 340px) { body .header-logo .image-logo { height: 24px !important; } body .rs-announce, body .announcement-bar .announcement-text { font-size: 12px !important; } }
 
 /* ---------- Motion: only when motion is welcome; content stays visible if script fails ---------- */
 @media (prefers-reduced-motion: no-preference) {
