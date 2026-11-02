@@ -158,11 +158,15 @@
     };
   }
   function readStore(root) {
-    var S = { hero: null, cats: [], sections: [], cards: [], used: [], banners: [], tiles: [], strip: [] };
+    var S = { hero: null, heroes: [], cats: [], sections: [], cards: [], used: [], banners: [], tiles: [], strip: [] };
     var ss = $$("section.ss", root);
+    S.heroes = [];
     if (ss[0]) {
-      var hi = live($$("img", ss[0]))[0], ha = hi && hi.closest("a");
-      if (hi) S.hero = { src: (hi.getAttribute("src") || "").trim() || (hi.currentSrc || ""), url: ha ? ha.getAttribute("href") : "", alt: hi.getAttribute("alt") || "" };
+      live($$("img", ss[0])).forEach(function (hi) {
+        var ha = hi.closest("a"), src = (hi.getAttribute("src") || hi.getAttribute("data-src") || "").trim() || (hi.currentSrc || "") || (hi.getAttribute("srcset") || hi.getAttribute("data-srcset") || "").split(",").pop().trim().split(" ")[0];
+        if (src && !S.heroes.some(function (h) { return h.src === src; })) S.heroes.push({ src: src, url: ha ? ha.getAttribute("href") : "", alt: hi.getAttribute("alt") || "" });
+      });
+      S.hero = S.heroes[0] || null;
     }
     var galleries = $$(".gallery-section", root), strips = galleries.filter(function (g) { return live($$("img", g)).length >= 5; }), plain = galleries.filter(function (g) { return strips.indexOf(g) < 0; });
     S.used = S.used.concat(ss, galleries);
@@ -223,13 +227,30 @@
     var top = fav.slice().sort(function (a, b) { return (b.rating * 10 + b.count) - (a.rating * 10 + a.count); });
 
     var hero;
-    if (S.hero) {
+    if (S.heroes.length > 1) {
+      hero = el('<section class="rs-hero rs-hero--multi" aria-label="العرض الرئيسي" aria-roledescription="carousel"><div class="rs-hero__track">' + S.heroes.slice(0, 8).map(function (h, i) {
+        var im = '<img class="rs-hero__img" src="' + esc(h.src) + '" alt="' + esc(h.alt || "العرض " + (i + 1)) + '"' + (i ? ' loading="lazy"' : ' fetchpriority="high"') + ">";
+        return '<div class="rs-hero__slide" role="group" aria-roledescription="slide" aria-label="' + (i + 1) + " / " + Math.min(8, S.heroes.length) + '">' + (h.url ? '<a href="' + esc(h.url) + '">' + im + "</a>" : im) + "</div>";
+      }).join("") + '</div><div class="rs-hero__dots">' + S.heroes.slice(0, 8).map(function (h, i) { return '<button type="button" aria-label="العرض ' + (i + 1) + '"' + (i ? "" : ' aria-current="true"') + "></button>"; }).join("") + "</div></section>");
+      (function (sec) {
+        var track = $(".rs-hero__track", sec), dots = $$(".rs-hero__dots button", sec), n = dots.length, cur = 0, timer = null;
+        function width() { return track.clientWidth || 1; }
+        function show(i) { cur = (i + n) % n; track.scrollTo({ left: (window.appDirection === "ltr" ? 1 : -1) * cur * width(), behavior: "smooth" }); }
+        function mark() { var i = Math.round(Math.abs(track.scrollLeft) / width()); dots.forEach(function (d, k) { if (k === i) d.setAttribute("aria-current", "true"); else d.removeAttribute("aria-current"); }); cur = i; }
+        dots.forEach(function (d, i) { d.addEventListener("click", function () { show(i); }); });
+        track.addEventListener("scroll", mark, { passive: true });
+        function play() { if (reduce || timer) return; timer = setInterval(function () { show(cur + 1); }, 5500); }
+        function stop() { clearInterval(timer); timer = null; }
+        sec.addEventListener("mouseenter", stop); sec.addEventListener("mouseleave", play); sec.addEventListener("focusin", stop); sec.addEventListener("focusout", play); sec.addEventListener("touchstart", stop, { passive: true });
+        play();
+      })(hero);
+    } else if (S.hero) {
       var himg = '<img class="rs-hero__img" src="' + esc(S.hero.src) + '" alt="' + esc(S.hero.alt || "العرض الرئيسي") + '" fetchpriority="high">';
       hero = el('<section class="rs-hero" aria-label="العرض الرئيسي">' + (S.hero.url ? '<a href="' + esc(S.hero.url) + '">' + himg + "</a>" : himg) + "</section>");
     } else {
       hero = el('<section class="rs-hero" aria-label="العرض الرئيسي"><img class="rs-hero__img" src="' + esc(RESAS.bannerFallback) + '" width="1280" height="494" alt="" fetchpriority="high"></section>');
     }
-    (function (im) { var f = function () { if (im.naturalWidth && Math.abs(im.naturalWidth / im.naturalHeight - 2.59) < 0.12) im.setAttribute("data-crop", ""); }; if (im.complete) f(); else im.addEventListener("load", f); })($("img", hero));
+    $$("img", hero).forEach(function (im) { var f = function () { if (im.naturalWidth && Math.abs(im.naturalWidth / im.naturalHeight - 2.59) < 0.12) im.setAttribute("data-crop", ""); }; if (im.complete) f(); else im.addEventListener("load", f); });
 
     var CHEV = function (d) { return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + d + '"/></svg>'; };
     var arches = S.cats.length ? el('<section class="rs-sec" aria-labelledby="rs-cat-title"><div class="rs-wrap"><div class="rs-sec__head"><h2 class="rs-title rs-sec__title" id="rs-cat-title"' + rise(0) + '>تسوّق حسب القسم</h2>' +
@@ -364,10 +385,10 @@
       var gl = $$('a[href*="/categories/"]').filter(function (a) { return /هدايا|هدية/.test(txt(a)); })[0];
       if (gl) gifts = { name: txt(gl), url: gl.getAttribute("href") };
     }
-    var brazier = S.cards.filter(function (c) { return /مبخر/.test(c.name); })[0] || top[0];
+    var brazier = S.cards.filter(function (c) { return /مبخر/.test(c.name); })[0] || top[0] || S.cards[0];
     var duoItems = [];
     if (gifts) duoItems.push({ kicker: "للمناسبات", title: gifts.name, text: "اختر الأنسب لمن تحب.", cta: "تسوّق " + gifts.name, url: gifts.url, image: brazier.image });
-    duoItems.push({ kicker: "محتار في اختيار عطرك؟", title: "نساعدك تختار عطرك المناسب", text: "فريق رساس يرد عليك على واتساب، لك أو لهديتك.", cta: "تحدّث معنا على واتساب", url: "https://wa.me/" + RESAS.whatsapp, image: (top[1] || top[0]).image });
+    duoItems.push({ kicker: "محتار في اختيار عطرك؟", title: "نساعدك تختار عطرك المناسب", text: "فريق رساس يرد عليك على واتساب، لك أو لهديتك.", cta: "تحدّث معنا على واتساب", url: "https://wa.me/" + RESAS.whatsapp, image: (top[1] || top[0] || S.cards[0]).image });
     var duo = el('<section class="rs-sec" aria-label="هدايا ومساعدة"><div class="rs-wrap"><div class="rs-duo">' + duoItems.map(function (d, i) {
       var ext = /^https?:/.test(d.url);
       return '<a class="rs-duo__item"' + rise(i * 90) + ' href="' + esc(d.url) + '"' + (ext ? ' target="_blank" rel="noopener"' : "") + '><span class="rs-duo__body"><span class="rs-duo__kicker">' + esc(d.kicker) + '</span><span class="rs-title rs-duo__title">' + esc(d.title) + '</span><span class="rs-duo__text">' + esc(d.text) + '</span><span class="rs-link">' + esc(d.cta) + '</span></span><span class="rs-duo__img"><img src="' + esc(sized(d.image, 720)) + '" alt="" loading="lazy"></span></a>';

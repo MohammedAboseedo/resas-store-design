@@ -484,7 +484,6 @@ body .a-shopping-cart .icon-shopping_cart_black_36dp-1-1 { -webkit-mask-image: u
 body .account-area .account-btn [class*="icon-account"] { -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%228%22 r=%224%22/%3E%3Cpath d=%22M4 21c0-4 3.6-7 8-7s8 3 8 7%22/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%228%22 r=%224%22/%3E%3Cpath d=%22M4 21c0-4 3.6-7 8-7s8 3 8 7%22/%3E%3C/svg%3E"); }
 
 /* ---------- Store features strip (Zid section) in the page's own colors ---------- */
-body .features-section { background: var(--rs-ivory) !important; }
 body .features-section :is(p, span, h3, h4, div) { color: var(--rs-ink) !important; }
 body .features-section img { border-radius: 50%; }
 
@@ -615,6 +614,16 @@ body section.blog .blog-text p, body section.blog .blog-text span, body section.
 body section.blog .blog-text p:empty, body section.blog .blog-text p:has(> br:only-child) { display: none; }
 body section.blog .blog-text p { margin: 0 0 12px; }
 body .card-categories .box-1-1 .content, body .card-categories .box-1-1 { background: var(--rs-linen) !important; }
+
+/* ---------- Hero slider (only when the dashboard banner section has several slides) ---------- */
+.rs-hero--multi { position: relative; }
+.rs-hero__track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none; }
+.rs-hero__track::-webkit-scrollbar { display: none; }
+.rs-hero__slide { flex: 0 0 100%; min-width: 0; scroll-snap-align: start; }
+.rs-hero__dots { position: absolute; inset-inline: 0; bottom: 14px; display: flex; justify-content: center; gap: 8px; }
+.rs-hero__dots button { width: 10px; height: 10px; padding: 0; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .6); box-shadow: 0 0 0 1px rgba(36, 27, 22, .25); cursor: pointer; transition: width .25s ease, background-color .25s ease; }
+.rs-hero__dots button[aria-current="true"] { width: 26px; border-radius: 999px; background: var(--rs-cognac); }
+.rs-hero__dots button:focus-visible { outline: 2px solid var(--rs-ink); outline-offset: 3px; }
 
 /* ---------- Motion: only when motion is welcome; content stays visible if script fails ---------- */
 @media (prefers-reduced-motion: no-preference) {
