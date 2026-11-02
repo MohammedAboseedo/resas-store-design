@@ -25,8 +25,8 @@
     tileText: "اكتشف المجموعة",
     tabLimit: 10,
     featuredCount: 6,
-    /* Product pages checked for an old price when no product on the home page is on sale. Optional. */
-    dealUrls: ["/products/رساس", "/products/مجموعة-سجى-saja-perfumes", "/products/ربع-تولة", "/products/5-كريمات-لليدين"],
+    /* The sale band reads the discounted products of the home page (set the discount on the product in Zid); nothing is listed here. */
+    dealUrls: [],
     instagram: "resas_perfume"
   };
 
@@ -106,7 +106,7 @@
   function live(list) { return list.filter(function (e) { return !e.closest(".slick-cloned"); }); }
   function cardInfo(c) {
     var a = $('a[href*="/products/"]', c), im = $("img[id^='product-card-img']", c), pr = $(".product-price span", c);
-    var old = $(".product-price del, .product-price .old-price, .product-price [class*='old']", c);
+    var old = $(".product-prev-price, .product-price del, .product-price .old-price, .product-price [class*='old']", c);
     var rt = $(".product-card-rating", c), rc = $(".product-card-rating-count", c), w = $("[data-wishlist-id]", c);
     if (!a || !im) return null;
     return {
@@ -270,7 +270,8 @@
 
     /* Sale band: products on the home page that show an old price; if none do, the optional pages in RESAS.dealUrls are checked. */
     var deals = el('<section class="rs-sec" aria-labelledby="rs-deals-title" hidden><div class="rs-wrap"><div class="rs-dband"></div></div></section>');
-    var onSale = S.cards.filter(function (c) { return c.oldNum > c.priceNum && c.priceNum > 0; }).map(function (c) {
+    var seen = {};
+    var onSale = S.cards.filter(function (c) { if (seen[c.url] || !(c.oldNum > c.priceNum && c.priceNum > 0)) return false; seen[c.url] = 1; return true; }).map(function (c) {
       return { url: c.url, title: c.name, price: c.price, old: c.oldHtml, pct: Math.round((1 - c.priceNum / c.oldNum) * 100), image: c.image };
     });
     var dealsReady = !EX.deals ? Promise.resolve([]) : onSale.length ? Promise.resolve(onSale) : Promise.all((RESAS.dealUrls || []).map(loadProduct)).then(function (list) {
