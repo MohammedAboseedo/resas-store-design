@@ -23,6 +23,8 @@
     /* Extra blocks the dashboard does not have. All off: set true to show one. */
     extras: { about: false, tiles: true, deals: true, featured: false, duo: false, blog: false, instagram: false },
     tileText: "اكتشف المجموعة",
+    /* The bottom tab bar on phones, and the sticky add-to-cart bar on product pages. */
+    phoneBars: true,
     tabLimit: 10,
     featuredCount: 6,
     /* The sale band reads the discounted products of the home page (set the discount on the product in Zid); nothing is listed here. */
@@ -525,6 +527,85 @@
     $$(".cat-col").forEach(function (c) { c.classList.toggle("col-6", narrow); });
   }
 
+  /* ---------- phone bars ----------
+     A floating tab bar at the bottom of every page on phones (home, categories, account, favourites, cart) and, on a product page, a sticky
+     add-to-cart bar above it that appears while the real button is off screen. The sticky bar only forwards to Soft's own button, so options,
+     stock checks and the cart count behave exactly as before. Set RESAS.phoneBars to false to turn both off. */
+  var TAB_ICONS = {
+    home: '<path d="M4 11.2 12 4l8 7.2V20a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1z"/>',
+    cats: '<rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/>',
+    user: '<circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c.7-3.6 3.6-5.5 7.5-5.5s6.8 1.9 7.5 5.5z"/>',
+    heart: '<path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z"/>',
+    cart: '<path d="M6 8h12l1 12.5H5z"/><path d="M9 8V7a3 3 0 0 1 6 0v1"/>'
+  };
+  function phoneBars() {
+    if (RESAS.phoneBars === false || $(".rs-tabbar")) return;
+    var path = location.pathname, dec = path; try { dec = decodeURIComponent(path); } catch (e) {}
+    if (/^\/(checkout|payment)/.test(dec)) return;
+    var tabs = [
+      { k: "home", href: "/", label: "الرئيسية", on: dec === "/" },
+      { k: "cats", href: "/categories", label: "التصنيفات", on: /^\/categories/.test(dec) },
+      { k: "user", href: "/account-profile", label: "حسابي", on: /^\/account/.test(dec) && !/wishlist/.test(dec) },
+      { k: "heart", href: "/account-wishlist", label: "المفضلة", on: /wishlist/.test(dec) },
+      { k: "cart", href: "/cart", label: "السلة", on: dec === "/cart" }
+    ];
+    var bar = el('<nav class="rs-tabbar" aria-label="التنقل السريع">' + tabs.map(function (t) {
+      return '<a class="rs-tab rs-tab--' + t.k + '" href="' + t.href + '" aria-label="' + t.label + '"' + (t.on ? ' aria-current="page"' : "") + '><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + TAB_ICONS[t.k] + "</svg>" + (t.k === "cart" ? '<span class="rs-tab__count" hidden></span>' : "") + "</a>";
+    }).join("") + "</nav>");
+    document.body.appendChild(bar);
+    document.body.classList.add("rs-has-tabbar");
+
+    /* The cart count comes from the header's own badge (Zid keeps it up to date). */
+    var count = $(".rs-tab__count", bar), badge = $(".cart-badge");
+    function syncCount() {
+      var n = badge ? parseInt(badge.textContent.replace(/\D/g, ""), 10) || 0 : 0;
+      count.textContent = n > 99 ? "99+" : String(n);
+      count.hidden = n < 1;
+    }
+    if (badge) { syncCount(); if ("MutationObserver" in window) new MutationObserver(syncCount).observe(badge, { childList: true, characterData: true, subtree: true }); }
+
+    /* The WhatsApp button sits where the bars are: lift it above them while the phone layout is on. */
+    var mq = window.matchMedia ? window.matchMedia("(max-width: 767px)") : null, tries = 0;
+    function lift() {
+      var w = $("[id^='gb-widget']");
+      if (!w) return tries++ < 40 ? setTimeout(lift, 500) : null;
+      var phone = !mq || mq.matches, buy = document.body.classList.contains("rs-has-buy");
+      if (phone) w.style.setProperty("bottom", (buy ? 176 : 96) + "px", "important"); else w.style.setProperty("bottom", "14px", "important");
+    }
+    lift();
+    if (mq && mq.addListener) mq.addListener(lift);
+    document.addEventListener("rs-buy-change", lift);
+
+    try { stickyCart(); } catch (e) { console.error("Resas sticky cart:", e); }
+  }
+
+  function stickyCart() {
+    var btn = $(".col-product-info .btn-add-to-cart") || $(".product-buttons .btn-add-to-cart");
+    if (!btn || btn.disabled || !("IntersectionObserver" in window)) return;
+    var sel = $("#product-quantity"), max = sel ? sel.options.length : 1, qty = 1;
+    var label = btn.textContent.replace(/\s+/g, " ").trim() || "أضف إلى السلة";
+    var buy = el('<div class="rs-buy" role="group" aria-label="إضافة إلى السلة">' + (sel ? '<div class="rs-buy__qty" dir="ltr"><button type="button" data-d="-1" aria-label="إنقاص الكمية">&minus;</button><output aria-live="polite">1</output><button type="button" data-d="1" aria-label="زيادة الكمية">+</button></div>' : "") + '<button type="button" class="rs-buy__btn">' + esc(label) + "</button></div>");
+    document.body.appendChild(buy);
+    var out = $("output", buy);
+    function show() { if (out) out.textContent = String(qty); }
+    function setQty(n) {
+      qty = Math.max(1, Math.min(max, n)); show();
+      if (sel) { sel.value = String(qty); sel.dispatchEvent(new Event("change", { bubbles: true })); }
+    }
+    if (sel) {
+      sel.addEventListener("change", function () { var n = parseInt(sel.value, 10); if (n && n !== qty) { qty = n; show(); } });
+      buy.addEventListener("click", function (e) { var b = e.target.closest("[data-d]"); if (b) setQty(qty + parseInt(b.getAttribute("data-d"), 10)); });
+    }
+    $(".rs-buy__btn", buy).addEventListener("click", function () { if (sel && String(qty) !== sel.value) setQty(qty); btn.click(); });
+    /* Show the bar while the real button is out of view. */
+    new IntersectionObserver(function (en) {
+      var on = !en[0].isIntersecting;
+      buy.classList.toggle("rs-buy--on", on);
+      document.body.classList.toggle("rs-has-buy", on);
+      document.dispatchEvent(new Event("rs-buy-change"));
+    }).observe(btn);
+  }
+
   function init() {
     if (!reduce) document.documentElement.classList.add("rs-anim");
     try { announcement(); } catch (e) { console.error("Resas announcement:", e); }
@@ -534,6 +615,7 @@
     try { home(); } catch (e) { console.error("Resas home:", e); }
     try { reviewsSlider(); } catch (e) { console.error("Resas reviews:", e); }
     try { catCols(); window.addEventListener("resize", catCols); } catch (e) { console.error("Resas categories:", e); }
+    try { phoneBars(); } catch (e) { console.error("Resas phone bars:", e); }
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
