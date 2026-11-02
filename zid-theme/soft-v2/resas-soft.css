@@ -514,6 +514,9 @@ body .rs-panels .product-item .add-to-wishlist, body .rs-panels .product-item [d
   body .features-section .features-section-title { font-size: var(--rs-fs-s) !important; line-height: 1.6; text-align: center; padding-inline: 0 !important; }
 }
 
+/* ---------- Header back arrow on inner pages: it stuck to the logo on the phone ---------- */
+@media (max-width: 991px) { body header .ic-menu-back { display: none !important; } }
+
 /* ---------- Motion: only when motion is welcome; content stays visible if script fails ---------- */
 @media (prefers-reduced-motion: no-preference) {
   .rs-about__media img { animation: rs-drift 22s ease-in-out infinite alternate; }
