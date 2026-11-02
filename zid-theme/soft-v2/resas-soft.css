@@ -162,6 +162,10 @@ body.rtl .slick-next { left: 0 !important; right: auto !important; z-index: 2; }
 
 /* ---------- Homepage: the dashboard sections that the new design has already used ---------- */
 .home .rs-used { display: none !important; }
+/* Until the script has rebuilt the page, show only the first block (the hero banner) so the original Soft sections do not flash and then jump
+   (that jump was a 0.25 layout shift). If the script never finishes, everything is shown again after 5 seconds. */
+@keyframes rs-failsafe { to { visibility: visible; } }
+.home:not(.rs-ready) > [section-id]:not(:first-child) { visibility: hidden; animation: rs-failsafe 0s 5s forwards; }
 /* ---------- The dashboard's other banners: one tidy grid ---------- */
 .rs-banners { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
 @media (max-width: 767px) { .rs-banners { grid-template-columns: minmax(0, 1fr); gap: 16px; } }
