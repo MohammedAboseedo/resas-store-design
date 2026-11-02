@@ -46,6 +46,34 @@
     items.forEach(function (e) { io.observe(e); });
   }
 
+  /* The first product photo of a category or product page, read from the start of the page only (the request is cut as soon as the photo is found). */
+  var photos = {};
+  function photoIn(html, isProduct, final) {
+    var card = /<img[^>]*id="product-card-img[^"]*"[^>]*?\ssrc="\s*([^"\s]+)/.exec(html), og = /property="og:image"\s+content="([^"]+)"/.exec(html) || /content="([^"]+)"\s+property="og:image"/.exec(html);
+    if (isProduct) return (og && og[1]) || (card && card[1]) || "";
+    return (card && card[1]) || (final && og && og[1]) || "";
+  }
+  function firstPhoto(url) {
+    if (photos[url]) return photos[url];
+    var isProduct = /\/products\//.test(url), ctl = window.AbortController ? new AbortController() : null;
+    photos[url] = fetch(url, { credentials: "same-origin", signal: ctl ? ctl.signal : undefined }).then(function (r) {
+      if (!r.ok) return "";
+      if (!r.body || !r.body.getReader || !window.TextDecoder) return r.text().then(function (t) { return photoIn(t, isProduct, true); });
+      var rd = r.body.getReader(), dec = new TextDecoder(), buf = "";
+      function pump() {
+        return rd.read().then(function (x) {
+          if (x.done) return photoIn(buf, isProduct, true);
+          buf += dec.decode(x.value, { stream: true });
+          var f = photoIn(buf, isProduct);
+          if (f) { if (ctl) ctl.abort(); return f; }
+          return pump();
+        });
+      }
+      return pump();
+    }).catch(function () { return ""; });
+    return photos[url];
+  }
+
   /* A product page's price, old price and title, read for the hero card and the deals. */
   var cache = {};
   function loadProduct(url) {
@@ -362,6 +390,12 @@
     anchor.parentNode.insertBefore(hero, anchor);
     /* The "about" panel made with Zid's generator sits right after the categories, as in the design. */
     var aboutSec = $$(".aigc-section", root).filter(function (s) { return /عن رساس/.test(s.textContent); })[0];
+    /* Tile photos come from the products: the first product of the category (or the product) each card links to. The card's own image stays only as the placeholder until then. */
+    if (tiles) $$("a.rs-tile", tiles).forEach(function (a) {
+      var im = $("img", a), u = a.getAttribute("href");
+      if (!im || !u || u === "/") return;
+      firstPhoto(u).then(function (src) { if (src) { im.removeAttribute("srcset"); im.src = sized(src.trim(), 700); } });
+    });
     put(arches); put(EX.about ? about : null); put(aboutSec || null); put(picks); put(EX.tiles ? tiles : null); put(EX.deals ? deals : null); put(banners);
     put(EX.featured ? featured : null); put(EX.duo ? duo : null); put(EX.blog ? blog : null); put(EX.instagram ? insta : null);
     var rv = $(".testimonials-slider", root), reviews = rv && rv.closest("[section-id]");
