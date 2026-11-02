@@ -488,6 +488,22 @@ body .features-section { background: var(--rs-ivory) !important; }
 body .features-section :is(p, span, h3, h4, div) { color: var(--rs-ink) !important; }
 body .features-section img { border-radius: 50%; }
 
+/* ---------- Generated About panel (Zid generator) in the design's own measures ---------- */
+body .aigc-section { padding-top: var(--rs-space) !important; background: transparent !important; }
+body .aigc-section .aigc-story { padding: 0 !important; background: transparent !important; }
+body .aigc-section .aigc-story .container { max-width: calc(1360px + 2 * var(--rs-gutter)) !important; padding-inline: var(--rs-gutter) !important; }
+body .aigc-section .aigc-story__panel { padding: 0 !important; border-radius: var(--rs-r-l) !important; overflow: hidden; background: var(--rs-linen) !important; box-shadow: none !important; border: 0 !important; }
+body .aigc-section .aigc-story__grid { gap: 0 !important; align-items: stretch !important; }
+body .aigc-section .aigc-story__content { display: flex !important; flex-direction: column; justify-content: center; align-items: flex-start; gap: 12px; padding: var(--rs-pad-panel) !important; }
+body .aigc-section .aigc-story__media { height: 100%; min-height: 380px; overflow: hidden; border-radius: 0 !important; }
+body .aigc-section .aigc-story__img { width: 100% !important; height: 100% !important; object-fit: cover; border-radius: 0 !important; display: block; }
+body .aigc-section .aigc-story__eyebrow { margin: 0 !important; font-size: var(--rs-fs-b) !important; font-weight: 600 !important; color: var(--rs-cognac-deep) !important; letter-spacing: 0 !important; }
+body .aigc-section .aigc-story__heading { margin: 0 !important; font-size: var(--rs-fs-h2) !important; font-weight: 600 !important; line-height: 1.4 !important; color: var(--rs-ink) !important; }
+body .aigc-section .aigc-story__text { max-width: 30em; margin: 0 !important; font-size: var(--rs-fs-l) !important; line-height: 1.95 !important; color: var(--rs-muted) !important; }
+body .aigc-section .aigc-story__btn { display: inline-flex !important; align-items: center; gap: 8px; min-height: var(--rs-h-m); margin-top: 12px; padding-inline: 28px !important; border: 0 !important; border-radius: 999px !important; background: var(--rs-cognac) !important; color: var(--rs-ink) !important; font-size: var(--rs-fs-b) !important; font-weight: 500 !important; text-decoration: none; }
+body .aigc-section .aigc-story__btn:hover { background: var(--rs-cognac-deep) !important; color: #fff !important; }
+@media (max-width: 899px) { body .aigc-section .aigc-story__content { align-items: center; text-align: center; } body .aigc-section .aigc-story__media { min-height: 0; aspect-ratio: 4 / 3; } }
+
 /* ---------- Motion: only when motion is welcome; content stays visible if script fails ---------- */
 @media (prefers-reduced-motion: no-preference) {
   .rs-about__media img { animation: rs-drift 22s ease-in-out infinite alternate; }
