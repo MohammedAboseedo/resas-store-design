@@ -256,9 +256,9 @@
 
     var CHEV = function (d) { return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + d + '"/></svg>'; };
     var arches = S.cats.length ? el('<section class="rs-sec" aria-labelledby="rs-cat-title"><div class="rs-wrap"><div class="rs-sec__head"><h2 class="rs-title rs-sec__title" id="rs-cat-title"' + rise(0) + '>تسوّق حسب القسم</h2>' +
-      '<a class="rs-link" href="/categories"' + rise(80) + '>عرض كل الأقسام</a></div><div class="rs-rail"><ul class="rs-arches">' +
+      '<a class="rs-link" href="/categories"' + rise(80) + '>عرض كل الأقسام</a></div><div class="rs-rail"' + rise(60) + '><ul class="rs-arches">' +
       S.cats.slice(0, 16).map(function (a, i) {
-        return '<li' + rise(Math.min(i, 7) * 55) + '><a class="rs-arch-link" href="' + esc(a.url) + '"><span class="rs-arch-link__frame"><img src="' + esc(sized(a.image, 420)) + '" alt="" loading="lazy"></span><span class="rs-arch-link__name">' + esc(a.name) + "</span></a></li>";
+        return '<li><a class="rs-arch-link" href="' + esc(a.url) + '"><span class="rs-arch-link__frame"><img src="' + esc(sized(a.image, 420)) + '" alt="" loading="lazy"></span><span class="rs-arch-link__name">' + esc(a.name) + "</span></a></li>";
       }).join("") + '</ul><button class="rs-rail__btn rs-rail__btn--prev" type="button" aria-label="الأقسام السابقة" hidden>' + CHEV("M9 6l6 6-6 6") + '</button><button class="rs-rail__btn rs-rail__btn--next" type="button" aria-label="الأقسام التالية" hidden>' + CHEV("M15 6l-6 6 6 6") + "</button></div></div></section>") : null;
     if (arches) (function (rail) {
       var list = $(".rs-arches", rail), prev = $(".rs-rail__btn--prev", rail), next = $(".rs-rail__btn--next", rail);
