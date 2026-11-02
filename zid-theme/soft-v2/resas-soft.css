@@ -507,6 +507,13 @@ body .aigc-section .aigc-story__btn:hover { background: var(--rs-cognac-deep) !i
 /* ---------- No hearts on the home cards, as in the design ---------- */
 body .rs-panels .product-item .add-to-wishlist, body .rs-panels .product-item [data-wishlist-id] { display: none !important; }
 
+/* ---------- Features strip on the phone: three equal columns ---------- */
+@media (max-width: 599px) {
+  body .features-section .feature { flex: 1 1 0; min-width: 0; padding-inline: 4px; }
+  body .features-section .features-section-img { width: 64px; height: 64px; }
+  body .features-section .features-section-title { font-size: var(--rs-fs-s) !important; line-height: 1.6; text-align: center; padding-inline: 0 !important; }
+}
+
 /* ---------- Motion: only when motion is welcome; content stays visible if script fails ---------- */
 @media (prefers-reduced-motion: no-preference) {
   .rs-about__media img { animation: rs-drift 22s ease-in-out infinite alternate; }
