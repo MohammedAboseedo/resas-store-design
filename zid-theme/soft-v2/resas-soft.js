@@ -339,7 +339,9 @@
     var after = anchor;
     function put(node) { if (!node) return; after.parentNode.insertBefore(node, after.nextSibling); after = node; }
     anchor.parentNode.insertBefore(hero, anchor);
-    put(arches); put(EX.about ? about : null); put(picks); put(banners); put(EX.tiles ? tiles : null); put(EX.deals ? deals : null);
+    /* The "about" panel made with Zid's generator sits right after the categories, as in the design. */
+    var aboutSec = $$(".aigc-section", root).filter(function (s) { return /عن رساس/.test(s.textContent); })[0];
+    put(arches); put(EX.about ? about : null); put(aboutSec || null); put(picks); put(banners); put(EX.tiles ? tiles : null); put(EX.deals ? deals : null);
     put(EX.featured ? featured : null); put(EX.duo ? duo : null); put(EX.blog ? blog : null); put(EX.instagram ? insta : null);
     var rv = $(".testimonials-slider", root), reviews = rv && rv.closest("[section-id]");
     if (reviews) {

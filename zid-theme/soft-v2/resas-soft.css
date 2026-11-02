@@ -477,6 +477,17 @@ body .cart-view .cart-empty .btn { max-width: 320px; margin-inline: auto; }
 body .cart-view .cart-empty h2 { font-size: var(--rs-fs-h3); font-weight: 600; color: var(--rs-ink); }
 @media (max-width: 767px) { body .cart-view .header-wrapper { display: none; } body .cart-view .section-cart-products-row { flex-wrap: wrap; gap: 12px; } body .cart-view .cart-totals-div, body .cart-view .coupon-form { padding: 16px; } }
 
+/* ---------- Header icons, thin line like the design ---------- */
+body .a-shopping-cart .icon-shopping_cart_black_36dp-1-1, body .account-area .account-btn [class*="icon-account"] { display: inline-block !important; width: 26px; height: 26px; font-size: 0 !important; background: var(--rs-ink); -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center; -webkit-mask-size: contain; mask-size: contain; }
+body .a-shopping-cart .icon-shopping_cart_black_36dp-1-1 > span, body .account-area .account-btn [class*="icon-account"] > span { display: none !important; }
+body .a-shopping-cart .icon-shopping_cart_black_36dp-1-1 { -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M5 8h14l-1 12H6L5 8z%22/%3E%3Cpath d=%22M9 8V7a3 3 0 0 1 6 0v1%22/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M5 8h14l-1 12H6L5 8z%22/%3E%3Cpath d=%22M9 8V7a3 3 0 0 1 6 0v1%22/%3E%3C/svg%3E"); }
+body .account-area .account-btn [class*="icon-account"] { -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%228%22 r=%224%22/%3E%3Cpath d=%22M4 21c0-4 3.6-7 8-7s8 3 8 7%22/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%228%22 r=%224%22/%3E%3Cpath d=%22M4 21c0-4 3.6-7 8-7s8 3 8 7%22/%3E%3C/svg%3E"); }
+
+/* ---------- Store features strip (Zid section) in the page's own colors ---------- */
+body .features-section { background: var(--rs-ivory) !important; }
+body .features-section :is(p, span, h3, h4, div) { color: var(--rs-ink) !important; }
+body .features-section img { border-radius: 50%; }
+
 /* ---------- Motion: only when motion is welcome; content stays visible if script fails ---------- */
 @media (prefers-reduced-motion: no-preference) {
   .rs-about__media img { animation: rs-drift 22s ease-in-out infinite alternate; }
