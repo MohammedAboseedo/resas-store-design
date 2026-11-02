@@ -112,6 +112,8 @@ body .search-input-icon { color: var(--rs-subtle) !important; font-size: 20px !i
 /* Category row under the logo, no rules */
 body header .dark, body header .dark .div-bg-absolute { background: #fff !important; }
 /* White header: one thin brown line between the logo row and the categories. */
+/* Soft's script adds the menu's classes after load, which grew this bar from 42px to 57px and shifted the page; reserve the final height. */
+@media (min-width: 992px) { body header .dark { min-height: 57px; } }
 body .top-main-menu-wrapper { background: none !important; border-radius: 0 !important; margin: 0 !important; border-top: 1px solid var(--rs-cognac) !important; }
 body .main-nav { justify-content: center !important; gap: 8px 36px; padding: 0 !important; }
 body .main-nav > li.top-level-link > a { position: relative; display: inline-block; margin: 12px 0; padding: 4px 0 4px !important; color: var(--rs-ink) !important; font-size: var(--rs-fs-b) !important; font-weight: 500; text-decoration: none; background: none !important; }
