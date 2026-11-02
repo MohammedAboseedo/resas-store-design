@@ -362,6 +362,51 @@
     S.used.forEach(function (n) { n.classList.add("rs-used"); });
     root.classList.add("rs-ready");
     observe(root);
+    try { thread(root); } catch (e) { console.error("Resas thread:", e); }
+  }
+
+  /* The gold thread of the design: one thin line down the page margins, behind the content, drawn as you scroll and swapping
+     sides in the empty bands between the sections. Wide screens only. */
+  function thread(root) {
+    if (!root || $(".rs-thread", root)) return;
+    var NS = "http://www.w3.org/2000/svg", svg = document.createElementNS(NS, "svg"), path = document.createElementNS(NS, "path");
+    svg.setAttribute("class", "rs-thread"); svg.setAttribute("aria-hidden", "true"); svg.appendChild(path);
+    root.insertBefore(svg, root.firstChild);
+    var len = 0, startY = 0, endY = 1;
+    function blocks() {
+      return Array.prototype.filter.call(root.children, function (e) { return !e.classList.contains("rs-thread") && !e.classList.contains("rs-used") && e.offsetHeight > 0 && getComputedStyle(e).display !== "none"; });
+    }
+    function draw() {
+      if (!len) return;
+      var top = root.getBoundingClientRect().top + window.pageYOffset;
+      var p = reduce ? 1 : Math.min(1, Math.max(0, (window.pageYOffset + window.innerHeight * 0.75 - (top + startY)) / (endY - startY)));
+      path.style.strokeDashoffset = len * (1 - p);
+    }
+    function build() {
+      var W = root.clientWidth, H = root.scrollHeight;
+      if (W < 1100) { svg.style.display = "none"; len = 0; return; }
+      var secs = blocks();
+      if (secs.length < 3) { svg.style.display = "none"; len = 0; return; }
+      svg.style.display = "";
+      var xR = W - 22, xL = 22, side = 1, y0 = secs[1].offsetTop + 90, d = "M" + xR + " " + y0;
+      for (var i = 1; i < secs.length - 1; i++) {
+        var prev = secs[i], next = secs[i + 1], gapTop = prev.offsetTop + prev.offsetHeight, gapEnd = next.offsetTop + (parseFloat(getComputedStyle(next).paddingTop) || 0), gap = gapEnd - gapTop;
+        if (gap < 60) continue;
+        var mid = gapTop + gap / 2, half = Math.min(100, gap / 2 - 10), a = mid - half, c = mid + half, x1 = side ? xR : xL, x2 = side ? xL : xR;
+        d += " L" + x1 + " " + a + " C" + x1 + " " + (a + half) + " " + x2 + " " + (c - half) + " " + x2 + " " + c;
+        side = !side;
+      }
+      var endPY = H - 28;
+      d += " L" + (side ? xR : xL) + " " + endPY;
+      svg.style.width = W + "px"; svg.style.height = H + "px"; svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+      path.setAttribute("d", d); len = path.getTotalLength(); startY = y0; endY = endPY;
+      path.style.strokeDasharray = len; draw();
+    }
+    window.addEventListener("scroll", draw, { passive: true });
+    window.addEventListener("resize", build);
+    window.addEventListener("load", build);
+    if ("ResizeObserver" in window) new ResizeObserver(build).observe(root);
+    build();
   }
 
   /* Soft starts the reviews slider only on some loads (a known timing bug); start it here when it did not run. Phones keep Soft's stacked cards. */

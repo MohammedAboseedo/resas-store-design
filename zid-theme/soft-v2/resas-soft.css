@@ -520,6 +520,14 @@ body .rs-panels .product-item .add-to-wishlist, body .rs-panels .product-item [d
 /* ---------- Cart totals title spacing on the phone ---------- */
 @media (max-width: 991px) { body .cart-view .col-lg-4 .section-title { margin-top: 32px !important; } }
 
+/* ---------- Gold thread: one thin line down the page margins, behind the content (wide screens) ---------- */
+.home { position: relative; }
+.rs-thread { position: absolute; inset-inline-start: 0; top: 0; z-index: 0; pointer-events: none; overflow: visible; }
+.rs-thread path { fill: none; stroke: var(--rs-cognac); stroke-width: 1.5; stroke-linecap: round; }
+.home > *:not(.rs-thread) { position: relative; z-index: 1; }
+body .features-section { background: transparent !important; }
+@media (max-width: 1099px) { .rs-thread { display: none !important; } }
+
 /* ---------- Motion: only when motion is welcome; content stays visible if script fails ---------- */
 @media (prefers-reduced-motion: no-preference) {
   .rs-about__media img { animation: rs-drift 22s ease-in-out infinite alternate; }
