@@ -6,29 +6,23 @@
      - the product tabs: every product section (its title and its first products)
      - every other section you add in the dashboard (banners, gallery...) stays on the page, in its order
      - reviews, menu, footer, store logo
-   Nothing else is added by this file. Extra blocks (about, tiles, sale band, featured products, two banners, blog,
-   Instagram) exist but are OFF; switch one on in RESAS.extras below. */
+   Nothing else is added by this file. The top bar, the logo and the four tiles are set in the dashboard too. Extra blocks (featured
+   products, blog, Instagram...) exist but are OFF; switch one on in RESAS.extras below. */
 (function () {
   "use strict";
 
   var RESAS = {
-    announcement: "قسّم مشترياتك على 4 دفعات مع تمارا وتابي، بدون فوائد",
+    /* The top bar, the logo and the four tiles are now set in the dashboard (شريط التنبيهات، الشعار، شرائح البطاقات); nothing here. */
+    announcement: "",
     whatsapp: "966590000902",
     /* Header logo override. Better: upload the logo in Zid's store settings and leave this empty. */
-    logo: "https://mohammedaboseedo.github.io/resas-store-design/storefront/assets/img/logo.svg",
+    logo: "",
     /* Shown only when the dashboard has no banner section. */
     bannerFallback: "https://mohammedaboseedo.github.io/resas-store-design/storefront/assets/img/banner.webp",
     about: { title: "ثمانية عشر عاماً في صناعة الرائحة", text: "نشأت رساس في المملكة العربية السعودية عام 2008، لتقدم عطوراً فرنسية وشرقية بأسلوب دافئ وأنيق، وبخوراً وعوداً من أجود الأنواع.", cta: "تسوّق عطور رساس" },
     /* Extra blocks the dashboard does not have. All off: set true to show one. */
     extras: { about: false, tiles: true, deals: true, featured: false, duo: false, blog: false, instagram: false },
     tileText: "اكتشف المجموعة",
-    /* The four tiles of the approved design: copy, link and (for the last one) its own photo. The others take the first product photo of the matching section. */
-    tilesCopy: [
-      { title: "عطور رساس\nالخاصة", text: "تراكيب لا تجدها في مكان آخر.", url: "/categories/1162806/عطور-خاصة" },
-      { title: "صُنعت\nبعناية", text: "خبرة رساس منذ 2008.", url: "/categories/358519/عطور" },
-      { title: "قسّمها على\n4 دفعات", text: "مع تمارا وتابي، بدون فوائد.", url: "/products/" },
-      { title: "الهدايا\nالملكية", text: "مباخر وأطقم لمن تحب.", url: "/categories/265764/الهدايا-الملكية", image: "https://media.zid.store/640fc833-23b0-408d-8400-ab3e292a7099/d27754d3-1a8c-4b49-b5e8-b9d7d1723dc9.jpeg" }
-    ],
     tabLimit: 10,
     featuredCount: 6,
     /* Product pages checked for an old price when no product on the home page is on sale. Optional. */
@@ -113,7 +107,7 @@
     };
   }
   function readStore(root) {
-    var S = { hero: null, cats: [], sections: [], cards: [], used: [], banners: [] };
+    var S = { hero: null, cats: [], sections: [], cards: [], used: [], banners: [], tiles: [] };
     var ss = $$("section.ss", root);
     if (ss[0]) {
       var hi = live($$("img", ss[0]))[0], ha = hi && hi.closest("a");
@@ -125,6 +119,16 @@
       live($$("img", sec)).forEach(function (im) {
         var a = im.closest("a"), src = (im.getAttribute("src") || im.getAttribute("data-src") || "").trim() || (im.getAttribute("srcset") || im.getAttribute("data-srcset") || "").split(",").pop().trim().split(" ")[0];
         if (src && !S.banners.some(function (b) { return b.src === src; })) S.banners.push({ src: src, url: a ? a.getAttribute("href") : "", alt: im.getAttribute("alt") || "" });
+      });
+    });
+    /* The four tiles: a "شرائح البطاقات" section in the dashboard. Card title = "title | small text", link and image as set there. */
+    S.tiles = [];
+    $$(".home-cards-section", root).forEach(function (sec) {
+      S.used.push(sec);
+      live($$(".card-item a", sec)).forEach(function (a) {
+        var im = $("img", a), h = $("h3", a), parts = txt(h).split("|");
+        if (!im) return;
+        S.tiles.push({ url: a.getAttribute("href") || "", src: (im.getAttribute("src") || im.getAttribute("data-src") || "").trim(), title: parts[0].trim(), text: parts.slice(1).join("|").trim() });
       });
     });
     $$(".home-categories-section", root).forEach(function (sec) {
@@ -247,13 +251,11 @@
 
     /* Tiles: the first four product sections, each with its first product photo. */
     var KINDS = ["photo a", "sand", "dark", "photo d"];
-    var tiles = el('<section class="rs-sec" aria-label="أقسام مختارة"><div class="rs-wrap"><ul class="rs-tiles">' + S.sections.slice(0, 4).map(function (sec, i) {
-      var k = KINDS[i].split(" "), first = sec.cards.filter(function (c) { return c.inStock; })[0] || sec.cards[0], cat = catFor(S, sec.title);
-      var cls = "rs-tile rs-tile--" + k[0] + (k[1] ? " rs-tile--" + k[1] : "");
-      var cp = (RESAS.tilesCopy || [])[i] || {};
-      var text = '<span class="rs-tile__title">' + esc(cp.title || sec.title) + '</span><span class="rs-tile__text">' + esc(cp.text || RESAS.tileText) + "</span>";
-      var pic = '<img src="' + esc(sized(cp.image || first.image, 700)) + '" alt="" loading="lazy">';
-      return '<li' + rise(i * 90) + '><a class="' + cls + '" href="' + esc(cp.url || (cat ? cat.url : first.url)) + '">' + (k[0] === "photo" ? pic + text : text + pic) + "</a></li>";
+    var tiles = !S.tiles.length ? null : el('<section class="rs-sec" aria-label="أقسام مختارة"><div class="rs-wrap"><ul class="rs-tiles">' + S.tiles.slice(0, 4).map(function (t, i) {
+      var k = KINDS[i].split(" "), cls = "rs-tile rs-tile--" + k[0] + (k[1] ? " rs-tile--" + k[1] : "");
+      var text = '<span class="rs-tile__title">' + esc(t.title) + '</span><span class="rs-tile__text">' + esc(t.text || RESAS.tileText) + "</span>";
+      var pic = '<img src="' + esc(sized(t.src, 700)) + '" alt="" loading="lazy">';
+      return '<li' + rise(i * 90) + '><a class="' + cls + '" href="' + esc(t.url) + '">' + (k[0] === "photo" ? pic + text : text + pic) + "</a></li>";
     }).join("") + "</ul></div></section>");
 
     /* Sale band: products on the home page that show an old price; if none do, the optional pages in RESAS.dealUrls are checked. */

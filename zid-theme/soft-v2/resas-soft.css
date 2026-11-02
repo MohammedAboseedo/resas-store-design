@@ -528,6 +528,10 @@ body .rs-panels .product-item .add-to-wishlist, body .rs-panels .product-item [d
 body .features-section { background: transparent !important; }
 @media (max-width: 1099px) { .rs-thread { display: none !important; } }
 
+/* ---------- Zid's top bar (شريط التنبيهات): text, colours and link come from the dashboard; only the type is set here ---------- */
+body .announcement-bar .announcement-text { margin: 0 !important; padding: 8px 16px !important; font-family: inherit; font-size: var(--rs-fs-s) !important; font-weight: 500 !important; text-align: center; }
+body .announcement-bar a { color: inherit !important; text-decoration: none !important; }
+
 /* ---------- Motion: only when motion is welcome; content stays visible if script fails ---------- */
 @media (prefers-reduced-motion: no-preference) {
   .rs-about__media img { animation: rs-drift 22s ease-in-out infinite alternate; }
