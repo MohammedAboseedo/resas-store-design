@@ -547,6 +547,63 @@ body .announcement-bar .ab-close { display: none !important; }
 /* the footer's curve shows only when the footer itself has no background of its own */
 body footer { background: transparent !important; }
 
+/* ---------- Mobile menu drawer ---------- */
+body.sidenav-open::after { background: rgba(42, 32, 26, .55) !important; }
+body nav.slide-menu { background: var(--rs-ivory) !important; border-radius: 0 var(--rs-r-l) var(--rs-r-l) 0; box-shadow: none !important; }
+[dir="rtl"] body nav.slide-menu, body.rtl nav.slide-menu { border-radius: var(--rs-r-l) 0 0 var(--rs-r-l); }
+body nav.slide-menu ul, body nav.slide-menu .menu-header-theme-bg-primary { background: transparent !important; }
+body nav.slide-menu .menu-link { display: flex !important; align-items: center; justify-content: space-between; min-height: 56px; padding: 0 24px !important; border-bottom: 1px solid var(--rs-linen); font-size: var(--rs-fs-l) !important; font-weight: 500 !important; color: var(--rs-ink) !important; }
+body nav.slide-menu .menu-link:hover, body nav.slide-menu .menu-link.rs-current { background: var(--rs-linen); color: var(--rs-cognac-deep) !important; }
+body nav.slide-menu .menu-link .slide-menu__decorator, body nav.slide-menu .menu-link [class*="icon-arrow"] { color: var(--rs-muted) !important; font-size: 18px; }
+body nav.slide-menu .slide-menu__backlink { min-height: 56px; padding-inline: 24px; color: var(--rs-cognac-deep) !important; font-weight: 600; }
+body nav.slide-menu .rs-drawer-logo { display: block; width: auto; height: 28px; margin: 18px auto 12px; }
+
+/* ---------- Content pages (policies, blog, custom pages) ---------- */
+body section.blog { margin: 0 !important; padding-block: var(--rs-sp-head) var(--rs-space); }
+body section.blog .container { max-width: 820px; }
+body section.blog .blog-title { margin: 0 0 24px !important; text-align: center; }
+body section.blog .blog-title h1 { margin: 0; font-size: var(--rs-fs-h2); font-weight: 600; line-height: 1.4; color: var(--rs-ink); }
+body section.blog .blog-text { margin: 0 !important; font-size: var(--rs-fs-b); line-height: 2.05; color: var(--rs-muted); }
+body section.blog .blog-text > h1:first-child { display: none; }
+body section.blog .blog-text h1, body section.blog .blog-text h2, body section.blog .blog-text h3, body section.blog .blog-text h4 { margin: 32px 0 12px; font-size: var(--rs-fs-l); font-weight: 600; line-height: 1.6; color: var(--rs-ink); }
+body section.blog .blog-text p, body section.blog .blog-text li { color: var(--rs-muted); }
+body section.blog .blog-text img { max-width: 100%; height: auto; border-radius: var(--rs-r-m); }
+body section.blog .blog-text .row { margin-inline: 0; }
+body section.blog .blog-text .row > * { padding-inline: 0; }
+body section.blog .blog-text a, body .page-content a:not(.btn) { color: var(--rs-cognac-deep); text-decoration: underline; text-decoration-color: var(--rs-sand); text-underline-offset: 4px; }
+body section.blog .blog-text a:hover { color: var(--rs-ink); text-decoration-color: var(--rs-cognac); }
+body section.blog .blog-text table { width: 100%; border-collapse: collapse; }
+body section.blog .blog-text th, body section.blog .blog-text td { padding: 10px 12px; border: 1px solid var(--rs-linen); }
+body section.blog .blog-text th { background: var(--rs-linen); color: var(--rs-ink); }
+
+/* ---------- Account and information pages (shipping and payment, orders, addresses...) ---------- */
+body .profile-pages-bg .section-colored, body .profile-section { background: var(--rs-linen) !important; }
+body .profile-section { border-radius: var(--rs-r-l); padding: 12px; align-self: flex-start; }
+body .profile-section .profile-item, body .profile-section .profile-item * { color: var(--rs-ink) !important; }
+body .profile-section .profile-item { border-radius: var(--rs-r-s); border-color: var(--rs-sand) !important; }
+body .profile-section .profile-item.active, body .profile-section .active > .profile-item { background: rgba(174, 144, 59, .22); }
+body .profile-section [class*="icon-"] { color: var(--rs-cognac-deep) !important; }
+body .profile-title { background: transparent !important; }
+body .profile-title .page-breadcurmb, body .profile-title h1, body .profile-title h2 { font-size: var(--rs-fs-h3) !important; font-weight: 600 !important; color: var(--rs-ink) !important; }
+body .account-content table { width: 100%; border-collapse: separate; border-spacing: 0; }
+body .account-content thead th, body .account-content th { padding: 12px 16px; background: var(--rs-linen) !important; color: var(--rs-ink) !important; font-size: var(--rs-fs-s); font-weight: 600; border: 0 !important; }
+body .account-content td { padding: 14px 16px; border-bottom: 1px solid var(--rs-linen) !important; font-size: var(--rs-fs-s); color: var(--rs-muted); }
+body .account-content a { color: var(--rs-cognac-deep); }
+body .account-content .btn-primary, body .account-content .btn-dark { border: 0 !important; border-radius: 999px !important; background: var(--rs-cognac) !important; color: var(--rs-ink) !important; font-weight: 500; }
+body .account-content input.form-control, body .account-content select.form-control, body .account-content textarea.form-control { border: 1px solid #DCCFA6; border-radius: var(--rs-r-s); background: #fff; }
+
+/* ---------- All categories page ---------- */
+body .categories-row { row-gap: 24px; }
+body .card-categories-wrapper { overflow: hidden; border: 0 !important; border-radius: var(--rs-r-m); background: var(--rs-ivory); box-shadow: none !important; }
+body .card-categories img { width: 100%; height: 100%; object-fit: cover; }
+body .category-second-card, body .category-second-card .card-content { background: var(--rs-linen) !important; }
+body .card-header-category, body .card-header-category * { color: var(--rs-ink) !important; font-size: var(--rs-fs-b) !important; font-weight: 600 !important; }
+body .category-second-card a { color: var(--rs-ink) !important; font-size: var(--rs-fs-s) !important; }
+body .category-second-card a:hover { color: var(--rs-cognac-deep) !important; }
+
+/* ---------- Wishlist heart on cards: a clean round button ---------- */
+body .product-item .add-to-wishlist { border-radius: 50% !important; background: rgba(255, 255, 255, .92) !important; }
+
 /* ---------- Motion: only when motion is welcome; content stays visible if script fails ---------- */
 @media (prefers-reduced-motion: no-preference) {
   .rs-about__media img { animation: rs-drift 22s ease-in-out infinite alternate; }

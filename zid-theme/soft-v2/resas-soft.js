@@ -124,6 +124,9 @@
     if (cart && cartLink && cartLink.parentNode !== cart) cart.appendChild(cartLink.parentNode);
     var logoImg = $(".header-logo .image-logo");
     if (RESAS.logo && logoImg) { logoImg.removeAttribute("srcset"); logoImg.src = RESAS.logo; }
+    /* The brand mark at the top of the phone menu. */
+    var drawerTop = $(".slide-menu .menu-header-theme-bg-primary > li:first-child > div, .slide-menu ul > li:first-child > div");
+    if (drawerTop && logoImg && !$(".rs-drawer-logo", drawerTop)) { var dl = document.createElement("img"); dl.className = "rs-drawer-logo"; dl.alt = ""; dl.src = logoImg.currentSrc || logoImg.src; drawerTop.appendChild(dl); }
     var lang = $(".account-lang-currency");
     if (lang) lang.style.display = "none";
   }
