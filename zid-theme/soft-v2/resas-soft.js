@@ -583,6 +583,8 @@
       if (!w) return tries++ < 40 ? setTimeout(lift, 500) : null;
       var phone = !mq || mq.matches, buy = document.body.classList.contains("rs-has-buy");
       if (phone) w.style.setProperty("bottom", (buy ? 176 : 96) + "px", "important"); else w.style.setProperty("bottom", "14px", "important");
+      /* On phones keep just the round button: the "message us" label covered the text. */
+      $$("a", w).forEach(function (l) { if (/راسلنا/.test(l.textContent) && l.querySelector("svg") === null && l.textContent.trim().length < 12) l.style.display = phone ? "none" : ""; });
     }
     lift();
     if (mq && mq.addListener) mq.addListener(lift);
