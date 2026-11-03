@@ -25,6 +25,8 @@
     tileText: "اكتشف المجموعة",
     /* The bottom tab bar on phones, and the sticky add-to-cart bar on product pages. */
     phoneBars: true,
+    /* Free-shipping meter: it follows the free-shipping rule set in Zid; this is only a fallback amount (SAR, 0 = off). */
+    freeShippingFrom: 0,
     /* Product page: a short trust strip under the add-to-cart button, and a "only N left" note when the stock is 5 or less (read from the
        quantity list). Add a line to `extra` (for example "شحن مجاني للطلبات فوق 200 ريال") only once it is true. false turns the strip off. */
     trust: {
@@ -595,7 +597,7 @@
       var phone = !mq || mq.matches, buy = document.body.classList.contains("rs-has-buy");
       if (phone) w.style.setProperty("bottom", (buy ? 176 : 96) + "px", "important"); else w.style.setProperty("bottom", "14px", "important");
       /* On phones keep just the round button: the "message us" label covered the text. */
-      $$("a", w).forEach(function (l) { if (/راسلنا/.test(l.textContent) && l.querySelector("svg") === null && l.textContent.trim().length < 12) l.style.display = phone ? "none" : ""; });
+      $$("a", w).forEach(function (l) { if (l.textContent.trim().length < 12 && /راسلنا/.test(l.textContent)) l.style.display = phone ? "none" : ""; });
     }
     lift();
     if (mq && mq.addListener) mq.addListener(lift);
@@ -740,6 +742,92 @@
     }
   }
 
+  /* ---------- free-shipping meter + "complete your order" bundle ----------
+     The meter reads the store's own free-shipping rule (Zid dashboard: shipping settings); with no rule it stays hidden unless
+     RESAS.freeShippingFrom is set. The bundle offers two top-rated products from other categories next to the one being viewed. */
+  function cartData() {
+    return fetch("/api/v1/cart", { credentials: "same-origin" }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });
+  }
+  function cartPieces(c) { return c && c.products ? c.products.reduce(function (n, p) { return n + (parseInt(p.quantity, 10) || 0); }, 0) : null; }
+  function money(n) { return (Math.round(n * 100) % 100 ? n.toFixed(2) : String(Math.round(n))) + " ريال"; }
+  function shipMeter(host, where) {
+    if (!host) return;
+    var box = $(".rs-ship", host.parentNode) || el('<div class="rs-ship" hidden></div>');
+    if (!box.parentNode) { if (where === "before") host.parentNode.insertBefore(box, host); else host.parentNode.insertBefore(box, host.nextSibling); }
+    function paint() {
+      cartData().then(function (c) {
+        if (!c) return;
+        var rule = c.free_shipping_rule && c.free_shipping_rule.subtotal_condition || {}, min = Number(rule.min) || 0, total = Number(c.total_value) || 0, left, pct;
+        if (min > 0 && rule.remaining != null) { left = Number(rule.remaining) || 0; pct = Math.max(0, Math.min(100, Number(rule.products_subtotal_percentage_from_min) || (min ? 100 * (1 - left / min) : 0))); }
+        else { min = Number(RESAS.freeShippingFrom) || 0; if (!min) { box.hidden = true; return; } left = Math.max(0, min - total); pct = Math.min(100, 100 * total / min); }
+        var empty = !(c.products && c.products.length);
+        box.hidden = false;
+        box.innerHTML = (left > 0 ? "<p>" + (empty ? "شحن مجاني للطلبات فوق <strong>" + money(min) + "</strong>" : "أضف <strong>" + money(left) + "</strong> إلى سلتك للحصول على شحن مجاني") + "</p>" : "<p class=\"rs-ship__ok\">✓ طلبك مؤهل للشحن المجاني</p>") + '<div class="rs-ship__bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + Math.round(empty ? 0 : pct) + '"><span style="width:' + (empty ? 0 : pct) + '%"></span></div>';
+      });
+    }
+    paint();
+    document.addEventListener("rs-cart-change", function () { setTimeout(paint, 500); });
+    return paint;
+  }
+  function cartPage() {
+    var view = $(".cart-view");
+    if (!view || $(".rs-ship", view.parentNode)) return;
+    var paint = shipMeter(view, "before");
+    var body = $(".cart-products-with-totals", view);
+    if (paint && body && "MutationObserver" in window) { var t = 0; new MutationObserver(function () { clearTimeout(t); t = setTimeout(paint, 700); }).observe(body, { childList: true, subtree: true }); }
+  }
+  function bundle(page, box, title, priceEl, img) {
+    if ($(".rs-bundle", box)) return;
+    var anchor = $(".rs-ask", box) || $(".product-buttons", box), main = $(".col-product-info .btn-add-to-cart", box);
+    if (!anchor || !main) return;
+    var picks = $$(".rs-more--best .rs-more__slot", page).map(function (slot) {
+      var c = $(".product-item", slot), b = c && $(".product-card-add-to-cart", c), im = c && $("img[id^='product-card-img']", c), pr = c && $(".product-price span", c);
+      return c && b && pr ? { name: txt($(".product-title", c)), price: num(txt(pr)), img: im ? (im.getAttribute("src") || im.getAttribute("data-src") || "") : "", btn: b } : null;
+    }).filter(function (p) { return p && p.price > 0 && p.name; }).slice(0, 2);
+    if (!picks.length) return;
+    var mainPrice = priceEl ? num(txt(priceEl)) : 0;
+    function row(p, i, fixed) {
+      return '<li class="rs-bundle__row"><label><input type="checkbox" data-i="' + i + '" checked' + (fixed ? " disabled" : "") + '><span class="rs-bundle__img">' + (p.img ? '<img src="' + esc(p.img) + '" alt="" loading="lazy">' : "") + '</span><span class="rs-bundle__name">' + esc(p.name) + '</span><span class="rs-bundle__price">' + money(p.price) + "</span></label></li>";
+    }
+    var all = [{ name: title, price: mainPrice, img: img }].concat(picks);
+    var sec = el('<section class="rs-bundle" aria-label="يكمل طلبك"><h3 class="rs-bundle__title">يكمل طلبك</h3><ul class="rs-bundle__list">' + all.map(function (p, i) { return row(p, i, i === 0); }).join("") + '</ul><div class="rs-bundle__foot"><span class="rs-bundle__total">المجموع <strong></strong></span><button type="button" class="rs-bundle__go"></button></div></section>');
+    anchor.parentNode.insertBefore(sec, anchor.nextSibling);
+    var total = $(".rs-bundle__total strong", sec), go = $(".rs-bundle__go", sec), busy = false;
+    function chosen() { return all.filter(function (p, i) { return $('input[data-i="' + i + '"]', sec).checked; }); }
+    function refresh() {
+      var list = chosen(), sum = list.reduce(function (n, p) { return n + p.price; }, 0);
+      total.textContent = money(sum); go.textContent = list.length > 1 ? "أضف " + list.length + " منتجات للسلة" : "أضف للسلة";
+    }
+    sec.addEventListener("change", refresh); refresh();
+    go.addEventListener("click", function () {
+      if (busy) return; busy = true; go.disabled = true;
+      var list = chosen(), sel = $("#product-quantity"), want = 1 + list.length - 1;
+      cartData().then(function (c0) {
+        var before = cartPieces(c0), i = 0; go.textContent = "جارٍ الإضافة…";
+        (function next() {
+          if (i >= list.length) return verify(0);
+          var p = list[i++]; if (p === all[0]) main.click(); else p.btn.click();
+          setTimeout(next, 900);
+        })();
+        function verify(n) {
+          setTimeout(function () {
+            cartData().then(function (c1) {
+              var now = cartPieces(c1);
+              if (before !== null && now !== null && now >= before + want) return finish(true);
+              if (n >= 6) return finish(before === null || now === null);
+              verify(n + 1);
+            });
+          }, 500);
+        }
+      });
+      function finish(ok) {
+        go.textContent = ok ? "تمت الإضافة ✓" : "تعذّرت الإضافة، حاول مرة ثانية";
+        document.dispatchEvent(new Event("rs-cart-change"));
+        setTimeout(function () { refresh(); go.disabled = false; busy = false; }, 2200);
+      }
+    });
+  }
+
   /* ---------- product page: things that help the sale ----------
      Under the buy box: "you may also like" (same category), at the end: highest rated and recently viewed. Plus a savings line next to
      the discount and an "ask on WhatsApp" button. All of it is read from the store's own pages, nothing is typed in here. */
@@ -812,6 +900,7 @@
         var best = home.filter(function (c) { return !used[hrefKey(c)]; }).sort(function (a, b) { return ratingOf(b) - ratingOf(a); });
         var s2 = moreSection(best[0] && ratingOf(best[0]) >= 10 ? "الأعلى تقييماً" : "اختيارات رساس", best, "rs-more--best");
         if (s2) page.appendChild(s2);
+        try { bundle(page, box, title, priceEl, img); shipMeter($(".rs-bundle", box) || $(".rs-ask", box) || $(".product-buttons", box), "after"); } catch (e) { console.error("Resas bundle:", e); }
         if (recent.length) {
           var s3 = el('<section class="rs-more rs-more--recent" aria-label="شاهدتها مؤخراً"><div class="rs-more__head"><h2 class="rs-more__title">شاهدتها مؤخراً</h2></div><div class="rs-more__rail">' + recent.slice(0, 8).map(function (r) {
             return '<div class="rs-more__slot"><a class="rs-recent" href="' + esc(r.u) + '">' + (r.i ? '<img src="' + esc(r.i) + '" alt="" loading="lazy">' : "") + '<span class="rs-recent__name">' + esc(r.t) + '</span><span class="rs-recent__price">' + esc(r.p) + "</span></a></div>";
@@ -833,6 +922,7 @@
     try { catCols(); window.addEventListener("resize", catCols); } catch (e) { console.error("Resas categories:", e); }
     try { phoneBars(); } catch (e) { console.error("Resas phone bars:", e); }
     try { productPage(); } catch (e) { console.error("Resas product page:", e); }
+    try { cartPage(); } catch (e) { console.error("Resas cart page:", e); }
     try { productTrust(); } catch (e) { console.error("Resas trust strip:", e); }
     try { categoryTop(); } catch (e) { console.error("Resas category top:", e); }
     try { footerYear(); } catch (e) { console.error("Resas footer year:", e); }
