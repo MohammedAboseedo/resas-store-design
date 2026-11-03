@@ -241,12 +241,13 @@
     var fav = S.cards.filter(function (c) { return c.inStock; });
     var top = fav.slice().sort(function (a, b) { return (b.rating * 10 + b.count) - (a.rating * 10 + a.count); });
 
-    var hero;
-    if (S.heroes.length > 1) {
-      hero = el('<section class="rs-hero rs-hero--multi" aria-label="العرض الرئيسي" aria-roledescription="carousel"><div class="rs-hero__track">' + S.heroes.slice(0, 8).map(function (h, i) {
+    function buildHero(list) {
+      var hero;
+    if (list.length > 1) {
+      hero = el('<section class="rs-hero rs-hero--multi" aria-label="العرض الرئيسي" aria-roledescription="carousel"><div class="rs-hero__track">' + list.slice(0, 8).map(function (h, i) {
         var im = '<img class="rs-hero__img" src="' + esc(h.src) + '" alt="' + esc(h.alt || "العرض " + (i + 1)) + '"' + (i ? ' loading="lazy"' : ' fetchpriority="high"') + ">";
-        return '<div class="rs-hero__slide" role="group" aria-roledescription="slide" aria-label="' + (i + 1) + " / " + Math.min(8, S.heroes.length) + '">' + (h.url ? '<a href="' + esc(h.url) + '">' + im + "</a>" : im) + "</div>";
-      }).join("") + '</div><div class="rs-hero__dots">' + S.heroes.slice(0, 8).map(function (h, i) { return '<button type="button" aria-label="العرض ' + (i + 1) + '"' + (i ? "" : ' aria-current="true"') + "></button>"; }).join("") + "</div></section>");
+        return '<div class="rs-hero__slide" role="group" aria-roledescription="slide" aria-label="' + (i + 1) + " / " + Math.min(8, list.length) + '">' + (h.url ? '<a href="' + esc(h.url) + '">' + im + "</a>" : im) + "</div>";
+      }).join("") + '</div><div class="rs-hero__dots">' + list.slice(0, 8).map(function (h, i) { return '<button type="button" aria-label="العرض ' + (i + 1) + '"' + (i ? "" : ' aria-current="true"') + "></button>"; }).join("") + "</div></section>");
       (function (sec) {
         var track = $(".rs-hero__track", sec), dots = $$(".rs-hero__dots button", sec), n = dots.length, cur = 0, timer = null;
         function width() { return track.clientWidth || 1; }
@@ -257,15 +258,38 @@
         function play() { if (reduce || timer) return; timer = setInterval(function () { show(cur + 1); }, 5500); }
         function stop() { clearInterval(timer); timer = null; }
         sec.addEventListener("mouseenter", stop); sec.addEventListener("mouseleave", play); sec.addEventListener("focusin", stop); sec.addEventListener("focusout", play); sec.addEventListener("touchstart", stop, { passive: true });
+        sec.__stop = stop;
         play();
       })(hero);
-    } else if (S.hero) {
-      var himg = '<img class="rs-hero__img" src="' + esc(S.hero.src) + '" alt="' + esc(S.hero.alt || "العرض الرئيسي") + '" fetchpriority="high">';
-      hero = el('<section class="rs-hero" aria-label="العرض الرئيسي">' + (S.hero.url ? '<a href="' + esc(S.hero.url) + '">' + himg + "</a>" : himg) + "</section>");
+    } else if (list[0]) {
+      var himg = '<img class="rs-hero__img" src="' + esc(list[0].src) + '" alt="' + esc(list[0].alt || "العرض الرئيسي") + '" fetchpriority="high">';
+      hero = el('<section class="rs-hero" aria-label="العرض الرئيسي">' + (list[0].url ? '<a href="' + esc(list[0].url) + '">' + himg + "</a>" : himg) + "</section>");
     } else {
       hero = el('<section class="rs-hero" aria-label="العرض الرئيسي"><img class="rs-hero__img" src="' + esc(RESAS.bannerFallback) + '" width="1280" height="494" alt="" fetchpriority="high"></section>');
     }
     $$("img", hero).forEach(function (im) { var f = function () { if (im.naturalWidth && Math.abs(im.naturalWidth / im.naturalHeight - 2.59) < 0.12) im.setAttribute("data-crop", ""); }; if (im.complete) f(); else im.addEventListener("load", f); });
+      return hero;
+    }
+    var hero = buildHero(S.heroes);
+    /* One slider, two shapes: upload portrait banners (taller than wide) and landscape banners in the same dashboard slider; phones show the
+       portrait ones, bigger screens the landscape ones. With only one kind, every slide shows everywhere as before. */
+    if (S.heroes.length > 1) {
+      var shown = S.heroes, mq = window.matchMedia ? window.matchMedia("(max-width: 767px)") : null;
+      var phoneNow = function () { return mq ? mq.matches : window.innerWidth < 768; };
+      var refreshHero = function () {
+        var ps = S.heroes.filter(function (h) { return h.ar && h.ar < 1.15; }), ls = S.heroes.filter(function (h) { return h.ar && h.ar >= 1.15; });
+        if (!ps.length || !ls.length) return;
+        var want = phoneNow() ? ps : ls;
+        if (want.length === shown.length && want.every(function (h, i) { return h === shown[i]; })) return;
+        var next = buildHero(want);
+        if (hero.__stop) hero.__stop();
+        if (hero.parentNode) hero.parentNode.replaceChild(next, hero);
+        hero = next; shown = want;
+      };
+      Promise.all(S.heroes.map(function (h) {
+        return new Promise(function (res) { var im = new Image(); im.onload = function () { h.ar = im.naturalWidth / (im.naturalHeight || 1); res(); }; im.onerror = res; im.src = h.src; setTimeout(res, 2500); });
+      })).then(function () { refreshHero(); if (mq && mq.addListener) mq.addListener(refreshHero); });
+    }
 
     var CHEV = function (d) { return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + d + '"/></svg>'; };
     var arches = S.cats.length ? el('<section class="rs-sec" aria-labelledby="rs-cat-title"><div class="rs-wrap"><div class="rs-sec__head"><h2 class="rs-title rs-sec__title" id="rs-cat-title"' + rise(0) + '>تسوّق حسب القسم</h2>' +
@@ -441,12 +465,25 @@
       '<h2 class="rs-title rs-sec__title" id="rs-insta-title"' + rise(0) + '>تابعنا على إنستغرام</h2><a class="rs-insta__handle" href="https://www.instagram.com/' + RESAS.instagram + '" target="_blank" rel="noopener">@' + RESAS.instagram + '</a></div><ul class="rs-insta__grid">' +
       igPics.map(function (m) { return '<li><a href="https://www.instagram.com/' + RESAS.instagram + '" target="_blank" rel="noopener" aria-label="رساس على إنستغرام"><img src="' + esc(sized(m, 480)) + '" alt="" loading="lazy"></a></li>'; }).join("") + "</ul></section>");
 
-    /* Order: banner, categories, product tabs, then the dashboard's other sections in their own order, then the store's reviews.
+    /* A second product row right under the tabs: the best rated products of the page (the stars come from the store's reviews). */
+    var topRail = null, topList = top.filter(function (c) { return c.rating > 0; }).slice(0, 8);
+    if (topList.length >= 4) {
+      topRail = el('<section class="rs-sec" aria-labelledby="rs-top-title"><div class="rs-wrap"><div class="rs-sec__head"><h2 class="rs-title rs-sec__title" id="rs-top-title"' + rise(0) + '>الأعلى تقييماً</h2><a class="rs-link" href="/products"' + rise(80) + '>عرض كل المنتجات</a></div><div class="rs-more__rail"></div></div></section>');
+      var trail = $(".rs-more__rail", topRail);
+      topList.forEach(function (c) {
+        var slot = document.createElement("div"); slot.className = "rs-more__slot";
+        var card = c.node.cloneNode(true);
+        $$("img[id^='product-card-img']", card).forEach(function (im) { im.src = sized(im.getAttribute("src"), 600); });
+        slot.appendChild(card); trail.appendChild(slot);
+      });
+    }
+
+    /* Order: banner, categories, product tabs, best rated, sale band, tiles, banners, "about", then the dashboard's other sections in their own order, then the store's reviews.
        The optional extras (RESAS.extras) go in the places the first design gave them. */
     var after = anchor;
     function put(node) { if (!node) return; after.parentNode.insertBefore(node, after.nextSibling); after = node; }
     anchor.parentNode.insertBefore(hero, anchor);
-    /* The "about" panel made with Zid's generator sits right after the categories, as in the design. */
+    /* The "about" panel made with Zid's generator now comes after the product rows and banners. */
     var aboutSec = $$(".aigc-section", root).filter(function (s) { return /عن رساس/.test(s.textContent); })[0];
     /* Tile photos come from the products: the first product of the category (or the product) each card links to. The card's own image stays only as the placeholder until then. */
     if (tiles) $$("a.rs-tile", tiles).forEach(function (a) {
@@ -454,7 +491,7 @@
       if (!im || !u || u === "/") return;
       firstPhoto(u).then(function (src) { if (src) { im.removeAttribute("srcset"); im.src = sized(src.trim(), 700); } });
     });
-    put(arches); put(EX.about ? about : null); put(aboutSec || null); put(picks); put(EX.tiles ? tiles : null); put(EX.deals ? deals : null); put(banners);
+    put(arches); put(EX.about ? about : null); put(picks); put(topRail); put(EX.deals ? deals : null); put(EX.tiles ? tiles : null); put(banners); put(aboutSec || null);
     put(EX.featured ? featured : null); put(EX.duo ? duo : null); put(EX.blog ? blog : null); put(EX.instagram ? insta : null);
     var strip = !S.strip.length ? null : el('<section class="rs-strip" aria-label="صور"><ul class="rs-strip__grid">' + S.strip.slice(0, 12).map(function (p, i) {
       var inner = '<img src="' + esc(sized(p.src, 480)) + '" alt="' + esc(p.alt) + '" loading="lazy">';
