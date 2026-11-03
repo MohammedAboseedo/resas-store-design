@@ -828,6 +828,25 @@
     });
   }
 
+  /* ---------- long product descriptions: show a part, "show more" for the rest ---------- */
+  function descMore() {
+    var d = $(".description-paragrah");
+    if (!d || $(".rs-readmore")) return;
+    var limit = window.innerWidth < 768 ? 280 : 320, btn = null;
+    function apply() {
+      if (btn || d.scrollHeight <= limit + 120) return;
+      d.classList.add("rs-clamp"); d.style.setProperty("--rs-clamp", limit + "px");
+      btn = el('<button type="button" class="rs-readmore" aria-expanded="false">عرض المزيد</button>');
+      d.parentNode.insertBefore(btn, d.nextSibling);
+      btn.addEventListener("click", function () {
+        var open = d.classList.toggle("is-open");
+        btn.textContent = open ? "عرض أقل" : "عرض المزيد"; btn.setAttribute("aria-expanded", open ? "true" : "false");
+        if (!open) d.parentNode.scrollIntoView({ block: "start", behavior: "smooth" });
+      });
+    }
+    apply(); window.addEventListener("load", apply); setTimeout(apply, 1500);
+  }
+
   /* ---------- product page: things that help the sale ----------
      Under the buy box: "you may also like" (same category), at the end: highest rated and recently viewed. Plus a savings line next to
      the discount and an "ask on WhatsApp" button. All of it is read from the store's own pages, nothing is typed in here. */
@@ -866,6 +885,7 @@
   }
   function productPage() {
     var page = $(".products-details-page");
+    try { descMore(); } catch (e) { console.error("Resas description:", e); }
     if (!page || $(".rs-more", page) || RESAS.productExtras === false) return;
     var box = $("section.products-details", page), here = decodeURIComponent(location.pathname);
     if (!box) return;
