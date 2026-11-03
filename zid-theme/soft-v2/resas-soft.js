@@ -580,13 +580,14 @@
     lift();
     if (mq && mq.addListener) mq.addListener(lift);
     document.addEventListener("rs-buy-change", lift);
+    document.addEventListener("rs-cart-change", function () { setTimeout(syncCount, 400); });
 
     try { stickyCart(); } catch (e) { console.error("Resas sticky cart:", e); }
   }
 
   function stickyCart() {
     var btn = $(".col-product-info .btn-add-to-cart") || $(".product-buttons .btn-add-to-cart");
-    if (!btn || btn.disabled || !("IntersectionObserver" in window)) return;
+    if (!btn || btn.disabled) return;
     var sel = $("#product-quantity"), max = sel ? sel.options.length : 1, qty = 1;
     var label = btn.textContent.replace(/\s+/g, " ").trim() || "أضف إلى السلة";
     var buy = el('<div class="rs-buy" role="group" aria-label="إضافة إلى السلة">' + (sel ? '<div class="rs-buy__qty" dir="ltr"><button type="button" data-d="-1" aria-label="إنقاص الكمية">&minus;</button><output aria-live="polite">1</output><button type="button" data-d="1" aria-label="زيادة الكمية">+</button></div>' : "") + '<button type="button" class="rs-buy__btn">' + esc(label) + "</button></div>");
@@ -601,14 +602,46 @@
       sel.addEventListener("change", function () { var n = parseInt(sel.value, 10); if (n && n !== qty) { qty = n; show(); } });
       buy.addEventListener("click", function (e) { var b = e.target.closest("[data-d]"); if (b) setQty(qty + parseInt(b.getAttribute("data-d"), 10)); });
     }
-    $(".rs-buy__btn", buy).addEventListener("click", function () { if (sel && String(qty) !== sel.value) setQty(qty); btn.click(); });
-    /* Show the bar while the real button is out of view. */
-    new IntersectionObserver(function (en) {
-      var on = !en[0].isIntersecting;
-      buy.classList.toggle("rs-buy--on", on);
-      document.body.classList.toggle("rs-has-buy", on);
-      document.dispatchEvent(new Event("rs-buy-change"));
-    }).observe(btn);
+    /* Zid's own button adds to the cart silently on phones, so the bar confirms it: it reads the cart before and after
+       and shows "added" (or an error) on the button for a moment. */
+    var go = $(".rs-buy__btn", buy), busy = false;
+    function units() {
+      return fetch("/api/v1/cart", { credentials: "same-origin" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (c) {
+        return c && c.products ? c.products.reduce(function (n, p) { return n + (parseInt(p.quantity, 10) || 0); }, 0) : null;
+      }).catch(function () { return null; });
+    }
+    function done(ok, n) {
+      go.textContent = ok ? "تمت الإضافة ✓" + (n ? " (" + n + ")" : "") : "تعذّرت الإضافة، تحقق من خيارات المنتج";
+      go.classList.toggle("rs-buy__btn--ok", ok); go.classList.toggle("rs-buy__btn--err", !ok);
+      document.dispatchEvent(new Event("rs-cart-change"));
+      setTimeout(function () { go.textContent = label; go.classList.remove("rs-buy__btn--ok", "rs-buy__btn--err"); go.disabled = false; busy = false; }, ok ? 1800 : 3000);
+    }
+    go.addEventListener("click", function () {
+      if (busy) return;
+      busy = true; go.disabled = true;
+      if (sel && String(qty) !== sel.value) setQty(qty);
+      var added = qty;
+      units().then(function (before) {
+        btn.click();
+        go.textContent = "جارٍ الإضافة…";
+        var tries = 0;
+        (function check() {
+          setTimeout(function () {
+            units().then(function (now) {
+              tries++;
+              if (before === null || now === null) return tries >= 2 ? done(true, added) : check();
+              if (now > before) return done(true, added);
+              if (tries >= 7) return done(false);
+              check();
+            });
+          }, 500);
+        })();
+      });
+    });
+    /* Always on screen on a product page (the real button is further down the page). */
+    buy.classList.add("rs-buy--on");
+    document.body.classList.add("rs-has-buy");
+    document.dispatchEvent(new Event("rs-buy-change"));
   }
 
   function init() {
