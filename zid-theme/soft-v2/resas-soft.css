@@ -729,3 +729,11 @@ body .description-paragrah a { text-decoration: underline; text-underline-offset
 body .card-categories, body .card-categories .box-1-1, body .card-categories .content { background: linear-gradient(160deg, var(--rs-linen), var(--rs-sand)) !important; }
 body .breadcrumb { margin-bottom: 12px; }
 body .card-categories .content > div { background: transparent !important; }
+
+/* Cart page: − / + quantity buttons replace Zid's 0-145 list (the list stays in the page, hidden, and still does the work). */
+body .cart-product-quantity-dropdown[data-rs-qty="1"] select { display: none !important; }
+.rs-cqty { display: inline-flex; align-items: center; background: var(--rs-linen); border-radius: 16px; }
+.rs-cqty button { width: 44px; height: 44px; border: 0; background: transparent; color: var(--rs-ink); font: inherit; font-size: 22px; cursor: pointer; }
+.rs-cqty button:disabled { opacity: .35; cursor: default; }
+.rs-cqty button:focus-visible { outline: 2px solid var(--rs-ink); outline-offset: 2px; }
+.rs-cqty output { min-width: 26px; text-align: center; font-weight: 600; color: var(--rs-ink); }

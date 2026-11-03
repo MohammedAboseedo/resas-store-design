@@ -693,6 +693,44 @@
     host.insertAdjacentElement("afterend", box);
   }
 
+  /* ---------- small fixes ----------
+     The footer line says 2023: show the current year instead. */
+  function footerYear() {
+    var y = String(new Date().getFullYear());
+    $$(".footer-copyrights").forEach(function (n) { if (!n.children.length && /2023/.test(n.textContent)) n.textContent = n.textContent.replace(/2023/g, y); });
+  }
+
+  /* Cart page: Zid's quantity is a list from 0 to 145. Show − / + buttons instead; they set the real list and fire its change event, so
+     Zid updates the cart and the totals exactly as before. The list is only hidden. Re-applied when Zid redraws the cart. */
+  function cartQty() {
+    if (!/^\/cart/.test(location.pathname)) return;
+    function enhance() {
+      $$(".cart-product-quantity-dropdown").forEach(function (box) {
+        var sel = $("select", box);
+        if (!sel || box.getAttribute("data-rs-qty") === "1" || !sel.options.length) return;
+        box.setAttribute("data-rs-qty", "1");
+        var max = parseInt(sel.options[sel.options.length - 1].value, 10) || 1;
+        var step = el('<div class="rs-cqty" dir="ltr"><button type="button" data-d="-1" aria-label="إنقاص الكمية">&minus;</button><output aria-live="polite"></output><button type="button" data-d="1" aria-label="زيادة الكمية">+</button></div>');
+        var out = $("output", step), minus = $("[data-d='-1']", step), plus = $("[data-d='1']", step);
+        function show() { var n = parseInt(sel.value, 10) || 1; out.textContent = String(n); minus.disabled = n <= 1; plus.disabled = n >= max; }
+        step.addEventListener("click", function (e) {
+          var b = e.target.closest("[data-d]"); if (!b || b.disabled) return;
+          var n = Math.max(1, Math.min(max, (parseInt(sel.value, 10) || 1) + parseInt(b.getAttribute("data-d"), 10)));
+          if (String(n) === sel.value) return;
+          sel.value = String(n); sel.dispatchEvent(new Event("change", { bubbles: true })); show();
+        });
+        sel.addEventListener("change", show);
+        show();
+        sel.insertAdjacentElement("afterend", step);
+      });
+    }
+    enhance();
+    if ("MutationObserver" in window) {
+      var t = null;
+      new MutationObserver(function () { clearTimeout(t); t = setTimeout(enhance, 150); }).observe(document.body, { childList: true, subtree: true });
+    }
+  }
+
   function init() {
     if (!reduce) document.documentElement.classList.add("rs-anim");
     try { announcement(); } catch (e) { console.error("Resas announcement:", e); }
@@ -705,6 +743,8 @@
     try { phoneBars(); } catch (e) { console.error("Resas phone bars:", e); }
     try { productTrust(); } catch (e) { console.error("Resas trust strip:", e); }
     try { categoryTop(); } catch (e) { console.error("Resas category top:", e); }
+    try { footerYear(); } catch (e) { console.error("Resas footer year:", e); }
+    try { cartQty(); } catch (e) { console.error("Resas cart quantity:", e); }
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
