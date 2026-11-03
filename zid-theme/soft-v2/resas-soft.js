@@ -753,7 +753,7 @@
   function shipMeter(host, where) {
     if (!host) return;
     var box = $(".rs-ship", host.parentNode) || el('<div class="rs-ship" hidden></div>');
-    if (!box.parentNode) { if (where === "before") host.parentNode.insertBefore(box, host); else host.parentNode.insertBefore(box, host.nextSibling); }
+    if (!box.isConnected) { if (where === "before") host.parentNode.insertBefore(box, host); else host.parentNode.insertBefore(box, host.nextSibling); }
     function paint() {
       cartData().then(function (c) {
         if (!c) return;
