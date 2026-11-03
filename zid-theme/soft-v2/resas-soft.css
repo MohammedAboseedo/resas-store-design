@@ -839,3 +839,5 @@ body .description-paragrah.rs-clamp.is-open { max-height: none; }
 .rs-readmore { display: block; margin: 14px auto 0; min-height: 46px; padding: 0 30px; border: 1.5px solid var(--rs-cognac); border-radius: 999px; background: transparent; color: var(--rs-cognac-deep); font: inherit; font-weight: 600; cursor: pointer; }
 .rs-readmore:hover { background: var(--rs-linen); }
 body .cart-view .col-lg-4 > div:last-child .btn { display: flex; align-items: center; justify-content: center; gap: 8px; }
+body .cart-view .cart-product-quantity-dropdown { margin: 0 !important; }
+@media (max-width: 767px) { body .cart-view .cart-product-prices { flex: 1 1 0; min-width: 0; } body .cart-view .cart-product-prices .totals { width: 100%; } }
