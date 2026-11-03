@@ -867,3 +867,15 @@ body .product-item .product-card-footer .btn:hover img { filter: none; }
   .rs-cartbar__go { flex: none; display: grid; place-items: center; min-height: 52px; padding: 0 28px; border-radius: 20px; background: var(--rs-cognac); color: var(--rs-ink) !important; font-weight: 600; text-decoration: none !important; }
   body.rs-has-cartbar footer { padding-bottom: calc(180px + env(safe-area-inset-bottom, 0px)) !important; }
 }
+
+/* ---------- Back to top ---------- */
+.rs-top { position: fixed; z-index: 898; left: 20px; bottom: 24px; width: 46px; height: 46px; display: grid; place-items: center; padding: 0; border: 1px solid var(--rs-linen); border-radius: 50%; background: rgba(250, 248, 240, .96); color: var(--rs-espresso); box-shadow: 0 8px 22px rgba(42, 32, 26, .16); cursor: pointer; opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity .25s ease, transform .25s ease, background-color .2s ease; }
+.rs-top svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.rs-top--on { opacity: 1; transform: none; pointer-events: auto; }
+.rs-top:hover { background: var(--rs-linen); }
+.rs-top:focus-visible { outline: 2px solid var(--rs-ink); outline-offset: 2px; }
+@media (max-width: 767px) {
+  .rs-top { left: 16px; bottom: calc(100px + env(safe-area-inset-bottom, 0px)); width: 44px; height: 44px; }
+  body.rs-has-buy .rs-top { bottom: calc(184px + env(safe-area-inset-bottom, 0px)); }
+}
+@media (prefers-reduced-motion: reduce) { .rs-top { transition: none; } }

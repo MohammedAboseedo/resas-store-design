@@ -25,6 +25,8 @@
     tileText: "اكتشف المجموعة",
     /* The bottom tab bar on phones, and the sticky add-to-cart bar on product pages. */
     phoneBars: true,
+    /* The round "back to top" button (appears after scrolling down). */
+    backToTop: true,
     /* Free-shipping meter: it follows the free-shipping rule set in Zid; this is only a fallback amount (SAR, 0 = off). */
     freeShippingFrom: 0,
     /* Product page: a short trust strip under the add-to-cart button, and a "only N left" note when the stock is 5 or less (read from the
@@ -988,6 +990,17 @@
     });
   }
 
+  /* ---------- back to the top ---------- */
+  function backToTop() {
+    if (RESAS.backToTop === false || $(".rs-top")) return;
+    var b = el('<button type="button" class="rs-top" aria-label="العودة إلى أعلى الصفحة"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 19V5M5.5 11.5 12 5l6.5 6.5"/></svg></button>');
+    document.body.appendChild(b);
+    var shown = false;
+    function sync() { var on = (window.pageYOffset || document.documentElement.scrollTop) > 700; if (on !== shown) { shown = on; b.classList.toggle("rs-top--on", on); } }
+    window.addEventListener("scroll", sync, { passive: true }); sync();
+    b.addEventListener("click", function () { window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" }); });
+  }
+
   function init() {
     if (!reduce) document.documentElement.classList.add("rs-anim");
     try { announcement(); } catch (e) { console.error("Resas announcement:", e); }
@@ -1000,6 +1013,7 @@
     try { phoneBars(); } catch (e) { console.error("Resas phone bars:", e); }
     try { productPage(); } catch (e) { console.error("Resas product page:", e); }
     try { cartPage(); } catch (e) { console.error("Resas cart page:", e); }
+    try { backToTop(); } catch (e) { console.error("Resas back to top:", e); }
     try { productTrust(); } catch (e) { console.error("Resas trust strip:", e); }
     try { categoryTop(); } catch (e) { console.error("Resas category top:", e); }
     try { footerYear(); } catch (e) { console.error("Resas footer year:", e); }
