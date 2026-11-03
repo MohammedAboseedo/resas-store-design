@@ -879,3 +879,6 @@ body .product-item .product-card-footer .btn:hover img { filter: none; }
   body.rs-has-buy .rs-top { bottom: calc(184px + env(safe-area-inset-bottom, 0px)); }
 }
 @media (prefers-reduced-motion: reduce) { .rs-top { transition: none; } }
+
+/* The floating WhatsApp (GetButton) bubble is hidden on the store pages; the "ask on WhatsApp" button on product pages stays. */
+[id^="gb-widget"] { display: none !important; }
