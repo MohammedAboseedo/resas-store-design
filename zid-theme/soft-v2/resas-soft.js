@@ -615,6 +615,7 @@
     if (!btn || btn.disabled) return;
     var sel = $("#product-quantity"), max = sel ? sel.options.length : 1, qty = 1;
     var label = btn.textContent.replace(/\s+/g, " ").trim() || "أضف إلى السلة";
+    if (label === "أضف إلى السلة") label = "أضف للسلة";
     var buy = el('<div class="rs-buy" role="group" aria-label="إضافة إلى السلة">' + (sel ? '<div class="rs-buy__qty" dir="ltr"><button type="button" data-d="-1" aria-label="إنقاص الكمية">&minus;</button><output aria-live="polite">1</output><button type="button" data-d="1" aria-label="زيادة الكمية">+</button></div>' : "") + '<button type="button" class="rs-buy__btn">' + esc(label) + '</button><button type="button" class="rs-buy__now">اشترِ الآن</button></div>');
     document.body.appendChild(buy);
     var out = $("output", buy);
