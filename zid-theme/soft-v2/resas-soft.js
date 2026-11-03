@@ -740,6 +740,81 @@
     }
   }
 
+  /* ---------- product page: things that help the sale ----------
+     Under the buy box: "you may also like" (same category), at the end: highest rated and recently viewed. Plus a savings line next to
+     the discount and an "ask on WhatsApp" button. All of it is read from the store's own pages, nothing is typed in here. */
+  function jsonLd(type) {
+    var out = [];
+    $$('script[type="application/ld+json"]').forEach(function (sc) { try { var j = JSON.parse(sc.textContent); (Array.isArray(j) ? j : [j]).forEach(function (x) { if (x && x["@type"] === type) out.push(x); }); } catch (e) {} });
+    return out;
+  }
+  function hrefKey(c) { var a = $('a[href*="/products/"]', c); if (!a) return ""; try { return decodeURIComponent((a.getAttribute("href") || "").split("?")[0]); } catch (e) { return a.getAttribute("href") || ""; } }
+  function cardsOf(url, here) {
+    return fetch(url, { credentials: "same-origin" }).then(function (r) { return r.ok ? r.text() : ""; }).then(function (html) {
+      if (!html) return [];
+      var d = new DOMParser().parseFromString(html, "text/html"), seen = {}, list = [];
+      $$(".product-item", d).forEach(function (c) {
+        var key = hrefKey(c);
+        if (!key || seen[key] || key === here || $(".btn-product-card-out-of-stock", c)) return;
+        seen[key] = 1; list.push(c);
+      });
+      return list;
+    }).catch(function () { return []; });
+  }
+  function ratingOf(c) { var r = $(".product-card-rating", c), n = $(".product-card-rating-count", c); return (r ? parseFloat(r.getAttribute("data-rating")) || 0 : 0) * 10 + (n ? num(n.textContent) / 100 : 0); }
+  function moreSection(title, nodes, cls) {
+    if (!nodes.length) return null;
+    var sec = el('<section class="rs-more ' + (cls || "") + '" aria-label="' + esc(title) + '"><div class="rs-more__head"><h2 class="rs-more__title">' + esc(title) + '</h2></div><div class="rs-more__rail"></div></section>');
+    var rail = $(".rs-more__rail", sec);
+    nodes.slice(0, 8).forEach(function (c) { var slot = document.createElement("div"); slot.className = "rs-more__slot"; slot.appendChild(document.importNode(c, true)); rail.appendChild(slot); });
+    return sec;
+  }
+  function productPage() {
+    var page = $(".products-details-page");
+    if (!page || $(".rs-more", page) || RESAS.productExtras === false) return;
+    var box = $("section.products-details", page), here = decodeURIComponent(location.pathname);
+    if (!box) return;
+    var title = txt($("h1", box)) || document.title, ld = jsonLd("Product")[0] || {}, img = Array.isArray(ld.image) ? ld.image[0] : ld.image || "";
+    var priceEl = $(".product-formatted-price", box), oldEl = $(".product-formatted-price-old", box), discEl = $(".product-formatted-price-discount", box);
+
+    /* the saving in riyals, beside the percentage */
+    if (priceEl && oldEl && discEl && !$(".rs-save", box)) {
+      var diff = num(txt(oldEl)) - num(txt(priceEl));
+      if (diff > 0) { var sv = document.createElement("span"); sv.className = "rs-save"; sv.textContent = "وفّرت " + (Math.round(diff * 100) % 100 ? diff.toFixed(2) : Math.round(diff)) + " ريال"; discEl.parentNode.insertBefore(sv, discEl.nextSibling); }
+    }
+    /* ask on WhatsApp, with the product in the message */
+    var buttons = $(".product-buttons", box);
+    if (buttons && RESAS.whatsapp && !$(".rs-ask", box)) {
+      var msg = "مرحباً، أريد الاستفسار عن: " + title + "\n" + location.origin + location.pathname;
+      var ask = el('<a class="rs-ask" href="https://wa.me/' + esc(RESAS.whatsapp) + "?text=" + encodeURIComponent(msg) + '" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5a8.5 8.5 0 0 0-7.3 12.9L3.5 20.5l4.2-1.1A8.5 8.5 0 1 0 12 3.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 8.6c.2 2.6 2.8 5.2 5.4 5.4l1.3-1.2-1.9-1.1-.8.6c-.9-.4-1.7-1.2-2.1-2.1l.6-.8-1.1-1.9z" fill="currentColor"/></svg><span>اسأل عن هذا العطر على واتساب</span></a>');
+      buttons.parentNode.insertBefore(ask, buttons.nextSibling);
+    }
+
+    /* recently viewed (this browser only) */
+    var recent = [];
+    try { recent = JSON.parse(localStorage.getItem("rs-recent") || "[]").filter(function (r) { return r && r.u && decodeURIComponent(r.u) !== here; }); } catch (e) {}
+    try { localStorage.setItem("rs-recent", JSON.stringify([{ u: location.pathname, t: title, i: img, p: priceEl ? txt(priceEl) : "" }].concat(recent).slice(0, 9))); } catch (e) {}
+
+    var cat = "", crumbs = jsonLd("BreadcrumbList")[0];
+    if (crumbs && crumbs.itemListElement) crumbs.itemListElement.forEach(function (it) { var u = String((it.item && it.item["@id"]) || it.item || ""); if (/\/categories\//.test(u)) cat = u; });
+    (cat ? cardsOf(cat, here) : Promise.resolve([])).then(function (rel) {
+      var used = {}; rel.forEach(function (c) { used[hrefKey(c)] = 1; });
+      var s1 = moreSection("قد يعجبك أيضاً", rel, "rs-more--related");
+      if (s1) box.parentNode.insertBefore(s1, box.nextSibling);
+      return cardsOf("/", here).then(function (home) {
+        var best = home.filter(function (c) { return !used[hrefKey(c)]; }).sort(function (a, b) { return ratingOf(b) - ratingOf(a); });
+        var s2 = moreSection(best[0] && ratingOf(best[0]) >= 10 ? "الأعلى تقييماً" : "اختيارات رساس", best, "rs-more--best");
+        if (s2) page.appendChild(s2);
+        if (recent.length) {
+          var s3 = el('<section class="rs-more rs-more--recent" aria-label="شاهدتها مؤخراً"><div class="rs-more__head"><h2 class="rs-more__title">شاهدتها مؤخراً</h2></div><div class="rs-more__rail">' + recent.slice(0, 8).map(function (r) {
+            return '<div class="rs-more__slot"><a class="rs-recent" href="' + esc(r.u) + '">' + (r.i ? '<img src="' + esc(r.i) + '" alt="" loading="lazy">' : "") + '<span class="rs-recent__name">' + esc(r.t) + '</span><span class="rs-recent__price">' + esc(r.p) + "</span></a></div>";
+          }).join("") + "</div></section>");
+          page.appendChild(s3);
+        }
+      });
+    });
+  }
+
   function init() {
     if (!reduce) document.documentElement.classList.add("rs-anim");
     try { announcement(); } catch (e) { console.error("Resas announcement:", e); }
@@ -750,6 +825,7 @@
     try { reviewsSlider(); } catch (e) { console.error("Resas reviews:", e); }
     try { catCols(); window.addEventListener("resize", catCols); } catch (e) { console.error("Resas categories:", e); }
     try { phoneBars(); } catch (e) { console.error("Resas phone bars:", e); }
+    try { productPage(); } catch (e) { console.error("Resas product page:", e); }
     try { productTrust(); } catch (e) { console.error("Resas trust strip:", e); }
     try { categoryTop(); } catch (e) { console.error("Resas category top:", e); }
     try { footerYear(); } catch (e) { console.error("Resas footer year:", e); }

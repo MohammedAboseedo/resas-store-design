@@ -737,3 +737,25 @@ body .cart-product-quantity-dropdown[data-rs-qty="1"] select { display: none !im
 .rs-cqty button:disabled { opacity: .35; cursor: default; }
 .rs-cqty button:focus-visible { outline: 2px solid var(--rs-ink); outline-offset: 2px; }
 .rs-cqty output { min-width: 26px; text-align: center; font-weight: 600; color: var(--rs-ink); }
+
+/* ---------- Product page: "you may also like", best rated, recently viewed, savings, WhatsApp ---------- */
+.rs-more { margin-block: 48px 8px; }
+.rs-more__head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+.rs-more__title { margin: 0; font-size: clamp(22px, 3vw, 30px); font-weight: 600; color: var(--rs-ink); }
+.rs-more__rail { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin-inline: -16px; padding: 0 16px 6px; }
+.rs-more__rail::-webkit-scrollbar { display: none; }
+.rs-more__slot { flex: 0 0 min(46%, 230px); min-width: 0; scroll-snap-align: start; }
+.rs-more__slot > .product-item { height: 100%; }
+@media (min-width: 768px) {
+  .rs-more__rail { overflow: visible; margin: 0; padding: 0; gap: 20px; }
+  .rs-more__slot { flex-basis: calc((100% - 3 * 20px) / 4); }
+  .rs-more__slot:nth-child(n+5) { display: none; }
+}
+.rs-recent { display: block; text-decoration: none !important; color: var(--rs-ink) !important; }
+.rs-recent img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: var(--rs-r-m); background: var(--rs-linen); margin-bottom: 10px; }
+.rs-recent__name { display: block; font-weight: 500; line-height: 1.5; }
+.rs-recent__price { display: block; margin-top: 2px; color: var(--rs-cognac-deep); font-weight: 600; }
+.rs-save { display: inline-block; margin-inline-start: 10px; padding: 2px 10px; border-radius: 999px; background: var(--rs-linen); color: var(--rs-cognac-deep); font-size: var(--rs-fs-s); font-weight: 600; }
+.rs-ask { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; margin-top: 12px; padding: 0 18px; border: 1.5px solid var(--rs-cognac); border-radius: 999px; color: var(--rs-cognac-deep) !important; font-weight: 600; text-decoration: none !important; }
+.rs-ask svg { width: 22px; height: 22px; flex: none; }
+.rs-ask:hover { background: var(--rs-linen); }
