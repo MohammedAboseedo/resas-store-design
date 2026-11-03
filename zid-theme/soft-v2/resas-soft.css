@@ -841,3 +841,4 @@ body .description-paragrah.rs-clamp.is-open { max-height: none; }
 body .cart-view .col-lg-4 > div:last-child .btn { display: flex; align-items: center; justify-content: center; gap: 8px; }
 body .cart-view .cart-product-quantity-dropdown { margin: 0 !important; }
 @media (max-width: 767px) { body .cart-view .cart-product-prices { flex: 1 1 0; min-width: 0; } body .cart-view .cart-product-prices .totals { width: 100%; } }
+body .cart-view .cart-product-prices > * { margin: 0 !important; }
