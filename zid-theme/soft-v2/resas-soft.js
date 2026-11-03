@@ -772,6 +772,8 @@
   function cartPage() {
     var view = $(".cart-view");
     if (!view || $(".rs-ship", view.parentNode)) return;
+    /* clearer headings than Zid's table captions */
+    $$(".section-title", view).forEach(function (h) { var t = h.textContent.trim(); if (t === "المنتجات") h.textContent = "سلة التسوق"; else if (t === "ملخص الإجمالي") h.textContent = "ملخص الطلب"; });
     var paint = shipMeter(view, "before");
     var body = $(".cart-products-with-totals", view);
     if (paint && body && "MutationObserver" in window) { var t = 0; new MutationObserver(function () { clearTimeout(t); t = setTimeout(paint, 700); }).observe(body, { childList: true, subtree: true }); }
