@@ -728,3 +728,4 @@ body .description-paragrah a { text-decoration: underline; text-underline-offset
 /* Categories without a photo showed Zid's flat grey; give them the store's cream/gold instead (the photo, when set, covers it). */
 body .card-categories, body .card-categories .box-1-1, body .card-categories .content { background: linear-gradient(160deg, var(--rs-linen), var(--rs-sand)) !important; }
 body .breadcrumb { margin-bottom: 12px; }
+body .card-categories .content > div { background: transparent !important; }
