@@ -766,7 +766,14 @@
     if (!nodes.length) return null;
     var sec = el('<section class="rs-more ' + (cls || "") + '" aria-label="' + esc(title) + '"><div class="rs-more__head"><h2 class="rs-more__title">' + esc(title) + '</h2></div><div class="rs-more__rail"></div></section>');
     var rail = $(".rs-more__rail", sec);
-    nodes.slice(0, 8).forEach(function (c) { var slot = document.createElement("div"); slot.className = "rs-more__slot"; slot.appendChild(document.importNode(c, true)); rail.appendChild(slot); });
+    /* Zid's script turns each heart into a login link for visitors who are not signed in; cards fetched as plain HTML have not been through
+       it, so do the same here (signed-in visitors simply get no heart on these cards). */
+    var wl = $(".col-product-info .add-to-wishlist a.icon-heart-mask");
+    nodes.slice(0, 8).forEach(function (c) {
+      var slot = document.createElement("div"); slot.className = "rs-more__slot"; slot.appendChild(document.importNode(c, true));
+      $$(".add-to-wishlist", slot).forEach(function (h) { if (wl) h.innerHTML = '<a class="icon-heart-mask" href="' + esc(wl.getAttribute("href")) + '"></a>'; else h.parentNode.removeChild(h); });
+      rail.appendChild(slot);
+    });
     return sec;
   }
   function productPage() {
