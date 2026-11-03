@@ -697,3 +697,10 @@ body .categories-subTitle a { color: var(--rs-muted) !important; font-size: 14px
 .rs-buy__btn--ok { background: var(--rs-espresso) !important; color: var(--rs-bone) !important; }
 .rs-buy__btn--err { background: #f2d9d3 !important; color: #7a2a1d !important; font-size: 14px !important; }
 .rs-buy__btn:disabled { cursor: default; }
+
+/* ---------- Inner-page details found in the page-by-page check ---------- */
+/* The header cart count sits on the icon's corner, not on top of the bag. */
+body .a-shopping-cart .cart-badge { top: -4px !important; left: -10px !important; right: auto !important; }
+/* "Featured product" badges: Zid's lavender replaced with the store's colours. */
+body .badge-name { background: var(--rs-linen) !important; color: var(--rs-cognac-deep) !important; border-radius: 999px !important; }
+body .badge-name *, body .badge-name::before { color: inherit !important; fill: currentColor; }
