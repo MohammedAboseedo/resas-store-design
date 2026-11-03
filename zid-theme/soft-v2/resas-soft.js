@@ -569,14 +569,23 @@
       if (m) { e.preventDefault(); m.click(); }
     });
 
-    /* The cart count comes from the header's own badge (Zid keeps it up to date). */
-    var count = $(".rs-tab__count", bar), badge = $(".cart-badge");
-    function syncCount() {
-      var n = badge ? parseInt(badge.textContent.replace(/\D/g, ""), 10) || 0 : 0;
-      count.textContent = n > 99 ? "99+" : String(n);
-      count.hidden = n < 1;
+    /* The cart count: total pieces in the cart (Zid's header badge counts lines, so 8 of one product showed 1). The badge value is shown
+       first, then replaced by the cart's real total. */
+    var count = $(".rs-tab__count", bar), badge = $(".cart-badge"), timer = 0;
+    function paint(n) { count.textContent = n > 99 ? "99+" : String(n); count.hidden = n < 1; }
+    function pieces() {
+      return fetch("/api/v1/cart", { credentials: "same-origin" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (c) {
+        return c && c.products ? c.products.reduce(function (n, p) { return n + (parseInt(p.quantity, 10) || 0); }, 0) : null;
+      }).catch(function () { return null; });
     }
-    if (badge) { syncCount(); if ("MutationObserver" in window) new MutationObserver(syncCount).observe(badge, { childList: true, characterData: true, subtree: true }); }
+    function syncCount() {
+      badge = $(".cart-badge") || badge;
+      paint(badge ? parseInt(badge.textContent.replace(/\D/g, ""), 10) || 0 : 0);
+      clearTimeout(timer);
+      timer = setTimeout(function () { pieces().then(function (n) { if (n !== null) paint(n); }); }, 250);
+    }
+    syncCount();
+    if (badge && "MutationObserver" in window) new MutationObserver(syncCount).observe(badge, { childList: true, characterData: true, subtree: true });
 
     /* The WhatsApp button sits where the bars are: lift it above them while the phone layout is on. */
     var mq = window.matchMedia ? window.matchMedia("(max-width: 767px)") : null, tries = 0;
