@@ -887,11 +887,11 @@
     var body = $(".cart-products-with-totals", view);
     if (paint && body && "MutationObserver" in window) { var t = 0; new MutationObserver(function () { clearTimeout(t); t = setTimeout(paint, 700); }).observe(body, { childList: true, subtree: true }); }
   }
-  function bundle(page, box, title, priceEl, img) {
+  function bundle(page, box, title, priceEl, img, pool) {
     if ($(".rs-bundle", box)) return;
     var anchor = $(".rs-ask", box) || $(".product-buttons", box), main = $(".col-product-info .btn-add-to-cart", box);
     if (!anchor || !main) return;
-    var picks = $$(".rs-more--best .rs-more__slot", page).map(function (slot) {
+    var picks = (pool ? $$(".rs-more__slot", pool) : []).map(function (slot) {
       var c = $(".product-item", slot), b = c && $(".product-card-add-to-cart", c), im = c && $("img[id^='product-card-img']", c), pr = c && $(".product-price span", c);
       return c && b && pr ? { name: txt($(".product-title", c)), price: num(txt(pr)), img: im ? (im.getAttribute("src") || im.getAttribute("data-src") || "") : "", btn: b } : null;
     }).filter(function (p) { return p && p.price > 0 && p.name; }).slice(0, 2);
@@ -1026,17 +1026,19 @@
     (cat ? cardsOf(cat, here) : Promise.resolve([])).then(function (rel) {
       var used = {}; rel.forEach(function (c) { used[hrefKey(c)] = 1; });
       var s1 = moreSection("قد يعجبك أيضاً", rel, "rs-more--related");
-      if (s1) box.parentNode.insertBefore(s1, box.nextSibling);
+      /* After the description and the reviews, inside the page container (same width as the rest). */
+      var host = box.parentNode;
+      if (s1) host.appendChild(s1);
       return cardsOf("/", here).then(function (home) {
         var best = home.filter(function (c) { return !used[hrefKey(c)]; }).sort(function (a, b) { return ratingOf(b) - ratingOf(a); });
         var s2 = moreSection(best[0] && ratingOf(best[0]) >= 10 ? "الأعلى تقييماً" : "اختيارات رساس", best, "rs-more--best");
-        if (s2) page.appendChild(s2);
-        try { bundle(page, box, title, priceEl, img); shipMeter($(".rs-bundle", box) || $(".rs-ask", box) || $(".product-buttons", box), "after"); } catch (e) { console.error("Resas bundle:", e); }
+        /* s2 is not shown on the page: it only gives the "complete your order" bundle its two products. */
+        try { bundle(page, box, title, priceEl, img, s2); shipMeter($(".rs-bundle", box) || $(".rs-ask", box) || $(".product-buttons", box), "after"); } catch (e) { console.error("Resas bundle:", e); }
         if (recent.length) {
           var s3 = el('<section class="rs-more rs-more--recent" aria-label="شاهدتها مؤخراً"><div class="rs-more__head"><h2 class="rs-more__title">شاهدتها مؤخراً</h2></div><div class="rs-more__rail">' + recent.slice(0, 8).map(function (r) {
             return '<div class="rs-more__slot"><a class="rs-recent" href="' + esc(r.u) + '">' + (r.i ? '<img src="' + esc(r.i) + '" alt="" loading="lazy">' : "") + '<span class="rs-recent__name">' + esc(r.t) + '</span><span class="rs-recent__price">' + esc(r.p) + "</span></a></div>";
           }).join("") + "</div></section>");
-          page.appendChild(s3);
+          host.appendChild(s3);
         }
       });
     });
