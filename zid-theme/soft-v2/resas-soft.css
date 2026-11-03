@@ -704,3 +704,15 @@ body .a-shopping-cart .cart-badge { top: -4px !important; left: -10px !important
 /* "Featured product" badges: Zid's lavender replaced with the store's colours. */
 body .badge-name { background: var(--rs-linen) !important; color: var(--rs-cognac-deep) !important; border-radius: 999px !important; }
 body .badge-name *, body .badge-name::before { color: inherit !important; fill: currentColor; }
+
+/* ---------- Product page trust strip + low-stock note, and the category page moving the SEO paragraph under the products ---------- */
+.rs-trust { margin: 16px 0 8px; padding: 14px 16px; border-radius: 20px; background: var(--rs-ivory); border: 1px solid var(--rs-linen); }
+.rs-trust__low { display: inline-block; margin: 0 0 10px; padding: 4px 12px; border-radius: 999px; background: #f6e3df; color: var(--rs-sale); font-size: 14px; font-weight: 600; }
+.rs-trust ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.rs-trust li { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--rs-ink); }
+.rs-trust svg { flex: none; width: 20px; height: 20px; fill: none; stroke: var(--rs-cognac-deep); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.rs-trust__links { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 10px 0 0; padding-top: 10px; border-top: 1px solid var(--rs-linen); font-size: 13px; }
+.rs-trust__links a { color: var(--rs-cognac-deep) !important; text-decoration: underline; text-underline-offset: 3px; }
+.rs-cat-seo { padding: 32px 0 8px; }
+.rs-cat-seo .bread-text { max-width: 760px; margin: 0 auto; color: var(--rs-muted); font-size: 14px; line-height: 1.9; text-align: center; }
+body .subTitle-detail { padding-bottom: 0 !important; margin-bottom: 8px; }

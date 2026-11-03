@@ -25,6 +25,13 @@
     tileText: "اكتشف المجموعة",
     /* The bottom tab bar on phones, and the sticky add-to-cart bar on product pages. */
     phoneBars: true,
+    /* Product page: a short trust strip under the add-to-cart button, and a "only N left" note when the stock is 5 or less (read from the
+       quantity list). Add a line to `extra` (for example "شحن مجاني للطلبات فوق 200 ريال") only once it is true. false turns the strip off. */
+    trust: {
+      extra: [],
+      items: ["أصلي 100% من رساس", "تقسيط بدون فوائد مع تمارا وتابي", "توصيل لجميع مناطق المملكة"],
+      links: [["الشحن والدفع", "/shipping-and-payment"], ["الاستبدال والاسترجاع", "/pages/refund-exchange-policy"]]
+    },
     tabLimit: 10,
     featuredCount: 6,
     /* The sale band reads the discounted products of the home page (set the discount on the product in Zid); nothing is listed here. */
@@ -644,6 +651,42 @@
     document.dispatchEvent(new Event("rs-buy-change"));
   }
 
+  /* ---------- product page: trust strip ----------
+     Sits right under Soft's add-to-cart button, where the buying decision is made. Only facts the store already states elsewhere
+     (the shipping page, the tabby/tamara widgets); nothing about free shipping or delivery days until RESAS.trust.extra says so. */
+  var TRUST_ICON = {
+    shield: '<path d="M12 3 5 6v5.5c0 4.3 2.9 7.6 7 9.5 4.1-1.9 7-5.2 7-9.5V6z"/><path d="m9 12 2 2 4-4"/>',
+    card: '<rect x="3" y="6" width="18" height="12" rx="2.5"/><path d="M3 10.5h18M7 15h3"/>',
+    truck: '<path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7.5" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/>',
+    tag: '<path d="m4 12.5 8-8h7v7l-8 8z"/><circle cx="15.5" cy="8.5" r="1"/>'
+  };
+  function productTrust() {
+    var cfg = RESAS.trust;
+    if (cfg === false || $(".rs-trust")) return;
+    var anchor = $(".col-product-info .product-buttons");
+    if (!anchor || !$(".col-product-info .btn-add-to-cart")) return;
+    cfg = cfg || {};
+    var lines = (cfg.extra || []).map(function (t) { return ["tag", t]; }).concat((cfg.items || []).map(function (t, i) { return [["shield", "card", "truck"][i % 3], t]; }));
+    var left = 0, sel = $("#product-quantity"), out = $(".section-out-of-stock-notify-me");
+    if (sel && (!out || out.classList.contains("d-none")) && sel.options.length > 0 && sel.options.length <= 5) left = sel.options.length;
+    var html = '<div class="rs-trust">' + (left ? '<p class="rs-trust__low">' + (left === 1 ? "بقيت قطعة واحدة فقط" : "متبقي " + left + " قطع فقط") + "</p>" : "") +
+      "<ul>" + lines.map(function (l) { return '<li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + TRUST_ICON[l[0]] + "</svg><span>" + esc(l[1]) + "</span></li>"; }).join("") + "</ul>" +
+      ((cfg.links || []).length ? '<p class="rs-trust__links">' + cfg.links.map(function (k) { return '<a href="' + esc(k[1]) + '">' + esc(k[0]) + "</a>"; }).join("") + "</p>" : "") + "</div>";
+    anchor.insertAdjacentElement("afterend", el(html));
+  }
+
+  /* ---------- category pages: products first ----------
+     Soft prints the whole SEO paragraph under the title, which pushes the products below the first phone screen. The paragraph moves
+     under the product list (same text, still on the page); the title stays on top. */
+  function categoryTop() {
+    var p = $(".subTitle-detail .bread-text"), list = $(".products-container");
+    if (!p || !list || $(".rs-cat-seo") || p.textContent.trim().length < 40) return;
+    var host = list.closest(".container") || list;
+    var box = el('<section class="rs-cat-seo"><div class="container"></div></section>');
+    $(".container", box).appendChild(p);
+    host.insertAdjacentElement("afterend", box);
+  }
+
   function init() {
     if (!reduce) document.documentElement.classList.add("rs-anim");
     try { announcement(); } catch (e) { console.error("Resas announcement:", e); }
@@ -654,6 +697,8 @@
     try { reviewsSlider(); } catch (e) { console.error("Resas reviews:", e); }
     try { catCols(); window.addEventListener("resize", catCols); } catch (e) { console.error("Resas categories:", e); }
     try { phoneBars(); } catch (e) { console.error("Resas phone bars:", e); }
+    try { productTrust(); } catch (e) { console.error("Resas trust strip:", e); }
+    try { categoryTop(); } catch (e) { console.error("Resas category top:", e); }
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
