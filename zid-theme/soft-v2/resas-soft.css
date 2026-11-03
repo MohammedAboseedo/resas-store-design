@@ -724,3 +724,7 @@ body .description-paragrah a { text-decoration: underline; text-underline-offset
   body .breadcrumb a { display: inline-block; padding: 10px 2px; }
   body footer .footer-about-us-links-div p { font-size: 14px !important; line-height: 1.8; }
 }
+
+/* Categories without a photo showed Zid's flat grey; give them the store's cream/gold instead (the photo, when set, covers it). */
+body .card-categories, body .card-categories .box-1-1, body .card-categories .content { background: linear-gradient(160deg, var(--rs-linen), var(--rs-sand)) !important; }
+body .breadcrumb { margin-bottom: 12px; }
