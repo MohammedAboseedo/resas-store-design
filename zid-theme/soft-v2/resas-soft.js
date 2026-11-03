@@ -29,7 +29,9 @@
        quantity list). Add a line to `extra` (for example "شحن مجاني للطلبات فوق 200 ريال") only once it is true. false turns the strip off. */
     trust: {
       extra: [],
-      items: ["أصلي 100% من رساس", "تقسيط بدون فوائد مع تمارا وتابي", "توصيل لجميع مناطق المملكة"],
+      /* A line for one product page only, hidden after its date. Free shipping in Zid is an automatic offer on one product, minimum 149 (31 Oct to 30 Nov 2026). */
+      byProduct: [{ match: "ارينا-1", text: "شحن مجاني على هذا العرض", until: "2026-11-30" }],
+      items: ["أصلي 100% من رساس", "تقسيط بدون فوائد مع تمارا وتابي", "توصيل لجميع مناطق المملكة خلال 1 إلى 5 أيام عمل"],
       links: [["الشحن والدفع", "/shipping-and-payment"], ["الاستبدال والاسترجاع", "/pages/refund-exchange-policy"]]
     },
     tabLimit: 10,
@@ -668,7 +670,9 @@
     var anchor = $(".col-product-info .product-buttons");
     if (!anchor || !$(".col-product-info .btn-add-to-cart")) return;
     cfg = cfg || {};
-    var lines = (cfg.extra || []).map(function (t) { return ["tag", t]; }).concat((cfg.items || []).map(function (t, i) { return [["shield", "card", "truck"][i % 3], t]; }));
+    var here = location.pathname; try { here = decodeURIComponent(here); } catch (e) {}
+    var own = (cfg.byProduct || []).filter(function (b) { return here.indexOf(b.match) > -1 && (!b.until || Date.now() <= Date.parse(b.until + "T23:59:59+03:00")); }).map(function (b) { return b.text; });
+    var lines = own.concat(cfg.extra || []).map(function (t) { return ["tag", t]; }).concat((cfg.items || []).map(function (t, i) { return [["shield", "card", "truck"][i % 3], t]; }));
     var left = 0, sel = $("#product-quantity"), out = $(".section-out-of-stock-notify-me");
     if (sel && (!out || out.classList.contains("d-none")) && sel.options.length > 0 && sel.options.length <= 5) left = sel.options.length;
     var html = '<div class="rs-trust">' + (left ? '<p class="rs-trust__low">' + (left === 1 ? "بقيت قطعة واحدة فقط" : "متبقي " + left + " قطع فقط") + "</p>" : "") +
