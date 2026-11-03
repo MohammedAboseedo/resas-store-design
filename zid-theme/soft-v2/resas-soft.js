@@ -615,7 +615,7 @@
     if (!btn || btn.disabled) return;
     var sel = $("#product-quantity"), max = sel ? sel.options.length : 1, qty = 1;
     var label = btn.textContent.replace(/\s+/g, " ").trim() || "أضف إلى السلة";
-    var buy = el('<div class="rs-buy" role="group" aria-label="إضافة إلى السلة">' + (sel ? '<div class="rs-buy__qty" dir="ltr"><button type="button" data-d="-1" aria-label="إنقاص الكمية">&minus;</button><output aria-live="polite">1</output><button type="button" data-d="1" aria-label="زيادة الكمية">+</button></div>' : "") + '<button type="button" class="rs-buy__btn">' + esc(label) + "</button></div>");
+    var buy = el('<div class="rs-buy" role="group" aria-label="إضافة إلى السلة">' + (sel ? '<div class="rs-buy__qty" dir="ltr"><button type="button" data-d="-1" aria-label="إنقاص الكمية">&minus;</button><output aria-live="polite">1</output><button type="button" data-d="1" aria-label="زيادة الكمية">+</button></div>' : "") + '<button type="button" class="rs-buy__btn">' + esc(label) + '</button><button type="button" class="rs-buy__now">اشترِ الآن</button></div>');
     document.body.appendChild(buy);
     var out = $("output", buy);
     function show() { if (out) out.textContent = String(qty); }
@@ -629,21 +629,30 @@
     }
     /* Zid's own button adds to the cart silently on phones, so the bar confirms it: it reads the cart before and after
        and shows "added" (or an error) on the button for a moment. */
-    var go = $(".rs-buy__btn", buy), busy = false;
+    var go = $(".rs-buy__btn", buy), now = $(".rs-buy__now", buy), busy = false, thenBuy = false;
+    /* "Buy now": add, then go straight to the checkout button's address (taken from the cart page) or to the cart. */
+    function goCheckout() {
+      go.textContent = "جارٍ التحويل…";
+      fetch("/cart", { credentials: "same-origin" }).then(function (r) { return r.text(); }).then(function (h) {
+        var d = new DOMParser().parseFromString(h, "text/html"), a = $$("a", d).filter(function (x) { return /إتمام الطلب/.test(x.textContent) && x.getAttribute("href"); })[0];
+        location.href = a ? a.getAttribute("href") : "/cart";
+      }).catch(function () { location.href = "/cart"; });
+    }
     function units() {
       return fetch("/api/v1/cart", { credentials: "same-origin" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (c) {
         return c && c.products ? c.products.reduce(function (n, p) { return n + (parseInt(p.quantity, 10) || 0); }, 0) : null;
       }).catch(function () { return null; });
     }
     function done(ok, n) {
+      if (ok && thenBuy) { document.dispatchEvent(new Event("rs-cart-change")); return goCheckout(); }
       go.textContent = ok ? "تمت الإضافة ✓" + (n ? " (" + n + ")" : "") : "تعذّرت الإضافة، تحقق من خيارات المنتج";
       go.classList.toggle("rs-buy__btn--ok", ok); go.classList.toggle("rs-buy__btn--err", !ok);
       document.dispatchEvent(new Event("rs-cart-change"));
-      setTimeout(function () { go.textContent = label; go.classList.remove("rs-buy__btn--ok", "rs-buy__btn--err"); go.disabled = false; busy = false; }, ok ? 1800 : 3000);
+      setTimeout(function () { go.textContent = label; go.classList.remove("rs-buy__btn--ok", "rs-buy__btn--err"); go.disabled = now.disabled = false; busy = false; }, ok ? 1800 : 3000);
     }
-    go.addEventListener("click", function () {
+    function run(buyNow) {
       if (busy) return;
-      busy = true; go.disabled = true;
+      busy = true; thenBuy = buyNow; go.disabled = now.disabled = true;
       if (sel && String(qty) !== sel.value) setQty(qty);
       var added = qty;
       units().then(function (before) {
@@ -662,7 +671,9 @@
           }, 500);
         })();
       });
-    });
+    }
+    go.addEventListener("click", function () { run(false); });
+    now.addEventListener("click", function () { run(true); });
     /* Always on screen on a product page (the real button is further down the page). */
     buy.classList.add("rs-buy--on");
     document.body.classList.add("rs-has-buy");
@@ -745,6 +756,45 @@
     }
   }
 
+  /* ---------- cart page on phones: a fixed bar with the total and the checkout button, and "recommended for you" under the cart ---------- */
+  function cartBar(view) {
+    if ($(".rs-cartbar")) return;
+    var bar = el('<div class="rs-cartbar" hidden><div class="rs-cartbar__sum"><span class="rs-cartbar__lbl">الإجمالي</span><strong class="rs-cartbar__total"></strong></div><a class="rs-cartbar__go" href="/cart">إتمام الطلب</a></div>');
+    document.body.appendChild(bar);
+    var go = $(".rs-cartbar__go", bar), tot = $(".rs-cartbar__total", bar), lbl = $(".rs-cartbar__lbl", bar), timer = 0;
+    function paint() {
+      cartData().then(function (c) {
+        var any = c && c.products && c.products.length;
+        bar.hidden = !any;
+        document.body.classList.toggle("rs-has-cartbar", !!any);
+        document.body.classList.toggle("rs-has-buy", !!any);
+        document.dispatchEvent(new Event("rs-buy-change"));
+        if (!any) return;
+        tot.textContent = money(Number(c.total_value) || 0);
+        lbl.textContent = "الإجمالي (" + cartPieces(c) + " قطعة)";
+        var a = $$("a", view).filter(function (x) { return /إتمام الطلب/.test(x.textContent) && x.getAttribute("href") && x.getAttribute("href") !== "#"; })[0];
+        if (a) go.setAttribute("href", a.getAttribute("href"));
+      });
+    }
+    paint();
+    document.addEventListener("rs-cart-change", function () { setTimeout(paint, 500); });
+    var body = $(".cart-products-with-totals", view);
+    if (body && "MutationObserver" in window) new MutationObserver(function () { clearTimeout(timer); timer = setTimeout(paint, 700); }).observe(body, { childList: true, subtree: true });
+  }
+  function cartRecs(view) {
+    if ($(".rs-more--cart")) return;
+    cartData().then(function (c) {
+      if (!c || !c.products || !c.products.length) return;
+      var inCart = {};
+      c.products.forEach(function (p) { try { inCart[decodeURIComponent(String(p.url || "").replace(location.origin, "").split("?")[0])] = 1; } catch (e) {} });
+      cardsOf("/", "").then(function (home) {
+        var list = home.filter(function (x) { return !inCart[hrefKey(x)]; }).sort(function (a, b) { return ratingOf(b) - ratingOf(a); });
+        var sec = moreSection("موصى به لك", list, "rs-more--cart");
+        if (sec && !$(".rs-more--cart")) view.parentNode.insertBefore(sec, view.nextSibling);
+      });
+    });
+  }
+
   /* ---------- free-shipping meter + "complete your order" bundle ----------
      The meter reads the store's own free-shipping rule (Zid dashboard: shipping settings); with no rule it stays hidden unless
      RESAS.freeShippingFrom is set. The bundle offers two top-rated products from other categories next to the one being viewed. */
@@ -777,6 +827,7 @@
     if (!view || $(".rs-ship", view.parentNode)) return;
     /* clearer headings than Zid's table captions */
     $$(".section-title", view).forEach(function (h) { var t = h.textContent.trim(); if (t === "المنتجات") h.textContent = "سلة التسوق"; else if (t === "ملخص الإجمالي") h.textContent = "ملخص الطلب"; });
+    try { cartBar(view); cartRecs(view); } catch (e) { console.error("Resas cart extras:", e); }
     var paint = shipMeter(view, "before");
     var body = $(".cart-products-with-totals", view);
     if (paint && body && "MutationObserver" in window) { var t = 0; new MutationObserver(function () { clearTimeout(t); t = setTimeout(paint, 700); }).observe(body, { childList: true, subtree: true }); }
