@@ -275,6 +275,7 @@
        portrait ones, bigger screens the landscape ones. With only one kind, every slide shows everywhere as before. */
     if (S.heroes.length > 1) {
       var shown = S.heroes, mq = window.matchMedia ? window.matchMedia("(max-width: 767px)") : null;
+      hero.style.visibility = "hidden"; /* until the slides are measured, so the wrong banner never flashes */
       var phoneNow = function () { return mq ? mq.matches : window.innerWidth < 768; };
       var refreshHero = function () {
         var ps = S.heroes.filter(function (h) { return h.ar && h.ar < 1.15; }), ls = S.heroes.filter(function (h) { return h.ar && h.ar >= 1.15; });
@@ -288,7 +289,7 @@
       };
       Promise.all(S.heroes.map(function (h) {
         return new Promise(function (res) { var im = new Image(); im.onload = function () { h.ar = im.naturalWidth / (im.naturalHeight || 1); res(); }; im.onerror = res; im.src = h.src; setTimeout(res, 2500); });
-      })).then(function () { refreshHero(); if (mq && mq.addListener) mq.addListener(refreshHero); });
+      })).then(function () { refreshHero(); hero.style.visibility = ""; if (mq && mq.addListener) mq.addListener(refreshHero); });
     }
 
     var CHEV = function (d) { return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + d + '"/></svg>'; };
