@@ -766,6 +766,20 @@
     $$(".footer-copyrights").forEach(function (n) { if (!n.children.length && /2023/.test(n.textContent)) n.textContent = n.textContent.replace(/2023/g, y); });
   }
 
+  /* Zid keeps a "signed in" flag cookie (zid_customer_auth=1). When the real session has expired the flag stays at 1, and the hosted
+     checkout then asks for the account, gets a 401 and shows its "could not load" error. If the flag says signed in but the server says
+     not, drop the flag so checkout starts as a guest. Only touches the flag, only when the server confirms the visitor is signed out. */
+  function staleLogin() {
+    if (!/(?:^|;\s*)zid_customer_auth=1(?:;|$)/.test(document.cookie)) return;
+    fetch("/api/v1/auth/login-status", { credentials: "include" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
+      if (!j || j.is_authenticated !== false) return;
+      var host = location.hostname, parts = host.split("."), root = parts.length > 2 ? parts.slice(-2).join(".") : host;
+      ["", "; domain=" + host, "; domain=." + host, "; domain=." + root].forEach(function (d) {
+        document.cookie = "zid_customer_auth=; Max-Age=0; path=/" + d + "; secure";
+      });
+    }).catch(function () {});
+  }
+
   /* Cart page: Zid's quantity is a list from 0 to 145. Show − / + buttons instead; they set the real list and fire its change event, so
      Zid updates the cart and the totals exactly as before. The list is only hidden. Re-applied when Zid redraws the cart. */
   function cartQty() {
@@ -1056,6 +1070,7 @@
     try { categoryTop(); } catch (e) { console.error("Resas category top:", e); }
     try { footerYear(); } catch (e) { console.error("Resas footer year:", e); }
     try { cartQty(); } catch (e) { console.error("Resas cart quantity:", e); }
+    try { staleLogin(); } catch (e) { console.error("Resas stale login:", e); }
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
