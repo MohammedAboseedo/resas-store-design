@@ -597,7 +597,10 @@
       var phone = !mq || mq.matches, buy = document.body.classList.contains("rs-has-buy");
       if (phone) w.style.setProperty("bottom", (buy ? 176 : 96) + "px", "important"); else w.style.setProperty("bottom", "14px", "important");
       /* On phones keep just the round button: the "message us" label covered the text. */
-      $$("a", w).forEach(function (l) { if (l.textContent.trim().length < 12 && /راسلنا/.test(l.textContent)) l.style.display = phone ? "none" : ""; });
+      function hideLabel() { $$("a", w).forEach(function (l) { if (l.textContent.trim().length < 12 && /راسلنا/.test(l.textContent)) l.style.display = (!mq || mq.matches) ? "none" : ""; }); }
+      hideLabel();
+      /* The widget draws its inside a moment after its box exists, so keep watching. */
+      if (!w.__rs && "MutationObserver" in window) { w.__rs = 1; new MutationObserver(hideLabel).observe(w, { childList: true, subtree: true }); }
     }
     lift();
     if (mq && mq.addListener) mq.addListener(lift);
