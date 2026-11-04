@@ -798,6 +798,32 @@
     }).catch(function () {});
   }
 
+  /* Zid's own script calls $(".s-slider").slick("resize") on every window resize. Once the home page is rebuilt there is no slider under that
+     name, and slick throws "Cannot read properties of undefined (reading 'resize')" into the console each time. The wrapper swallows that
+     one failure and leaves everything else about slick alone. */
+  function slickGuard() {
+    var jq = window.jQuery;
+    if (!jq || !jq.fn || typeof jq.fn.slick !== "function" || jq.fn.slick.rsGuard) return;
+    var orig = jq.fn.slick;
+    var safe = function () { try { return orig.apply(this, arguments); } catch (e) { return this; } };
+    safe.rsGuard = true;
+    jq.fn.slick = safe;
+  }
+
+  /* Pictures with no alt attribute at all (about 150 on the home page, 40 on a category): a product card photo gets the product's name, anything
+     else gets an empty alt (marked decorative) so readers and search engines skip it instead of reading the file name. Zid draws part of the page
+     late, so it runs again a few times. */
+  function altFix() {
+    function run() {
+      $$("img:not([alt])").forEach(function (im) {
+        var card = im.closest(".product-item, .rs-card, .rs-mini__item, article"), name = card ? txt($(".product-title, .rs-card__name, h3", card)) : "";
+        im.setAttribute("alt", name);
+      });
+    }
+    run();
+    [1500, 4000, 9000].forEach(function (ms) { setTimeout(run, ms); });
+  }
+
   /* Cart page: Zid's quantity is a list from 0 to 145. Show − / + buttons instead; they set the real list and fire its change event, so
      Zid updates the cart and the totals exactly as before. The list is only hidden. Re-applied when Zid redraws the cart. */
   function cartQty() {
@@ -1091,6 +1117,8 @@
     try { footerYear(); } catch (e) { console.error("Resas footer year:", e); }
     try { cartQty(); } catch (e) { console.error("Resas cart quantity:", e); }
     try { staleLogin(); } catch (e) { console.error("Resas stale login:", e); }
+    try { slickGuard(); } catch (e) { console.error("Resas slick guard:", e); }
+    try { altFix(); } catch (e) { console.error("Resas alt text:", e); }
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
