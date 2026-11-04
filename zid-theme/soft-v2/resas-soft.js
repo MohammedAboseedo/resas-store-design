@@ -323,46 +323,52 @@
       '<div class="rs-about__media"' + rise(120) + '><img src="' + esc(sized(aimg, 900)) + '" alt=""></div></div></div></section>');
 
     /* Tabs: one per product section of the home page, in the dashboard order. */
-    /* Only the first RESAS.tabCount sections become tabs (a tidy row); the others follow as product rows near the end of the page. */
+    /* Product tabs, in two groups of the same design: the first RESAS.tabCount sections, then the rest right below. */
     var tabSecs = S.sections.slice(0, RESAS.tabCount || 4), restSecs = S.sections.slice(RESAS.tabCount || 4);
-    var tabs = tabSecs.map(function (sec) {
-      var cat = catFor(S, sec.title);
-      return { label: sec.title, url: cat ? cat.url : "", cards: sec.cards.slice(0, RESAS.tabLimit).map(function (c) { return c.node; }) };
-    });
-    var picks = el('<section class="rs-sec" aria-labelledby="rs-pop-title"><div class="rs-wrap"><div class="rs-sec__head"><h2 class="rs-title rs-sec__title" id="rs-pop-title"' + rise(0) + '>اختيارات رساس</h2>' +
-      '<div class="rs-tabs" role="tablist" aria-label="منتجات رساس"' + rise(80) + '></div></div><div class="rs-panels"></div></div></section>');
-    var bar = $(".rs-tabs", picks), panels = $(".rs-panels", picks);
-    tabs.forEach(function (t, i) {
-      bar.appendChild(el('<button type="button" role="tab" id="rs-tab-' + i + '" aria-controls="rs-panel-' + i + '" aria-selected="' + (i ? "false" : "true") + '"' + (i ? ' tabindex="-1"' : "") + ">" + esc(t.label) + "</button>"));
-      var panel = el('<div role="tabpanel" id="rs-panel-' + i + '" aria-labelledby="rs-tab-' + i + '"' + (i ? " hidden" : "") + '><div class="rs-grid rs-grid--five"></div></div>');
-      var grid = $(".rs-grid", panel);
-      t.cards.forEach(function (c, k) {
-        var li = document.createElement("div");
-        li.setAttribute("data-rise", ""); li.style.setProperty("--d", (k % 5) * 70 + "ms");
-        var card = c.cloneNode(true);
-        /* Zid sends 235px thumbnails for sliders; the grid needs larger photos. */
-        $$("img[id^='product-card-img']", card).forEach(function (im) { im.src = sized(im.getAttribute("src"), 600); });
-        li.appendChild(card); grid.appendChild(li);
+    function makePicks(secs, heading, pfx) {
+      var tabs = secs.map(function (sec) {
+        var cat = catFor(S, sec.title);
+        return { label: sec.title, url: cat ? cat.url : "", cards: sec.cards.slice(0, RESAS.tabLimit).map(function (c) { return c.node; }) };
       });
-      if (t.url) panel.appendChild(el('<p class="rs-more"><a class="rs-btn rs-btn--tone" href="' + esc(t.url) + '">عرض الكل</a></p>'));
-      panels.appendChild(panel);
-    });
-    var btns = $$("[role=tab]", bar);
-    var select = function (i, focus) {
-      btns.forEach(function (b, j) { b.setAttribute("aria-selected", j === i ? "true" : "false"); b.tabIndex = j === i ? 0 : -1; $("#rs-panel-" + j).hidden = j !== i; });
-      if (focus) btns[i].focus();
-      observe(picks);
-    };
-    btns.forEach(function (b, i) {
-      b.addEventListener("click", function () { select(i); });
-      /* RTL: the next tab is to the left. */
-      b.addEventListener("keydown", function (e) {
-        var n = { ArrowLeft: i + 1, ArrowRight: i - 1, Home: 0, End: btns.length - 1 }[e.key];
-        if (n === undefined) return;
-        e.preventDefault();
-        select((n + btns.length) % btns.length, true);
+      var picks = el('<section class="rs-sec" aria-labelledby="rs-pop-title' + pfx + '"><div class="rs-wrap"><div class="rs-sec__head"><h2 class="rs-title rs-sec__title" id="rs-pop-title' + pfx + '"' + rise(0) + '>' + esc(heading) + '</h2>' +
+        '<div class="rs-tabs" role="tablist" aria-label="' + esc(heading) + '"' + rise(80) + '></div></div><div class="rs-panels"></div></div></section>');
+      var bar = $(".rs-tabs", picks), panels = $(".rs-panels", picks);
+      tabs.forEach(function (t, i) {
+        var tid = "rs-tab-" + pfx + i, pid = "rs-panel-" + pfx + i;
+        bar.appendChild(el('<button type="button" role="tab" id="' + tid + '" aria-controls="' + pid + '" aria-selected="' + (i ? "false" : "true") + '"' + (i ? ' tabindex="-1"' : "") + ">" + esc(t.label) + "</button>"));
+        var panel = el('<div role="tabpanel" id="' + pid + '" aria-labelledby="' + tid + '"' + (i ? " hidden" : "") + '><div class="rs-grid rs-grid--five"></div></div>');
+        var grid = $(".rs-grid", panel);
+        t.cards.forEach(function (c, k) {
+          var li = document.createElement("div");
+          li.setAttribute("data-rise", ""); li.style.setProperty("--d", (k % 5) * 70 + "ms");
+          var card = c.cloneNode(true);
+          /* Zid sends 235px thumbnails for sliders; the grid needs larger photos. */
+          $$("img[id^='product-card-img']", card).forEach(function (im) { im.src = sized(im.getAttribute("src"), 600); });
+          li.appendChild(card); grid.appendChild(li);
+        });
+        if (t.url) panel.appendChild(el('<p class="rs-more"><a class="rs-btn rs-btn--tone" href="' + esc(t.url) + '">عرض الكل</a></p>'));
+        panels.appendChild(panel);
       });
-    });
+      var btns = $$("[role=tab]", bar), panelEls = $$("[role=tabpanel]", panels);
+      var select = function (i, focus) {
+        btns.forEach(function (b, j) { b.setAttribute("aria-selected", j === i ? "true" : "false"); b.tabIndex = j === i ? 0 : -1; panelEls[j].hidden = j !== i; });
+        if (focus) btns[i].focus();
+        observe(picks);
+      };
+      btns.forEach(function (b, i) {
+        b.addEventListener("click", function () { select(i); });
+        /* RTL: the next tab is to the left. */
+        b.addEventListener("keydown", function (e) {
+          var n = { ArrowLeft: i + 1, ArrowRight: i - 1, Home: 0, End: btns.length - 1 }[e.key];
+          if (n === undefined) return;
+          e.preventDefault();
+          select((n + btns.length) % btns.length, true);
+        });
+      });
+      return picks;
+    }
+    var picks = makePicks(tabSecs, "اختيارات رساس", "");
+    var picks2 = restSecs.length ? makePicks(restSecs, "المزيد من رساس", "b") : null;
 
     /* The dashboard's other banners and gallery, laid out as one tidy grid; wide strips take a full row. */
     var banners = S.banners.length ? el('<section class="rs-sec" aria-label="عروض"><div class="rs-wrap"><div class="rs-banners">' + S.banners.map(function (b, i) {
@@ -483,21 +489,6 @@
       });
     }
 
-    var restRails = restSecs.map(function (sec) {
-      var list = sec.cards.filter(function (c) { return c.inStock; }).slice(0, 8);
-      if (list.length < 2) return null;
-      var cat = catFor(S, sec.title);
-      var rail = el('<section class="rs-sec" aria-label="' + esc(sec.title) + '"><div class="rs-wrap"><div class="rs-sec__head"><h2 class="rs-title rs-sec__title"' + rise(0) + '>' + esc(sec.title) + '</h2>' + (cat ? '<a class="rs-link" href="' + esc(cat.url) + '"' + rise(80) + '>عرض الكل</a>' : "") + '</div><div class="rs-more__rail"></div></div></section>');
-      var row = $(".rs-more__rail", rail);
-      list.forEach(function (c) {
-        var slot = document.createElement("div"); slot.className = "rs-more__slot";
-        var card = c.node.cloneNode(true);
-        $$("img[id^='product-card-img']", card).forEach(function (im) { im.src = sized(im.getAttribute("src"), 600); });
-        slot.appendChild(card); row.appendChild(slot);
-      });
-      return rail;
-    });
-
     /* Order: banner, categories, product tabs, best rated, sale band, tiles, banners, "about", then the dashboard's other sections in their own order, then the store's reviews.
        The optional extras (RESAS.extras) go in the places the first design gave them. */
     var after = anchor;
@@ -511,7 +502,7 @@
       if (!im || !u || u === "/") return;
       firstPhoto(u).then(function (src) { if (src) { im.removeAttribute("srcset"); im.src = sized(src.trim(), 700); } });
     });
-    put(arches); put(EX.about ? about : null); put(picks); put(topRail); put(EX.deals ? deals : null); put(EX.tiles ? tiles : null); put(banners); put(aboutSec || null); restRails.forEach(put);
+    put(arches); put(EX.about ? about : null); put(picks); put(picks2); put(topRail); put(EX.deals ? deals : null); put(EX.tiles ? tiles : null); put(banners); put(aboutSec || null);
     put(EX.featured ? featured : null); put(EX.duo ? duo : null); put(EX.blog ? blog : null); put(EX.instagram ? insta : null);
     var strip = !S.strip.length ? null : el('<section class="rs-strip" aria-label="صور"><ul class="rs-strip__grid">' + S.strip.slice(0, 12).map(function (p, i) {
       var inner = '<img src="' + esc(sized(p.src, 480)) + '" alt="' + esc(p.alt) + '" loading="lazy">';
