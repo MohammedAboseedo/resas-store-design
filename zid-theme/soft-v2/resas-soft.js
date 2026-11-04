@@ -39,6 +39,8 @@
       links: [["الشحن والدفع", "/shipping-and-payment"], ["الاستبدال والاسترجاع", "/pages/refund-exchange-policy"]]
     },
     tabLimit: 10,
+    /* How many product sections become tabs under "اختيارات رساس"; the rest are rows lower on the page. */
+    tabCount: 4,
     featuredCount: 6,
     /* The sale band reads the discounted products of the home page (set the discount on the product in Zid); nothing is listed here. */
     dealUrls: [],
@@ -321,7 +323,9 @@
       '<div class="rs-about__media"' + rise(120) + '><img src="' + esc(sized(aimg, 900)) + '" alt=""></div></div></div></section>');
 
     /* Tabs: one per product section of the home page, in the dashboard order. */
-    var tabs = S.sections.map(function (sec) {
+    /* Only the first RESAS.tabCount sections become tabs (a tidy row); the others follow as product rows near the end of the page. */
+    var tabSecs = S.sections.slice(0, RESAS.tabCount || 4), restSecs = S.sections.slice(RESAS.tabCount || 4);
+    var tabs = tabSecs.map(function (sec) {
       var cat = catFor(S, sec.title);
       return { label: sec.title, url: cat ? cat.url : "", cards: sec.cards.slice(0, RESAS.tabLimit).map(function (c) { return c.node; }) };
     });
@@ -479,6 +483,21 @@
       });
     }
 
+    var restRails = restSecs.map(function (sec) {
+      var list = sec.cards.filter(function (c) { return c.inStock; }).slice(0, 8);
+      if (list.length < 2) return null;
+      var cat = catFor(S, sec.title);
+      var rail = el('<section class="rs-sec" aria-label="' + esc(sec.title) + '"><div class="rs-wrap"><div class="rs-sec__head"><h2 class="rs-title rs-sec__title"' + rise(0) + '>' + esc(sec.title) + '</h2>' + (cat ? '<a class="rs-link" href="' + esc(cat.url) + '"' + rise(80) + '>عرض الكل</a>' : "") + '</div><div class="rs-more__rail"></div></div></section>');
+      var row = $(".rs-more__rail", rail);
+      list.forEach(function (c) {
+        var slot = document.createElement("div"); slot.className = "rs-more__slot";
+        var card = c.node.cloneNode(true);
+        $$("img[id^='product-card-img']", card).forEach(function (im) { im.src = sized(im.getAttribute("src"), 600); });
+        slot.appendChild(card); row.appendChild(slot);
+      });
+      return rail;
+    });
+
     /* Order: banner, categories, product tabs, best rated, sale band, tiles, banners, "about", then the dashboard's other sections in their own order, then the store's reviews.
        The optional extras (RESAS.extras) go in the places the first design gave them. */
     var after = anchor;
@@ -492,7 +511,7 @@
       if (!im || !u || u === "/") return;
       firstPhoto(u).then(function (src) { if (src) { im.removeAttribute("srcset"); im.src = sized(src.trim(), 700); } });
     });
-    put(arches); put(EX.about ? about : null); put(picks); put(topRail); put(EX.deals ? deals : null); put(EX.tiles ? tiles : null); put(banners); put(aboutSec || null);
+    put(arches); put(EX.about ? about : null); put(picks); put(topRail); put(EX.deals ? deals : null); put(EX.tiles ? tiles : null); put(banners); put(aboutSec || null); restRails.forEach(put);
     put(EX.featured ? featured : null); put(EX.duo ? duo : null); put(EX.blog ? blog : null); put(EX.instagram ? insta : null);
     var strip = !S.strip.length ? null : el('<section class="rs-strip" aria-label="صور"><ul class="rs-strip__grid">' + S.strip.slice(0, 12).map(function (p, i) {
       var inner = '<img src="' + esc(sized(p.src, 480)) + '" alt="' + esc(p.alt) + '" loading="lazy">';
