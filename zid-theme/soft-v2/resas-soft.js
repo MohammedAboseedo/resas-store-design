@@ -160,6 +160,15 @@
 
   /* ---------- reading the store's own sections ---------- */
   function sized(src, w) { src = String(src || "").trim(); return /cdn-cgi\/image\//.test(src) ? src.replace(/w=\d+/, "w=" + w) : src; }
+  /* A product card copied into a tab or rail: its photos load only when they come near the screen (the ones in hidden tabs, never until the
+     tab opens), and the thumbnail Zid sends for sliders (235px) is swapped for a 480px one. loading is set first, so the swap itself is lazy. */
+  function lazyCard(card) {
+    $$("img", card).forEach(function (im) {
+      if (/spinner/.test(im.getAttribute("src") || "")) return;
+      im.loading = "lazy"; im.decoding = "async";
+      if (/^product-card-img/.test(im.id)) im.src = sized(im.getAttribute("src"), 480);
+    });
+  }
   function txt(e) { return e ? e.textContent.replace(/\s+/g, " ").trim() : ""; }
   function live(list) { return list.filter(function (e) { return !e.closest(".slick-cloned"); }); }
   function cardInfo(c) {
@@ -342,8 +351,7 @@
           var li = document.createElement("div");
           li.setAttribute("data-rise", ""); li.style.setProperty("--d", (k % 5) * 70 + "ms");
           var card = c.cloneNode(true);
-          /* Zid sends 235px thumbnails for sliders; the grid needs larger photos. */
-          $$("img[id^='product-card-img']", card).forEach(function (im) { im.src = sized(im.getAttribute("src"), 600); });
+          lazyCard(card);
           li.appendChild(card); grid.appendChild(li);
         });
         if (t.url) panel.appendChild(el('<p class="rs-more"><a class="rs-btn rs-btn--tone" href="' + esc(t.url) + '">عرض الكل</a></p>'));
@@ -484,7 +492,7 @@
       topList.forEach(function (c) {
         var slot = document.createElement("div"); slot.className = "rs-more__slot";
         var card = c.node.cloneNode(true);
-        $$("img[id^='product-card-img']", card).forEach(function (im) { im.src = sized(im.getAttribute("src"), 600); });
+        lazyCard(card);
         slot.appendChild(card); trail.appendChild(slot);
       });
     }
