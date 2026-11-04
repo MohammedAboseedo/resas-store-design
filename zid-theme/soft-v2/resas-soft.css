@@ -882,3 +882,18 @@ body .product-item .product-card-footer .btn:hover img { filter: none; }
 
 /* The floating WhatsApp (GetButton) bubble is hidden on the store pages; the "ask on WhatsApp" button on product pages stays. */
 [id^="gb-widget"] { display: none !important; }
+
+/* Before the script has rebuilt the banner, Soft's own slider (all slides stacked, the lazy ones as broken images) must not show: only the first
+   slide is visible on wide screens, and phones show an empty space (they may get the portrait slide instead). Shown again after 5s if the script never runs. */
+.home:not(.rs-ready) > [section-id]:first-child { max-height: 46vw; overflow: hidden; }
+@media (max-width: 767px) {
+  .home:not(.rs-ready) > [section-id]:first-child { visibility: hidden; min-height: 70vw; max-height: 70vw; animation: rs-failsafe 0s 5s forwards; }
+}
+
+/* The product tabs on phones: one swipeable row of small chips (they wrapped into four rows of big pills). */
+@media (max-width: 767px) {
+  .rs-sec__head:has(.rs-tabs) { gap: 12px; margin-bottom: 18px; }
+  .rs-tabs { flex-wrap: nowrap; justify-content: flex-start; gap: 8px; width: 100%; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; padding: 2px 2px 6px; scroll-snap-type: x proximity; }
+  .rs-tabs::-webkit-scrollbar { display: none; }
+  .rs-tabs button { flex: none; min-height: 40px; padding: 0 18px; font-size: 15px; white-space: nowrap; scroll-snap-align: start; }
+}
