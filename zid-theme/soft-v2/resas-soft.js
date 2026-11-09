@@ -674,8 +674,16 @@
     var sel = $("#product-quantity"), max = sel ? sel.options.length : 1, qty = 1;
     var label = btn.textContent.replace(/\s+/g, " ").trim() || "أضف إلى السلة";
     if (label === "أضف إلى السلة") label = "أضف للسلة";
-    var buy = el('<div class="rs-buy" role="group" aria-label="إضافة إلى السلة">' + (sel ? '<div class="rs-buy__qty" dir="ltr"><button type="button" data-d="-1" aria-label="إنقاص الكمية">&minus;</button><output aria-live="polite">1</output><button type="button" data-d="1" aria-label="زيادة الكمية">+</button></div>' : "") + '<button type="button" class="rs-buy__btn">' + esc(label) + '</button><button type="button" class="rs-buy__now">اشترِ الآن</button></div>');
+    /* The price (and this product's offer line) on top of the bar, so it is on the first screen; it follows Soft's price if an option changes it. */
+    var pEl = $(".col-product-info .product-formatted-price"), oEl = $(".col-product-info .product-formatted-price-old"), note = pageNotes()[0] || "";
+    function priceRow() {
+      var p = pEl ? num(txt(pEl)) : 0, o = oEl ? num(txt(oEl)) : 0;
+      return p > 0 ? "<strong>" + esc(money(p)) + "</strong>" + (o > p ? "<del>" + esc(money(o)) + "</del>" : "") + (note ? "<span>" + esc(note) + "</span>" : "") : "";
+    }
+    var buy = el('<div class="rs-buy" role="group" aria-label="إضافة إلى السلة">' + (pEl ? '<div class="rs-buy__price">' + priceRow() + "</div>" : "") + (sel ? '<div class="rs-buy__qty" dir="ltr"><button type="button" data-d="-1" aria-label="إنقاص الكمية">&minus;</button><output aria-live="polite">1</output><button type="button" data-d="1" aria-label="زيادة الكمية">+</button></div>' : "") + '<button type="button" class="rs-buy__btn">' + esc(label) + '</button><button type="button" class="rs-buy__now">اشترِ الآن</button></div>');
     document.body.appendChild(buy);
+    var pRow = $(".rs-buy__price", buy);
+    if (pRow && "MutationObserver" in window) new MutationObserver(function () { pRow.innerHTML = priceRow(); }).observe(pEl, { childList: true, characterData: true, subtree: true });
     var out = $("output", buy);
     function show() { if (out) out.textContent = String(qty); }
     function setQty(n) {
@@ -748,14 +756,33 @@
     truck: '<path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7.5" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/>',
     tag: '<path d="m4 12.5 8-8h7v7l-8 8z"/><circle cx="15.5" cy="8.5" r="1"/>'
   };
+  /* The lines of RESAS.trust.byProduct that belong to this product page and have not passed their date. */
+  function pageNotes() {
+    var cfg = RESAS.trust || {}, here = location.pathname; try { here = decodeURIComponent(here); } catch (e) {}
+    return (cfg.byProduct || []).filter(function (b) { return here.indexOf(b.match) > -1 && (!b.until || Date.now() <= Date.parse(b.until + "T23:59:59+03:00")); }).map(function (b) { return b.text; });
+  }
+
+  /* ---------- product page: the price first ----------
+     Soft puts the short description between the name and the price, so on a phone the price sat under the first screen. The price row
+     moves right under the name and the rating (the same element, nothing copied), with this product's own offer line under it. */
+  function priceFirst() {
+    var sec = $(".col-product-info > section"), price = sec && $(".product-formatted-price", sec);
+    if (!price || sec.getAttribute("data-rs-price") === "1") return;
+    var row = price.closest(".d-flex"), after = $(".product-features", sec) || $("h1", sec);
+    if (!row || row.parentNode !== sec || !after || after.parentNode !== sec) return;
+    sec.setAttribute("data-rs-price", "1");
+    after.insertAdjacentElement("afterend", row);
+    var notes = pageNotes();
+    if (notes.length) row.insertAdjacentElement("afterend", el('<p class="rs-pnote">' + esc(notes[0]) + "</p>"));
+  }
+
   function productTrust() {
     var cfg = RESAS.trust;
     if (cfg === false || $(".rs-trust")) return;
     var anchor = $(".col-product-info .product-buttons");
     if (!anchor || !$(".col-product-info .btn-add-to-cart")) return;
     cfg = cfg || {};
-    var here = location.pathname; try { here = decodeURIComponent(here); } catch (e) {}
-    var own = (cfg.byProduct || []).filter(function (b) { return here.indexOf(b.match) > -1 && (!b.until || Date.now() <= Date.parse(b.until + "T23:59:59+03:00")); }).map(function (b) { return b.text; });
+    var own = pageNotes();
     var lines = own.concat(cfg.extra || []).map(function (t) { return ["tag", t]; }).concat((cfg.items || []).map(function (t, i) { return [["shield", "card", "truck"][i % 3], t]; }));
     var left = 0, sel = $("#product-quantity"), out = $(".section-out-of-stock-notify-me");
     if (sel && (!out || out.classList.contains("d-none")) && sel.options.length > 0 && sel.options.length <= 5) left = sel.options.length;
@@ -927,6 +954,15 @@
     /* clearer headings than Zid's table captions */
     $$(".section-title", view).forEach(function (h) { var t = h.textContent.trim(); if (t === "المنتجات") h.textContent = "سلة التسوق"; else if (t === "ملخص الإجمالي") h.textContent = "ملخص الطلب"; });
     try { cartBar(view); cartRecs(view); } catch (e) { console.error("Resas cart extras:", e); }
+    /* Most visitors who open checkout leave at its first field, the phone number. One line above the button says what the number is for and
+       that payment comes last. Put back if Zid redraws the totals. */
+    function assure() {
+      var go = $$("a", view).filter(function (a) { return /إتمام الطلب/.test(a.textContent); })[0];
+      if (!go || $(".rs-assure", view)) return;
+      go.parentNode.insertBefore(el('<p class="rs-assure"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg><span>رقم جوالك للتوصيل فقط، والدفع في آخر خطوة: <bdi>Apple Pay</bdi> والبطاقات وتابي وتمارا.</span></p>'), go);
+    }
+    assure();
+    if ("MutationObserver" in window) { var ta = 0; new MutationObserver(function () { clearTimeout(ta); ta = setTimeout(assure, 300); }).observe(view, { childList: true, subtree: true }); }
     var paint = shipMeter(view, "before");
     var body = $(".cart-products-with-totals", view);
     if (paint && body && "MutationObserver" in window) { var t = 0; new MutationObserver(function () { clearTimeout(t); t = setTimeout(paint, 700); }).observe(body, { childList: true, subtree: true }); }
@@ -1109,6 +1145,7 @@
     try { reviewsSlider(); } catch (e) { console.error("Resas reviews:", e); }
     try { catCols(); window.addEventListener("resize", catCols); } catch (e) { console.error("Resas categories:", e); }
     try { phoneBars(); } catch (e) { console.error("Resas phone bars:", e); }
+    try { priceFirst(); } catch (e) { console.error("Resas price first:", e); }
     try { productPage(); } catch (e) { console.error("Resas product page:", e); }
     try { cartPage(); } catch (e) { console.error("Resas cart page:", e); }
     try { backToTop(); } catch (e) { console.error("Resas back to top:", e); }

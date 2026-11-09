@@ -897,3 +897,20 @@ body .product-item .product-card-footer .btn:hover img { filter: none; }
   .rs-tabs button { width: 100%; min-height: 42px; padding: 6px 10px; font-size: 14px; line-height: 1.3; white-space: normal; text-align: center; }
   .rs-tabs button:last-child:nth-child(odd) { grid-column: 1 / -1; }
 }
+
+/* Product page: the price right under the name, with this product's offer line (resas-soft.js priceFirst). */
+.products-details-page .col-product-info > section > .d-flex { margin-top: 6px; }
+.rs-pnote { display: block; width: fit-content; max-width: 100%; margin: 8px 0 4px; padding: 3px 12px; border-radius: 999px; background: var(--rs-linen); color: var(--rs-cognac-deep); font-size: var(--rs-fs-s); font-weight: 600; }
+
+/* The price on top of the sticky add-to-cart bar on phones. */
+.rs-buy__price { flex: 1 0 100%; display: flex; align-items: baseline; gap: 8px; min-width: 0; padding: 0 8px; color: var(--rs-ink); font-size: 14px; line-height: 1.3; }
+.rs-buy__price:empty { display: none; }
+.rs-buy__price strong { font-size: 17px; font-weight: 700; color: var(--rs-cognac-deep); font-variant-numeric: tabular-nums; }
+.rs-buy__price del { color: var(--rs-subtle); font-size: 13px; }
+.rs-buy__price span { margin-inline-start: auto; color: var(--rs-cognac-deep); font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 767px) { body.rs-has-buy .rs-top { bottom: calc(210px + env(safe-area-inset-bottom, 0px)); } }
+
+/* Cart: one reassuring line above the checkout button. */
+.rs-assure { display: flex; align-items: flex-start; gap: 8px; margin: 0 0 10px; padding: 10px 12px; border: 1px solid var(--rs-linen); border-radius: 14px; background: var(--rs-ivory); color: var(--rs-ink); font-size: 14px; line-height: 1.6; }
+.rs-assure svg { flex: none; width: 18px; height: 18px; margin-top: 3px; fill: none; stroke: var(--rs-cognac-deep); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.rs-assure bdi { white-space: nowrap; }
